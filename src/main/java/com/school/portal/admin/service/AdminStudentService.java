@@ -1,0 +1,86 @@
+package com.school.portal.admin.service;
+
+import com.school.portal.admin.dto.CreateStudentRequest;
+import com.school.portal.admin.repository.StudentRepository;
+import com.school.portal.common.enums.Role;
+import com.school.portal.core.entity.Student;
+import com.school.portal.core.entity.User;
+import com.school.portal.core.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+
+@Service
+@RequiredArgsConstructor
+public class AdminStudentService {
+
+    private final StudentRepository studentRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public String addStudent(CreateStudentRequest request) {
+
+        if (request.getStudentId() == null || request.getStudentId().isBlank()) {
+            throw new RuntimeException("studentId is required");
+        }
+        if (request.getFullName() == null || request.getFullName().isBlank()) {
+            throw new RuntimeException("fullName is required");
+        }
+
+        // Check StudentId unique
+        if (studentRepository.findByStudentId(request.getStudentId()).isPresent()) {
+            throw new RuntimeException("StudentId already exists: " + request.getStudentId());
+        }
+
+        // Check username unique (since we use studentId as username)
+        if (userRepository.findByUsername(request.getStudentId()).isPresent()) {
+            throw new RuntimeException("Login username already exists: " + request.getStudentId());
+        }
+
+        boolean active = (request.getActive() == null) ? true : request.getActive();
+
+        Student student = Student.builder()
+                .studentId(request.getStudentId())
+                .fullName(request.getFullName())
+                .dateOfBirth(request.getDateOfBirth() != null && !request.getDateOfBirth().isBlank()
+                        ? LocalDate.parse(request.getDateOfBirth())
+                        : null)
+                .phoneNumber(request.getPhoneNumber())
+                .parentPhoneNumber(request.getParentPhoneNumber())
+                .otherNumber(request.getOtherNumber())
+                .address(request.getAddress())
+                .standard(request.getStandard())
+                .section(request.getSection())
+                .academicYear(request.getAcademicYear())
+                .fatherName(request.getFatherName())
+                .motherName(request.getMotherName())
+                .fatherOccupation(request.getFatherOccupation())
+                .studentEmailId(request.getStudentEmailId())
+                .parentEmailId(request.getParentEmailId())
+                .profileUrl(request.getProfileUrl())
+                .gender(request.getGender())
+                .caste(request.getCaste())
+                .religion(request.getReligion())
+                .active(active)
+                .build();
+
+        studentRepository.save(student);
+
+        // Create login for student
+        String defaultPassword = "student123"; // for demo, later we generate random
+
+        User user = User.builder()
+                .username(request.getStudentId())
+                .password(passwordEncoder.encode(defaultPassword))
+                .role(Role.STUDENT)
+                .active(active)
+                .build();
+
+        userRepository.save(user);
+
+        return "Student created successfully. Login username=" + request.getStudentId()
+                + " password=" + defaultPassword;
+    }
+}

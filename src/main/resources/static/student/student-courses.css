@@ -1,0 +1,107 @@
+body {
+  margin: 0;
+  font-family: "Poppins", Arial, sans-serif;
+  background: linear-gradient(135deg, #fff3e0, #e3f2fd);
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  background: white;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+  z-index: 10;
+}
+
+.topbar h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.back {
+  text-decoration: none;
+  background: #1976d2;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 10px;
+  transition: transform 0.2s ease;
+}
+.back:hover { transform: scale(1.05); }
+
+.container {
+  max-width: 1000px;
+  margin: auto;
+  padding: 18px;
+}
+
+.grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.course-card {
+  background: white;
+  border-radius: 16px;
+  padding: 14px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.10);
+  transform: translateY(0);
+  transition: 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.course-card:hover {
+  transform: translateY(-6px);
+}
+
+.course-card::before {
+  content: "";
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 90px;
+  height: 90px;
+  background: rgba(25,118,210,0.12);
+  border-radius: 50%;
+}
+
+.subject {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 10px;
+  color: #0d47a1;
+}
+
+.teacher {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.teacher img {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #90caf9;
+}
+
+.teacher .name {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.teacher .meta {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.empty {
+  text-align: center;
+  margin-top: 20px;
+  font-weight: 600;
+}

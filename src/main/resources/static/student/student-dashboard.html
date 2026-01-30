@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Portal • Dashboard</title>
+
+  <link rel="stylesheet" href="/shared/reset.css" />
+  <link rel="stylesheet" href="/shared/variables.css" />
+  <link rel="stylesheet" href="/student/student-dashboard.css" />
+</head>
+
+<body>
+  <!-- Floating background shapes -->
+  <div class="bg">
+    <span class="blob b1"></span>
+    <span class="blob b2"></span>
+    <span class="blob b3"></span>
+    <span class="spark s1"></span>
+    <span class="spark s2"></span>
+    <span class="spark s3"></span>
+  </div>
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">🎓</div>
+      <div>
+        <div class="brand-title">Student Portal</div>
+        <div class="brand-sub">Welcome back, Superstar ⭐</div>
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <div class="chip" id="studentChip">ID: —</div>
+      <button class="btn ghost" id="logoutBtn" title="Logout">Logout</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="profile-card">
+        <div class="avatar" aria-hidden="true">🧒</div>
+        <div class="pinfo">
+          <div class="pname" id="studentName">Student</div>
+          <div class="pmeta" id="classMeta">Class: —</div>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <button class="nav-item active" data-tab="faculties">
+          <span class="ico">👩‍🏫</span>
+          <span>My Faculties</span>
+          <span class="pill" id="facCount">0</span>
+        </button>
+
+        <button class="nav-item" data-tab="attendance">
+          <span class="ico">📅</span>
+          <span>Attendance</span>
+          <span class="pill" id="attCount">0</span>
+        </button>
+
+        <button class="nav-item" data-tab="profile">
+          <span class="ico">🪪</span>
+          <span>Profile</span>
+        </button>
+
+        <button class="nav-item" data-tab="help">
+          <span class="ico">🆘</span>
+          <span>Help</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="tip">
+          <div class="tip-title">Tip ✨</div>
+          <div class="tip-text">Click “Attendance” to see your latest updates instantly.</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Content -->
+    <section class="content">
+      <div class="content-header">
+        <div>
+          <h1 id="pageTitle">My Faculties</h1>
+          <p id="pageDesc">Your teachers for your class & section.</p>
+        </div>
+        <div class="content-actions">
+          <button class="btn" id="refreshBtn">Refresh</button>
+          <button class="btn ghost mobile-menu" id="menuBtn">Menu</button>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <!-- Faculties -->
+        <section class="tab show" id="tab-faculties">
+          <div class="grid" id="facGrid">
+            <!-- cards injected -->
+          </div>
+
+          <div class="empty" id="facEmpty" style="display:none;">
+            <div class="empty-emoji">🕵️‍♂️</div>
+            <div class="empty-title">No faculties found</div>
+            <div class="empty-text">Your class teacher assignments might not be added yet.</div>
+          </div>
+        </section>
+
+        <!-- Attendance -->
+        <section class="tab" id="tab-attendance">
+          <div class="card table-card">
+            <div class="card-head">
+              <div>
+                <div class="card-title">Attendance History</div>
+                <div class="card-sub">Latest first (real-time from database)</div>
+              </div>
+              <div class="filters">
+                <select id="subjectFilter" class="select">
+                  <option value="">All Subjects</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="table-wrap">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Subject</th>
+                    <th>Status</th>
+                    <th>Teacher</th>
+                  </tr>
+                </thead>
+                <tbody id="attTbody">
+                  <!-- rows injected -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="empty" id="attEmpty" style="display:none;">
+            <div class="empty-emoji">📭</div>
+            <div class="empty-title">No attendance yet</div>
+            <div class="empty-text">Once your teacher marks attendance, it will appear here.</div>
+          </div>
+        </section>
+
+       <!-- Profile -->
+<section class="tab" id="tab-profile">
+  <div class="card">
+    <div class="card-head">
+      <div>
+        <!-- clickable Profile -->
+        <div class="card-title">
+          <a href="/student/student-profile.html" class="profile-link">
+            My Profile
+          </a>
+        </div>
+        <div class="card-sub">We will connect this to backend next.</div>
+      </div>
+    </div>
+
+    <div class="profile-grid">
+      <div class="pitem"><span>Student ID</span><b id="pStudentId">—</b></div>
+      <div class="pitem"><span>Class</span><b id="pClass">—</b></div>
+      <div class="pitem"><span>Section</span><b id="pSection">—</b></div>
+      <div class="pitem"><span>Email</span><b id="pEmail">—</b></div>
+      <div class="pitem"><span>Parent Phone</span><b id="pParentPhone">—</b></div>
+      <div class="pitem"><span>Status</span><b id="pStatus">—</b></div>
+    </div>
+
+    <div class="note">
+      ✅ Next backend step: create <code>/student/profile/{studentId}</code> API and fill these.
+    </div>
+  </div>
+</section>
+
+        <!-- Help -->
+        <section class="tab" id="tab-help">
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <div class="card-title">Help & Support</div>
+                <div class="card-sub">Quick tips for students</div>
+              </div>
+            </div>
+
+            <ul class="help-list">
+              <li>📅 Attendance updates appear instantly after teacher submits.</li>
+              <li>👩‍🏫 Faculties list is based on your class/section mapping.</li>
+              <li>🔒 If you see “Unauthorized”, please login again.</li>
+            </ul>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <!-- Toast -->
+  <div class="toast" id="toast" aria-live="polite"></div>
+
+  <script src="./student-dashboard.js"></script>
+
+</body>
+</html>
