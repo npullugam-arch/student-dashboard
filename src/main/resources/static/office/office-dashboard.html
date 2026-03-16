@@ -1,0 +1,117 @@
+<!-- ================================
+✅ UPDATED FULL FILE: office-dashboard.html
+✅ Frontend-only change (SAFE):
+1) Added Offline Guard script in <head>
+   - If internet OFF -> redirect to /offline.html
+   - Saves last URL so offline page can come back
+   - Registers /sw.js (optional)
+✅ Everything else unchanged
+================================== -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Office Dashboard • EduConnect</title>
+
+  <link rel="stylesheet" href="office-dashboard.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- ✅ OFFLINE GUARD (Frontend only)
+       - If internet goes OFF -> redirect to /offline.html
+       - Stores last URL in sessionStorage (last_online_url)
+       - Registers service worker /sw.js (optional)
+  -->
+  <script>
+    (function () {
+      function rememberUrl() {
+        try {
+          if (navigator.onLine) {
+            sessionStorage.setItem("last_online_url", location.pathname + location.search + location.hash);
+          }
+        } catch {}
+      }
+
+      // Save current URL at start
+      rememberUrl();
+
+      // Keep saving when online
+      window.addEventListener("online", rememberUrl);
+      window.addEventListener("beforeunload", rememberUrl);
+
+      // Redirect immediately when offline
+      window.addEventListener("offline", () => {
+        try {
+          sessionStorage.setItem("last_online_url", location.pathname + location.search + location.hash);
+        } catch {}
+        if (location.pathname !== "/offline.html") {
+          location.href = "/offline.html";
+        }
+      });
+
+      // Register service worker (if file exists)
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/sw.js").catch(() => {});
+      }
+    })();
+  </script>
+</head>
+<body>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="logo">🏫</div>
+      <div>
+        <div class="title">Eduvantha</div>
+        <div class="sub">Office Dashboard</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <button class="nav-item active" data-page="fees" type="button">
+        <i class="fas fa-wallet"></i>
+        <span>Fees Overview</span>
+      </button>
+
+      <!-- ✅ now this just opens iframe -->
+      <button class="nav-item" data-page="transactions" type="button">
+        <i class="fas fa-receipt"></i>
+        <span>Transactions</span>
+      </button>
+
+      <button class="nav-item danger" id="logoutBtn" type="button">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Logout</span>
+      </button>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <button class="iconbtn" id="menuBtn" type="button"><i class="fas fa-bars"></i></button>
+      <div>
+        <div class="h1" id="pageTitle">Fees Overview</div>
+        <div class="muted" id="pageSub">Manage fees and dues</div>
+      </div>
+      <div class="right">
+        <div class="pill" id="officePill">OFFICE</div>
+      </div>
+    </header>
+
+    <!-- ✅ Fees page renders here -->
+    <section id="pageRoot" class="pageRoot"></section>
+
+    <!-- ✅ Transactions page will load here -->
+    <section id="iframeRoot" class="pageRoot" style="display:none">
+      <iframe
+        id="contentFrame"
+        title="Office Transactions"
+        src=""
+        style="width:100%;height:calc(100vh - 92px);border:0;border-radius:18px;background:#fff"
+      ></iframe>
+    </section>
+  </main>
+
+  <script src="office-dashboard.js"></script>
+</body>
+</html>

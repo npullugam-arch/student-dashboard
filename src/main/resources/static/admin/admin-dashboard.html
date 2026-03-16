@@ -1,0 +1,199 @@
+<!-- ================================
+✅ UPDATED FULL FILE: admin-dashboard.html
+✅ Frontend-only change (SAFE):
+1) Left sidebar is fixed and scrollable independently
+2) Right content area stays fixed in same screen
+3) Added dropdown sections:
+   - Passwords
+   - Timetable
+   - Examination
+4) Kept all existing ids, hrefs, scripts, iframe ids unchanged
+✅ Backend untouched
+================================== -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard - EduConnect</title>
+
+  <link rel="stylesheet" href="admin-dashboard.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+  <!-- ✅ OFFLINE GUARD (Frontend only)
+       - If internet goes OFF -> redirect to /offline.html
+       - Stores last URL in sessionStorage (last_online_url)
+       - Registers service worker /sw.js (optional)
+  -->
+  <script>
+    (function () {
+      function rememberUrl() {
+        try {
+          if (navigator.onLine) {
+            sessionStorage.setItem("last_online_url", location.pathname + location.search + location.hash);
+          }
+        } catch {}
+      }
+
+      rememberUrl();
+
+      window.addEventListener("online", rememberUrl);
+      window.addEventListener("beforeunload", rememberUrl);
+
+      window.addEventListener("offline", () => {
+        try {
+          sessionStorage.setItem("last_online_url", location.pathname + location.search + location.hash);
+        } catch {}
+        if (location.pathname !== "/offline.html") {
+          location.href = "/offline.html";
+        }
+      });
+
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/sw.js").catch(() => {});
+      }
+    })();
+  </script>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="logo">🧑‍💼</div>
+    <div>
+      <div class="title">Eduvantha</div>
+      <div class="sub">Admin Dashboard</div>
+    </div>
+  </div>
+
+  <div class="right">
+    <button id="logoutBtn" class="btn dark">Logout</button>
+  </div>
+</header>
+
+<main class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+      <div class="card">
+        <div class="big" id="adminName">Admin</div>
+        <div class="muted" id="adminId">ID: --</div>
+      </div>
+
+      <nav class="nav">
+        <a class="nav-item active" id="navOverview" href="admin-dashboard.html">🏠 Overview</a>
+
+        <!-- ✅ School Branding -->
+        <a class="nav-item" id="navSchoolBranding" href="./admin-school-branding.html">🎨 School Branding</a>
+
+        <a class="nav-item" id="navStudents" href="students.html">🧑‍🎓 Students</a>
+        <a class="nav-item" id="navTeachers" href="teachers.html">👩‍🏫 Teachers</a>
+        <a class="nav-item" id="navSubjects" href="./subjects.html">📚 Subjects</a>
+
+        <!-- ✅ Attendance -->
+        <a class="nav-item" id="navAttendance" href="./admin-attendance.html">✅ Attendance</a>
+
+        <!-- ✅ Passwords Dropdown -->
+        <details class="nav-group">
+          <summary class="nav-group-title">🔐 Passwords</summary>
+          <div class="nav-submenu">
+            <a class="nav-item sub-item" id="navStudentPasswords" href="./admin-passwords.html">Student Passwords</a>
+            <a class="nav-item sub-item" id="navTeacherPasswords" href="./admin-teacher-passwords.html">Teacher Passwords</a>
+          </div>
+        </details>
+
+        <!-- ✅ Timetable Dropdown -->
+        <details class="nav-group">
+          <summary class="nav-group-title">📅 Timetable</summary>
+          <div class="nav-submenu">
+            <a class="nav-item sub-item" id="navTimetable" href="./admin-timetable.html">Class Timetable</a>
+            <a class="nav-item sub-item" id="navTeacherTimetable" href="./admin-teacher-timetable.html">Teacher Timetable</a>
+          </div>
+        </details>
+
+        <!-- ✅ Examination Dropdown -->
+        <details class="nav-group">
+          <summary class="nav-group-title">📝 Examination</summary>
+          <div class="nav-submenu">
+            <a class="nav-item sub-item" id="navExamTimetable" href="./admin-exam-timetable.html">Exam Timetable</a>
+            <a class="nav-item sub-item" id="navExamTimetableDetail" href="./student-exam-timetable-details.html">Exam Timetable in Detail</a>
+            <a class="nav-item sub-item" id="navHallTicket" href="./admin-hallticket.html">Hall Ticket</a>
+          </div>
+        </details>
+
+        <!-- ✅ Notices & Holidays -->
+        <a class="nav-item" id="navNoticesHolidays" href="./admin-notices-holidays.html">📢 Notices & Holidays</a>
+      </nav>
+
+      <div class="tip">
+        Complete one module fully → freeze it → next module ✅
+      </div>
+    </div>
+  </aside>
+
+  <section class="content">
+
+    <!-- Overview -->
+    <div id="overviewView" class="view-scroll">
+      <h1>Overview</h1>
+      <p class="muted">Manage students, teachers and subjects from one place.</p>
+
+      <div class="grid">
+        <div class="stat">
+          <div class="label">Students</div>
+          <div class="value" id="studentsCount">--</div>
+        </div>
+
+        <div class="stat">
+          <div class="label">Teachers</div>
+          <div class="value" id="teachersCount">--</div>
+        </div>
+
+        <div class="stat">
+          <div class="label">Subjects</div>
+          <div class="value" id="subjectsCount">--</div>
+        </div>
+      </div>
+
+      <div class="note">
+        <b>Rules:</b>
+        <ul>
+          <li>Admin only can create/edit/delete Students & Teachers.</li>
+          <li>Admin controls Subjects and class subject mapping.</li>
+          <li>Attendance once taken is locked.</li>
+        </ul>
+      </div>
+
+      <div class="note">
+        <b>Tip:</b>
+        <div class="muted">Use the left menu to manage each module.</div>
+      </div>
+    </div>
+
+    <!-- Embedded view -->
+    <div id="embedView" class="embedView hidden">
+      <div class="embedHead">
+        <div>
+          <h1 id="embedTitle">Module</h1>
+          <div class="muted" style="margin-top:4px;">This page is loaded inside the dashboard.</div>
+        </div>
+        <button class="btn" id="backToOverviewBtn">← Back</button>
+      </div>
+
+      <iframe
+        id="contentFrame"
+        class="contentFrame"
+        src=""
+        title="Embedded Page"
+        loading="lazy"
+      ></iframe>
+    </div>
+
+  </section>
+</main>
+
+<script src="admin-api.js"></script>
+<script src="admin-dashboard.js"></script>
+</body>
+</html>

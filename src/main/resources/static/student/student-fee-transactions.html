@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fee Transactions • EduConnect</title>
+
+  <!-- Professional font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="student-fee-transactions.css" />
+</head>
+
+<body>
+  <div class="page">
+    <div class="shell">
+
+      <!-- Header -->
+      <div class="topbar">
+        <div class="brand">
+          <div class="logo" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" width="18" height="18">
+              <path d="M6 7h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="2" />
+              <path d="M6 10h12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+          </div>
+          <div>
+            <h1>Student • Fee Transactions</h1>
+            <p>Transaction - History</p>
+          </div>
+        </div>
+
+        <!-- ✅ ONLY STUDENT CHIP (dynamic) -->
+        <div class="right-actions">
+          <div class="chip" id="studentChip">STUDENT • -</div>
+        </div>
+      </div>
+
+      <!-- Summary cards -->
+      <div class="summary" id="summaryGrid">
+        <div class="sum-card skel" style="height:92px"></div>
+        <div class="sum-card skel" style="height:92px"></div>
+        <div class="sum-card skel" style="height:92px"></div>
+        <div class="sum-card skel" style="height:92px"></div>
+      </div>
+
+      <!-- Transactions section -->
+      <div class="section">
+        <div class="section-card">
+
+          <div class="section-head">
+            <div>
+              <div class="section-title">Transactions</div>
+              <div class="section-sub">Your fee payment history</div>
+            </div>
+
+            <div class="controls">
+              <select id="sortBy" aria-label="Sort">
+                <option value="date_desc" selected>Latest first</option>
+                <option value="date_asc">Oldest first</option>
+                <option value="amount_desc">Amount high → low</option>
+                <option value="amount_asc">Amount low → high</option>
+              </select>
+
+              <input id="q" type="text" placeholder="Search by remarks / date (dd-mm-yyyy)" />
+
+              <button class="btn" id="btnClear" type="button">Clear</button>
+              <button class="btn primary" id="btnReload" type="button">Reload</button>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table aria-label="Transactions table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th class="num">Paid</th>
+                  <th class="num">Paid Total After</th>
+                  <th class="num">Due After</th>
+                  <th>Next Due</th>
+                  <th>Remarks</th>
+                </tr>
+              </thead>
+              <tbody id="tbody">
+                <tr><td colspan="6" class="muted">Loading...</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div id="err" class="err" style="display:none"></div>
+        </div>
+
+        <div class="tip" role="note" aria-label="Tip">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 22a10 10 0 1 0-10-10 10 10 0 0 0 10 10Z" stroke="currentColor" stroke-width="2" />
+            <path d="M12 11v6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" />
+            <path d="M12 7h.01" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" />
+          </svg>
+          <div><strong>Tip</strong><br> If you don’t see transactions, ask office to add payments in Transactions module.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="student-fee-transactions.js"></script>
+</body>
+</html>

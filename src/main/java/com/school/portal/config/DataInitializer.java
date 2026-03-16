@@ -19,7 +19,7 @@ public class DataInitializer {
     CommandLineRunner initUsers(UserRepository userRepository) {
         return args -> {
 
-            if (userRepository.findByUsername("admin").isEmpty()) {
+            if (!userRepository.existsByUsername("admin")) {
                 User admin = User.builder()
                         .username("admin")
                         .password(passwordEncoder.encode("admin123"))
@@ -30,7 +30,7 @@ public class DataInitializer {
                 userRepository.save(admin);
             }
 
-            if (userRepository.findByUsername("office").isEmpty()) {
+            if (!userRepository.existsByUsername("office")) {
                 User office = User.builder()
                         .username("office")
                         .password(passwordEncoder.encode("office123"))

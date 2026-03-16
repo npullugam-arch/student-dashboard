@@ -29,22 +29,45 @@ document.addEventListener("mousemove", (event) => {
 const usernameEl = document.getElementById("username");
 const loginBtn = document.getElementById("loginBtn");
 const errorMsg = document.getElementById("errorMsg");
+const rightBubble = document.getElementById("pandaRightBubble");
 
 function getSelectedRole() {
   const checked = document.querySelector('input[name="role"]:checked');
   return checked ? checked.value : "STUDENT";
 }
 
-function showError(msg) {
-  errorMsg.textContent = msg || "Login failed";
-  errorMsg.style.display = "block";
+function triggerWrongEntry() {
+  form.classList.remove("wrong-entry");
+  void form.offsetWidth; // restart animation
   form.classList.add("wrong-entry");
-  setTimeout(() => form.classList.remove("wrong-entry"), 700);
+  setTimeout(() => form.classList.remove("wrong-entry"), 900);
+}
+
+function showRightBubble(msg) {
+  // keep old alert hidden
+  if (errorMsg) errorMsg.style.display = "none";
+
+  if (rightBubble) {
+    rightBubble.textContent = msg || "Login failed";
+    rightBubble.style.display = "block";
+
+    rightBubble.classList.remove("bubble-pop");
+    void rightBubble.offsetWidth;
+    rightBubble.classList.add("bubble-pop");
+  }
+
+  triggerWrongEntry();
 }
 
 function clearError() {
-  errorMsg.style.display = "none";
-  errorMsg.textContent = "";
+  if (errorMsg) {
+    errorMsg.style.display = "none";
+    errorMsg.textContent = "";
+  }
+  if (rightBubble) {
+    rightBubble.style.display = "none";
+    rightBubble.textContent = "";
+  }
 }
 
 function setLoading(isLoading) {
@@ -52,73 +75,79 @@ function setLoading(isLoading) {
   loginBtn.textContent = isLoading ? "Logging in..." : "Login";
 }
 
-// Store session so dashboard can read it
+// =============================
+// Session Storage (UNCHANGED)
+// =============================
 function saveSession({ username, password, role, message }) {
+  const basicToken = btoa(`${username}:${password}`);
+
   const session = {
     username,
     role,
     message: message || "Login successful",
     success: true,
     loginTime: new Date().toISOString(),
+    basicToken
   };
 
-  // ✅ Keep your existing localStorage session (for your app usage)
   localStorage.setItem("smp_session", JSON.stringify(session));
 
-  // ✅ IMPORTANT: Dashboard code expects sessionStorage keys
   sessionStorage.setItem("auth_username", username);
   sessionStorage.setItem("auth_password", password);
   sessionStorage.setItem("auth_role", role);
 
-  // ✅ Student dashboard uses studentId (we keep same as username like S1001)
   if (role === "STUDENT") {
     sessionStorage.setItem("studentId", username);
   } else {
     sessionStorage.removeItem("studentId");
   }
 
-  console.log("✅ Session saved for dashboard:", { username, role });
+  console.log("✅ Session saved:", { username, role });
 }
 
+// =============================
+// ✅ POPUP FIX: send Authorization header
+// =============================
 async function loginToBackend(username, password) {
   const url = "/auth/login";
 
+  // ✅ prevents browser Basic-Auth popup when backend sends 401 + WWW-Authenticate
+  const authHeader = `Basic ${btoa(`${username}:${password}`)}`;
+
   const res = await fetch(url, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": authHeader,     // ✅ IMPORTANT
+      "X-Requested-With": "fetch"      // ✅ helps some setups avoid auth dialog
+    },
+    credentials: "omit",
     body: JSON.stringify({ username, password }),
   });
 
-  // 🔴 INVALID CREDENTIALS (401)
   if (res.status === 401) {
-    throw new Error("Invalid Credentials 🐼❌");
+    throw new Error("Invalid Username or Password ❌");
   }
 
-  // 🔴 OTHER ERRORS
   if (!res.ok) {
     const rawErr = await res.text().catch(() => "");
     throw new Error(rawErr || "Login failed. Please try again.");
   }
 
-  // ✅ SUCCESS
   const raw = await res.text();
 
-  // If backend returns empty body
   if (!raw) {
     return {
       success: true,
       username,
-      // if server doesn't return role, we use selected role
       role: getSelectedRole(),
       message: "Login successful",
     };
   }
 
-  // If backend returns JSON
   try {
     return JSON.parse(raw);
   } catch {
-    // If backend returns plain text
     return {
       success: true,
       username,
@@ -129,34 +158,16 @@ async function loginToBackend(username, password) {
 }
 
 function redirectAfterLogin(role) {
-  console.log("✅ Redirecting role:", role);
-
-  if (role === "TEACHER") {
-    window.location.href = "/teacher/teacher-dashboard.html";
-    return;
-  }
-
-  if (role === "STUDENT") {
-    window.location.href = "/student/student-dashboard.html";
-    return;
-  }
-
-  // Optional: If you later add admin/office dashboards
-  if (role === "ADMIN") {
-    window.location.href = "/admin/admin-dashboard.html";
-    return;
-  }
-
-  if (role === "OFFICE") {
-    window.location.href = "/office/office-dashboard.html";
-    return;
-  }
-
-  // fallback
+  if (role === "TEACHER") return (window.location.href = "/teacher/teacher-dashboard.html");
+  if (role === "STUDENT") return (window.location.href = "/student/student-dashboard.html");
+  if (role === "ADMIN") return (window.location.href = "/admin/admin-dashboard.html");
+  if (role === "OFFICE") return (window.location.href = "/office/office-dashboard.html");
   window.location.href = "/student/student-dashboard.html";
 }
 
-// Submit handler
+// =============================
+// Submit Handler
+// =============================
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
   clearError();
@@ -166,7 +177,7 @@ form.addEventListener("submit", async (e) => {
   const selectedRole = getSelectedRole();
 
   if (!username || !pwd) {
-    showError("Please enter username and password.");
+    showRightBubble("Please enter username and password.");
     return;
   }
 
@@ -174,27 +185,25 @@ form.addEventListener("submit", async (e) => {
     setLoading(true);
 
     const result = await loginToBackend(username, pwd);
-
     const backendRole = result.role || selectedRole;
 
-    // Role mismatch check (your existing logic)
     if (backendRole !== selectedRole) {
-      showError(`You selected ${selectedRole}, but this account is ${backendRole}`);
+      showRightBubble(`You selected ${selectedRole}, but this account is ${backendRole}.`);
       return;
     }
 
-    // ✅ Save session for dashboard + keep your local storage session
     saveSession({
       username: result.username || username,
-      password: pwd, // needed for Basic Auth calls from dashboard
+      password: pwd,
       role: backendRole,
       message: result.message || "Login successful",
     });
 
     redirectAfterLogin(backendRole);
+
   } catch (err) {
     console.error("❌ Login error:", err);
-    showError(err instanceof Error ? err.message : "Login failed");
+    showRightBubble(err instanceof Error ? err.message : "Login failed");
   } finally {
     setLoading(false);
   }

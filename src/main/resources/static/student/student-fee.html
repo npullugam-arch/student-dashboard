@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fee Overview • EduConnect</title>
+
+  <!-- Professional UI font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="student-fee.css" />
+</head>
+
+<body>
+  <div class="page">
+    <div class="header">
+      <div class="title-block">
+        <h1>Fee Overview</h1>
+        <p>Your fee status, dues and next payment date</p>
+      </div>
+
+      <div class="actions">
+        <div class="chip" id="chipStudent">STUDENT • -</div>
+
+        <!-- optional: keep back button -->
+         <p id="btnBack" aria-lable="Go back"></p>
+        <!-- <button class="btn" id="btnBack" type="button" aria-label="Go back">
+          <span aria-hidden="true">←</span> Back
+        </button> -->
+      </div>
+    </div>
+
+    <div class="panel" id="root">
+      <!-- JS will render content here -->
+      <div class="muted">Loading fee overview...</div>
+    </div>
+  </div>
+
+  <script src="student-fee.js"></script>
+</body>
+</html>

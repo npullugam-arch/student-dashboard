@@ -38,10 +38,16 @@ public class Teacher {
     @Column(length = 500)
     private String profileUrl;
 
-    // Teacher teaches ONE main subject (your rule)
+    /*
+     * ✅ IMPORTANT:
+     * Teacher can teach MULTIPLE subjects now.
+     * Subjects are stored in TeacherAssignment -> StandardSubject mapping.
+     *
+     * So "subject" here is OPTIONAL (only if you want to show a "main subject").
+     */
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 30)
-    private Subject subject;
+    @Column(nullable = true, length = 30)
+    private Subject subject; // optional
 
     private LocalDate dateOfBirth;
 

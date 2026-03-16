@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EduConnect - FAQs</title>
+
+    <!-- Optional font similar to modern UI -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #F4F3FF;
+            /* light lavender */
+            --primary: #6366F1;
+            /* purple */
+            --pink: #EC4899;
+            /* badge pink */
+            --card: #FFFFFF;
+            --text: #111827;
+            /* near-black */
+            --muted: #6B7280;
+            /* gray */
+            --shadow: 0 10px 25px rgba(17, 24, 39, 0.08);
+            --border: rgba(99, 102, 241, 0.14);
+            --radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        /* Page container (matches centered content area look) */
+        .page {
+            max-width: 920px;
+            margin: 44px auto;
+            padding: 0 18px;
+        }
+
+        .title {
+            margin: 0 0 6px;
+            font-size: 30px;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: 0.2px;
+        }
+
+        .subtitle {
+            margin: 0 0 18px;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        /* FAQ list */
+        .faq {
+            display: grid;
+            gap: 12px;
+        }
+
+        .faq-item {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        /* Clickable header row */
+        .faq-q {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 16px 18px;
+            border: 0;
+            background: transparent;
+            color: var(--text);
+            cursor: pointer;
+            text-align: left;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .faq-q:focus {
+            outline: 2px solid rgba(99, 102, 241, 0.25);
+            outline-offset: 2px;
+            border-radius: var(--radius);
+        }
+
+        /* Chevron (same idea as screenshot) */
+        .chev {
+            flex: 0 0 auto;
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+            border: 1px solid rgba(17, 24, 39, 0.06);
+            background: rgba(99, 102, 241, 0.06);
+            transition: transform 220ms ease, background 220ms ease;
+        }
+
+        .chev svg {
+            width: 18px;
+            height: 18px;
+            fill: none;
+            stroke: rgba(17, 24, 39, 0.75);
+            stroke-width: 2.4;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* Answer panel */
+        .faq-a {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 260ms ease;
+        }
+
+        .faq-a-inner {
+            padding: 0 18px 16px;
+            color: rgba(17, 24, 39, 0.78);
+            font-size: 13px;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        .faq-a-inner ul {
+            margin: 10px 0 0;
+            padding-left: 18px;
+        }
+
+        .faq-a-inner li {
+            margin: 6px 0;
+        }
+
+        /* Open state */
+        .faq-item.open .faq-a {
+            max-height: 420px;
+            /* enough for most answers */
+        }
+
+        .faq-item.open .chev {
+            transform: rotate(180deg);
+            background: rgba(99, 102, 241, 0.10);
+        }
+
+        /* Small helper badge (optional) */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            background: rgba(236, 72, 153, 0.10);
+            border: 1px solid rgba(236, 72, 153, 0.22);
+            color: rgba(236, 72, 153, 0.95);
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 560px) {
+            .title {
+                font-size: 24px;
+            }
+
+            .faq-q {
+                padding: 14px 14px;
+            }
+
+            .faq-a-inner {
+                padding: 0 14px 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="page">
+        <h1 class="title">Frequently Asked Questions</h1>
+        <p class="subtitle">Find answers to common questions</p>
+
+        <div class="badge">Help & Support • FAQs</div>
+
+        <section class="faq" id="faq">
+            <!-- Your original 5 + more professional FAQs -->
+
+            <article class="faq-item open">
+                <button class="faq-q" type="button">
+                    <span>How do I submit my assignments?</span>
+                    <span class="chev" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M6 9l6 6 6-6" />
+                        </svg>
+                    </span>
+                </button>
+                <div class="faq-a">
+                    <div class="faq-a-inner">
+                        Go to <b>Assignments</b> → choose the subject → open the assignment → click <b>Upload / Submit</b>.
+                        <ul>
+                            <li>Attach your file(s) (PDF/DOC/Images as allowed).</li>
+                            <li>Check the deadline and instructions before submitting.</li>
+                            <li>After submission, confirm the status shows <b>Submitted</b>.</li>
+                        </ul>
+                    </div>
+                </div>
+            </article>
+
+            <article class="faq-item">
+                <button class="faq-q" type="button">
+                    <span>How can I check my attendance?</span>
+                    <span class="chev" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M6 9l6 6 6-6" />
+                        </svg>
+                    </span>
+                </button>
+                <div class="faq-a">
+                    <div class="faq-a-inner">
+                        Go to <b>Academics</b> → <b>Attendance</b>.
+                        <ul>
+                            <li>View day-wise and subject-wise attendance.</li>
+                            <li>Use filters (month/subject) to find specific records.</li>
+                            <li>If something looks wrong, raise a request via <b>Contact Support</b>.</li>
+                        </ul>
+                    </div>
+                </div>
+            </article>
+
+            <article class="faq-item">
+                <button class="faq-q" type="button">
+                    <span>Where can I find my exam results?</span>
+                    <span class="chev" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M6 9l6 6 6-6" />
+                        </svg>
+                    </span>
+                </button>
+                <div class="faq-a">
+                    <div class="faq-a-inner">
+                        Go to <b>Examination</b> → <b>Results</b>.
+                        <ul>
+                            <li>Select the exam/term to view marks and grade details.</li>
+                            <li>Download the report if your portal supports it.</li>
+                            <li>If results aren’t visible, wait for the official publish time.</li>
+                        </ul>
+                    </div>
+                </div>
+            </article>
+
+            <article class="faq-item">
+                <button class="faq-q" type="button">
+                    <span>How do I apply for leave?</span>
+                    <span class="chev" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M6 9l6 6 6-6" />
+                        </svg>
+                    </span>
+                </button>
+                <div class="faq-a">
+                    <div class="faq-a-inner">
+                        Go to <b>Diary</b> or <b>Academics</b> → <b>Leave Application</b> (based on your menu).
+                        <ul>
+                            <li>Select leave dates and mention a clear reason.</li>
+                            <li>Attach proof if required (medical note, event letter).</li>
+                            <li>Track approval status under <b>Leave History</b>.</li>
+                        </ul>
+                    </div>
+                </div>
+            </article>
+
+            <article class="faq-item">
+                <button class="faq-q" type="button">
+                    <span>Can I message my teachers?</span>
+                    <span class="chev" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M6 9l6 6 6-6" />
+                        </svg>
+                    </span>
+                </button>
+                <div class="faq-a">
+                    <div class="faq-a-inner">
+                        Yes. Go to <b>Notifications</b> or <b>Academics</b> → <b>Messages</b> (if enabled).
+                        <ul>
+                            <li>Select the teacher and write a short, respectful message.</li>
+                            <li>Attach files only if needed (screenshots/docs).</li>
+                            <li>Keep messages topic-specific for faster responses.</li>
+                        </ul>
+                    </div>
+                </div>
+            </article>
+
+            <!-- More FAQs (professional student portal) -->
+
+            <article class="faq-item">
+                <button class="faq-q" type="button">
+                    <span>I uploaded the wrong assignment file. How can I resubmit?</span>
+                    <span class="chev" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M6 9l6 6 6-6" />
+                        </svg>
+                    </span>
+                </button>
+                <div class="faq-a">
+                    <div class="faq-a-inner">
+                        Open <b>Assignments</b> → select the assignment → check for <b>Edit Submission / Resubmit</b>.
+                        <ul>
+                            <li>If resubmission is allowed, replace the file and submit again.</li>
+                            <li>If not allowed, contact your teacher or support before the deadline.</li>
+                        </ul>
+                    </div>
+                </div>
+            </article>
+
+            <article class="faq-item">
+                <button class="faq-q" type="button">
+                    <span>My assignment upload fails. What should I do?</span>
+                    <span class="chev" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M6 9l6 6 6-6" />
+                        </svg>
+                    </span>
+                </button>
+                <div class="faq-a">
+                    <div class="faq-a-inner">
+                        Try these quick fixes:
+                        <ul>
+                            <li>Check file size and format limits (PDF/DOC/JPG, etc.).</li>
+                            <li>Rename the file (avoid special characters like #, %, &).</li>
+                            <li>Switch network or retry after refreshing the page.</li>
+                            <li>If it still fails, share a screenshot via <b>Contact Support</b>.</li>
+                        </ul>
+                    </div>
+                </div>
+            </article>
+
+            <article class="faq-item">
+                <button class="faq-q" type="button">
+                    <span>How can I view my class timetable?</span>
+                    <span class="chev" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M6 9l6 6 6-6" />
+                        </svg>
+                    </span>
+                </button>
+                <div class="faq-a">
+                    <div class="faq-a-inner">
+                        Go to <b>Time Table</b>.
+                        <ul>
+                            <li>Use day/week view to check lecture timings.</li>
+                            <li>Verify room/online link details if provided.</li>
+                            <li>If a class is missing, report it to your coordinator.</li>
+                        </ul>
+                    </div>
+                </div>
+            </article>
+
+            <article class="faq-item">
+                <button class="faq-q" type="button">
+                    <span>Where can I see upcoming exams and exam schedule?</span>
+                    <span class="chev" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M6 9l6 6 6-6" />
+                        </svg>
+                    </span>
+                </button>
+                <div class="faq-a">
+                    <div class="faq-a-inner">
+                        Go to <b>Examination</b> → <b>Schedule</b>.
+                        <ul>
+                            <li>Check subject, date, time, and venue.</li>
+                            <li>Download/print the schedule if available.</li>
+                            <li>Monitor notifications for last-minute changes.</li>
+                        </ul>
+                    </div>
+                </div>
+            </article>
+
+            <article class="faq-item">
+                <button class="faq-q" type="button">
+                    <span>How do I pay fees and download the receipt?</span>
+                    <span class="chev" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M6 9l6 6 6-6" />
+                        </svg>
+                    </span>
+                </button>
+                <div class="faq-a">
+                    <div class="faq-a-inner">
+                        Go to <b>Payments</b> → choose the fee type → proceed to payment.
+                        <ul>
+                            <li>After success, download the receipt from <b>Payment History</b>.</li>
+                            <li>If money is deducted but status is pending, wait a while and refresh.</li>
+                            <li>If it doesn’t update, contact support with transaction details.</li>
+                        </ul>
+                    </div>
+                </div>
+            </article>
+
+            <article class="faq-item">
+                <button class="faq-q" type="button">
+                    <span>How do I reset or change my password?</span>
+                    <span class="chev" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M6 9l6 6 6-6" />
+                        </svg>
+                    </span>
+                </button>
+                <div class="faq-a">
+                    <div class="faq-a-inner">
+                        Use <b>Forgot Password</b> on the login page (or Profile → Security if available).
+                        <ul>
+                            <li>Verify OTP sent to your registered email/phone.</li>
+                            <li>Create a strong password (mix letters, numbers, symbols).</li>
+                            <li>Log out and log in again to confirm changes.</li>
+                        </ul>
+                    </div>
+                </div>
+            </article>
+
+            <article class="faq-item">
+                <button class="faq-q" type="button">
+                    <span>How do I update my profile information?</span>
+                    <span class="chev" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M6 9l6 6 6-6" />
+                        </svg>
+                    </span>
+                </button>
+                <div class="faq-a">
+                    <div class="faq-a-inner">
+                        Go to <b>Profile</b> (top-right avatar) → <b>Edit Profile</b>.
+                        <ul>
+                            <li>Update allowed fields (address, guardian details, etc.).</li>
+                            <li>Some fields may be locked—request changes via support if needed.</li>
+                        </ul>
+                    </div>
+                </div>
+            </article>
+
+            <article class="faq-item">
+                <button class="faq-q" type="button">
+                    <span>How do I enable notifications and avoid missing updates?</span>
+                    <span class="chev" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M6 9l6 6 6-6" />
+                        </svg>
+                    </span>
+                </button>
+                <div class="faq-a">
+                    <div class="faq-a-inner">
+                        Go to <b>Notifications</b> → <b>Settings</b> (if available).
+                        <ul>
+                            <li>Enable alerts for assignments, exams, and announcements.</li>
+                            <li>Check that your email/phone is correct in your profile.</li>
+                            <li>Whitelist portal emails to prevent spam filtering.</li>
+                        </ul>
+                    </div>
+                </div>
+            </article>
+
+            <article class="faq-item">
+                <button class="faq-q" type="button">
+                    <span>How does bus tracking work?</span>
+                    <span class="chev" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M6 9l6 6 6-6" />
+                        </svg>
+                    </span>
+                </button>
+                <div class="faq-a">
+                    <div class="faq-a-inner">
+                        Go to <b>Bus Tracking</b>.
+                        <ul>
+                            <li>Choose your route to view live location (if enabled).</li>
+                            <li>ETAs depend on traffic and GPS signal strength.</li>
+                            <li>If tracking is unavailable, it may be turned off outside route timings.</li>
+                        </ul>
+                    </div>
+                </div>
+            </article>
+
+            <article class="faq-item">
+                <button class="faq-q" type="button">
+                    <span>What should I do if I find incorrect marks/attendance?</span>
+                    <span class="chev" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M6 9l6 6 6-6" />
+                        </svg>
+                    </span>
+                </button>
+                <div class="faq-a">
+                    <div class="faq-a-inner">
+                        Raise a request as soon as possible:
+                        <ul>
+                            <li>Take a screenshot of the issue.</li>
+                            <li>Message your subject teacher (or class teacher).</li>
+                            <li>If unresolved, submit via <b>Contact Support</b> with details (date/subject/exam).</li>
+                        </ul>
+                    </div>
+                </div>
+            </article>
+
+        </section>
+    </main>
+
+    <script>
+        // Professional accordion behavior:
+        // - click to open/close
+        // - only one open at a time
+        (function() {
+            const faqRoot = document.getElementById('faq');
+            const items = Array.from(faqRoot.querySelectorAll('.faq-item'));
+
+            function closeAll(except = null) {
+                items.forEach(it => {
+                    if (it !== except) it.classList.remove('open');
+                });
+            }
+
+            items.forEach(item => {
+                const btn = item.querySelector('.faq-q');
+                btn.addEventListener('click', () => {
+                    const willOpen = !item.classList.contains('open');
+                    closeAll(item);
+                    item.classList.toggle('open', willOpen);
+                });
+            });
+        })();
+    </script>
+</body>
+
+</html>

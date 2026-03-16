@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EduConnect · Exam Timetable</title>
+
+  <!-- Font (as your UI) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="student-exam-timetable.css"/>
+</head>
+
+<body>
+  <!-- Header (same as your first UI) -->
+  <!-- <div class="header">
+    <div class="header-content">
+      <h1>
+        <span class="header-icon">📘</span>
+        Exam time table
+      </h1>
+      <p>Student · Check Exam Timetable</p>
+    </div>
+  </div> -->
+
+  <!-- Main -->
+  <div class="main-content">
+    <div class="exam-selector">
+      <label for="examSelect">Exam</label>
+      <div class="select-wrapper">
+        <select id="examSelect">
+          <option value="">Loading...</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="timetableContent">
+      <!-- filled by JS -->
+    </div>
+
+    <!-- hidden error area (JS will toggle) -->
+    <div id="errBox" class="error-box hidden"></div>
+  </div>
+
+  <script src="student-exam-timetable.js"></script>
+</body>
+</html>

@@ -14,13 +14,12 @@
     crossorigin="anonymous"
   />
 
-  <!-- Your Custom CSS (keep this AFTER bootstrap) -->
+  <!-- Your Custom CSS -->
   <link rel="stylesheet" href="login.css" />
 </head>
 
 <body>
 
-  <!-- Background wrapper (purple area like your screenshot) -->
   <div class="page-bg">
 
     <!-- Panda UI -->
@@ -87,18 +86,22 @@
         <input id="password" placeholder="Password" type="password" required class="form-control y" />
       </div>
 
-      <!-- Error Message -->
+      <!-- ✅ KEEP your existing errorMsg (we will not use it for UI now) -->
       <p id="errorMsg" class="alert" style="display:none;">Invalid Credentials..!!</p>
+
+      <!-- ✅ NEW: Right-side bubble (like demo) -->
+      <p id="pandaRightBubble" class="panda-right-bubble" style="display:none;">
+        Invalid Credentials..!!
+      </p>
 
       <button class="btn button z" type="submit" id="loginBtn">
         Login
       </button>
     </form>
 
-    <!-- Bottom curve line like the screenshot -->
+    <!-- Bottom curve -->
     <div class="bottom-wave">
       <svg viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true">
-        <!-- white wave -->
         <path
           d="M0,70 C240,130 480,10 720,70 C960,130 1200,10 1440,70 L1440,140 L0,140 Z"
           fill="#ffffff"
@@ -108,21 +111,17 @@
 
   </div>
 
-  <!-- Footer area under the curve (like screenshot info) -->
   <footer class="site-footer back">
     <div class="footer-inner back">
       <div class="footer-brand back mt-2">Veltrixis(OPC). Pvt. Ltd</div>
 
       <p class="footer-text back">
         © 2026 LAZEL, Inc.,"Where Tech Meets Purpose." Dive into a high-energy challenge to solve society’s toughest issues using cutting-edge tools — from AI to blockchain, IoT to data science. It’s more than a hackathon — it’s your launchpad to make change real.
-
-
         <a href="#" class="footer-link">Privacy Policy</a>
       </p>
     </div>
   </footer>
 
   <script src="./login.js"></script>
-
 </body>
 </html>

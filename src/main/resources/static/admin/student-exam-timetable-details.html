@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Student • Exam Timetable Details</title>
+  <link rel="stylesheet" href="student-exam-timetable-details.css"/>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">🧾</div>
+      <div>
+        <div class="title">EduConnect</div>
+        <div class="sub">Student • Exam Timetable Details</div>
+      </div>
+    </div>
+  </header>
+
+  <section class="card">
+    <div class="row">
+      <label class="field">
+        <span>Exam</span>
+        <select class="inp" id="examSelect">
+          <option value="">Loading...</option>
+        </select>
+      </label>
+
+      <label class="field">
+        <span>Class</span>
+        <select class="inp" id="standardSelect">
+          <option value="">Select</option>
+          <option value="0">Nursery</option>
+          <option value="-1">LKG</option>
+          <option value="-2">UKG</option>
+          <option value="1">Class 1</option>
+          <option value="2">Class 2</option>
+          <option value="3">Class 3</option>
+          <option value="4">Class 4</option>
+          <option value="5">Class 5</option>
+          <option value="6">Class 6</option>
+          <option value="7">Class 7</option>
+          <option value="8">Class 8</option>
+          <option value="9">Class 9</option>
+          <option value="10">Class 10</option>
+          <option value="11">Class 11</option>
+          <option value="12">Class 12</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="result" style="margin-top:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+        <b id="examTitle">Timetable</b>
+        <span class="muted" id="statusText"></span>
+      </div>
+
+      <div style="margin-top:10px; overflow:auto;">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Day</th>
+              <th>Subject</th>
+              <th>Start</th>
+              <th>End</th>
+              <th style="text-align:right;">Action</th> <!-- ✅ NEW -->
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+
+        <div id="empty" class="muted empty" style="display:none;">
+          No timetable rows found.
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ✅ NEW: Edit Modal (pure HTML, no CSS file change needed) -->
+<div id="editModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.35); padding:16px; z-index:9999;">
+  <div style="max-width:520px; margin:60px auto; background:#fff; border-radius:14px; padding:16px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:10px;">
+      <b>Edit Schedule</b>
+      <button id="btnCloseModal" class="btn ghost" type="button">✕</button>
+    </div>
+
+    <div style="margin-top:12px; display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+      <label class="field">
+        <span>Date</span>
+        <input class="inp" id="editDate" type="date"/>
+      </label>
+
+      <label class="field">
+        <span>Day</span>
+        <select class="inp" id="editDay">
+          <option value="">Select</option>
+          <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
+          <option>Thursday</option><option>Friday</option><option>Saturday</option>
+        </select>
+      </label>
+
+      <label class="field" style="grid-column:1 / -1;">
+        <span>Subject</span>
+        <input class="inp" id="editSubject" placeholder="Maths"/>
+      </label>
+
+      <label class="field">
+        <span>Start Time</span>
+        <input class="inp" id="editStart" type="time"/>
+      </label>
+
+      <label class="field">
+        <span>End Time</span>
+        <input class="inp" id="editEnd" type="time"/>
+      </label>
+    </div>
+
+    <div id="editErr" class="error hidden" style="margin-top:10px;"></div>
+
+    <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:14px;">
+      <button id="btnCancelEdit" class="btn ghost" type="button">Cancel</button>
+      <button id="btnSaveEdit" class="btn dark" type="button">Save</button>
+    </div>
+  </div>
+</div>
+
+<script src="student-exam-timetable-details.js"></script>
+</body>
+</html>

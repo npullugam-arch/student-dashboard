@@ -1,0 +1,53 @@
+<section class="page" id="answerSheetsRoot">
+  <div class="page-head">
+    <div>
+      <h2 class="h2">Answer Sheets Upload</h2>
+      <p class="muted">Upload PDF per student (Exam + Assigned Class).</p>
+    </div>
+    <button class="btn ghost" id="asReloadBtn" type="button">Reload</button>
+  </div>
+
+  <div class="card">
+    <div class="filters">
+      <label class="field">
+        <span>Exam</span>
+        <select class="inp" id="asExamSelect">
+          <option value="">Loading...</option>
+        </select>
+      </label>
+
+      <label class="field">
+        <span>Assigned Class</span>
+        <select class="inp" id="asClassSelect">
+          <option value="">Loading...</option>
+        </select>
+      </label>
+
+      <div class="hint">
+        <div class="muted" id="asHint">Select exam and class</div>
+        <div class="error" id="asError" style="display:none;"></div>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th style="width:72px;">Photo</th>
+            <th>Student</th>
+            <th style="width:260px;">PDF</th>
+            <th style="width:260px; text-align:right;">Action</th>
+          </tr>
+        </thead>
+        <tbody id="asTbody"></tbody>
+      </table>
+
+      <div id="asEmpty" class="muted empty" style="display:none;">
+        No students found.
+      </div>
+    </div>
+  </div>
+
+  <!-- hidden file picker -->
+  <input type="file" id="asFileInput" accept="application/pdf" style="display:none;" />
+</section>

@@ -1,0 +1,423 @@
+<!-- =========================================
+FRONTEND - SINGLE FILE (HTML + CSS + JS)
+FILE: admin-attendance.html
+========================================= -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin • Attendance Reset</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+  <style>
+    *{box-sizing:border-box;font-family:Poppins,sans-serif}
+    body{margin:0;background:#0b1220;color:#e8ecf7;padding:16px}
+    .wrap{max-width:980px;margin:0 auto}
+    .topbar{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:14px 16px;border-radius:18px;
+      background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)
+    }
+    .brand{display:flex;align-items:center;gap:10px}
+    .logo{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;
+      background:linear-gradient(135deg, rgba(92,156,255,.25), rgba(255,92,172,.18));
+      border:1px solid rgba(255,255,255,.12)
+    }
+    .title{font-weight:800;font-size:16px;line-height:1}
+    .sub{opacity:.75;font-size:12px;margin-top:2px}
+    .right{display:flex;gap:10px;align-items:center}
+    .btn{
+      cursor:pointer;border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.06);color:#e8ecf7;
+      padding:10px 12px;border-radius:14px;font-weight:700;
+      transition:.15s transform, .15s opacity, .15s background;
+    }
+    .btn:hover{transform:translateY(-1px);background:rgba(255,255,255,.09)}
+    .btn.dark{background:rgba(20,30,55,.85)}
+    .btn.ghost{background:transparent}
+    .btn.danger{background:rgba(255,60,90,.18);border-color:rgba(255,60,90,.35)}
+    .btn.danger:hover{background:rgba(255,60,90,.24)}
+    .grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:14px}
+    .card{
+      padding:16px;border-radius:18px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:0 10px 30px rgba(0,0,0,.25);
+    }
+    h2{margin:0 0 6px 0;font-size:16px}
+    .muted{opacity:.75;font-size:12px}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+    .field{display:flex;flex-direction:column;gap:6px}
+    label{font-size:12px;opacity:.85}
+    select,input{
+      width:100%;padding:11px 12px;border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(12,18,32,.7);color:#e8ecf7;
+      outline:none
+    }
+    .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;align-items:center}
+    .hint{
+      margin-top:10px;padding:10px 12px;border-radius:14px;
+      border:1px dashed rgba(255,255,255,.18);
+      background:rgba(255,255,255,.03);
+      font-size:12px;opacity:.9
+    }
+    .msg{
+      margin-top:12px;padding:10px 12px;border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.05);
+      font-size:12px
+    }
+    .msg.ok{border-color:rgba(70,255,150,.35);background:rgba(70,255,150,.08)}
+    .msg.err{border-color:rgba(255,90,110,.35);background:rgba(255,90,110,.08)}
+    .stats{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px
+    }
+    .pill{
+      padding:10px 12px;border-radius:16px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.10);
+      font-size:12px
+    }
+    .pill b{display:block;font-size:14px;margin-bottom:2px}
+    @media (max-width:720px){
+      .row{grid-template-columns:1fr}
+      .stats{grid-template-columns:1fr}
+    }
+
+    /* modal */
+    .modalBackdrop{
+      position:fixed;inset:0;background:rgba(0,0,0,.55);
+      display:none;align-items:center;justify-content:center;padding:16px;
+    }
+    .modal{
+      width:min(520px, 100%);
+      background:#0b1220;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:18px;
+      box-shadow:0 20px 60px rgba(0,0,0,.55);
+      padding:14px;
+    }
+    .modal h3{margin:0 0 6px 0;font-size:16px}
+    .modal .muted{margin-bottom:10px}
+    .modal .actions{justify-content:flex-end}
+  </style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">🧾</div>
+      <div>
+        <div class="title">EduConnect</div>
+        <div class="sub">Admin • Attendance Reset</div>
+      </div>
+    </div>
+    <div class="right">
+      <button class="btn ghost" id="btnBack">← Back</button>
+      <button class="btn dark" id="btnLogout">Logout</button>
+    </div>
+  </header>
+
+  <main class="grid">
+
+    <section class="card">
+      <h2>Reset Attendance (Year-End)</h2>
+      <div class="muted">
+        Select Class & Section → confirm by typing <b>RESET</b> → all attendance becomes zero (calendar clears).
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label for="standardSelect">Class (Standard)</label>
+          <select id="standardSelect">
+            <option value="">Select Class</option>
+
+            <!-- ✅ Added: Nursery / LKG / UKG -->
+            <option value="-2">Nursery</option>
+            <option value="-1">LKG</option>
+            <option value="0">UKG</option>
+
+            <!-- ✅ Existing + Added: 11 & 12 -->
+            <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+            <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+            <option value="7">7</option><option value="8">8</option><option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="sectionInput">Section</label>
+          <!-- ✅ Changed: dropdown -> input -->
+          <input
+            id="sectionInput"
+            placeholder="Enter Section (e.g., A)"
+            autocomplete="off"
+          />
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn danger" id="btnOpenReset" disabled>Reset Attendance</button>
+        <button class="btn" id="btnClear">Clear Selection</button>
+      </div>
+
+      <div class="hint">
+        ✅ This will delete:
+        <ul style="margin:8px 0 0 18px; padding:0">
+          <li>Daily attendance rows (overview calendar + totals)</li>
+          <li>Attendance sessions (lock entries)</li>
+          <li>Subject-wise attendance rows</li>
+        </ul>
+      </div>
+
+      <div id="msg" class="msg" style="display:none"></div>
+
+      <div class="stats" id="stats" style="display:none">
+        <div class="pill"><b id="stDaily">0</b>Daily rows deleted</div>
+        <div class="pill"><b id="stSessions">0</b>Sessions deleted</div>
+        <div class="pill"><b id="stSubject">0</b>Subject rows deleted</div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Modal -->
+<div class="modalBackdrop" id="modalBackdrop">
+  <div class="modal">
+    <h3>Confirm Reset</h3>
+    <div class="muted">
+      This will permanently clear attendance for <b id="confClass"></b>.
+      Type <b>RESET</b> to confirm.
+    </div>
+
+    <div class="field">
+      <label for="confirmInput">Type RESET</label>
+      <input id="confirmInput" placeholder="RESET" />
+    </div>
+
+    <div class="actions">
+      <button class="btn ghost" id="btnCancel">Cancel</button>
+      <button class="btn danger" id="btnConfirmReset">Confirm Reset</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  console.log("✅ admin-attendance.html loaded");
+
+  // ===========================
+  // SESSION (same style)
+  // ===========================
+  function getSession() {
+    try { return JSON.parse(localStorage.getItem("smp_session") || "{}"); }
+    catch { return {}; }
+  }
+
+  function normalizeToken(raw) {
+    if (!raw) return "";
+    let tok = String(raw).trim();
+    if (/^basic\s+/i.test(tok)) tok = tok.replace(/^basic\s+/i, "").trim();
+    const looksBase64 = /^[A-Za-z0-9+/=]+$/.test(tok) && tok.length >= 12;
+    if (!looksBase64 && tok.includes(":")) tok = btoa(tok);
+    return tok;
+  }
+
+  const session = getSession();
+  const basicToken = normalizeToken(session.basicToken);
+
+  if (!session.username || !basicToken || String(session.role || "").toUpperCase() !== "ADMIN") {
+    alert("Session expired. Please login again.");
+    window.location.href = "/login/admin.html";
+    throw new Error("No admin session");
+  }
+
+  // ===========================
+  // HELPERS
+  // ===========================
+  const API_BASE = ""; // same origin
+
+  function authHeaders() {
+    return {
+      "Authorization": `Basic ${basicToken}`,
+      "Content-Type": "application/json"
+    };
+  }
+
+  async function postJson(url, body) {
+    const res = await fetch(url, { method: "POST", headers: authHeaders(), body: JSON.stringify(body) });
+
+    if (res.status === 401) {
+      localStorage.removeItem("smp_session");
+      alert("Session expired. Please login again.");
+      window.location.href = "/login/admin.html";
+      throw new Error("Unauthorized");
+    }
+
+    const text = await res.text().catch(() => "");
+    if (!res.ok) throw new Error(text || `HTTP ${res.status}`);
+
+    try { return JSON.parse(text); }
+    catch { return text; }
+  }
+
+  function showMsg(type, html) {
+    const el = document.getElementById("msg");
+    el.style.display = "block";
+    el.className = "msg " + (type || "");
+    el.innerHTML = html;
+  }
+  function hideMsg() {
+    const el = document.getElementById("msg");
+    el.style.display = "none";
+    el.innerHTML = "";
+  }
+
+  function showStats(daily, sessions, subject) {
+    document.getElementById("stats").style.display = "grid";
+    document.getElementById("stDaily").textContent = String(daily ?? 0);
+    document.getElementById("stSessions").textContent = String(sessions ?? 0);
+    document.getElementById("stSubject").textContent = String(subject ?? 0);
+  }
+  function hideStats() {
+    document.getElementById("stats").style.display = "none";
+  }
+
+  // ===========================
+  // DOM
+  // ===========================
+  const standardSelect = document.getElementById("standardSelect");
+
+  // ✅ Changed: sectionSelect -> sectionInput
+  const sectionInput   = document.getElementById("sectionInput");
+
+  const btnOpenReset   = document.getElementById("btnOpenReset");
+  const btnClear       = document.getElementById("btnClear");
+
+  const modalBackdrop  = document.getElementById("modalBackdrop");
+  const confClass      = document.getElementById("confClass");
+  const confirmInput   = document.getElementById("confirmInput");
+  const btnCancel      = document.getElementById("btnCancel");
+  const btnConfirmReset= document.getElementById("btnConfirmReset");
+
+  // top buttons
+  document.getElementById("btnBack").addEventListener("click", () => history.back());
+  document.getElementById("btnLogout").addEventListener("click", () => {
+    localStorage.removeItem("smp_session");
+    window.location.href = "/login/admin.html";
+  });
+
+  function cleanSection(raw) {
+    // keep backend-compatible: uppercase + trimmed
+    return String(raw || "").trim().toUpperCase();
+  }
+
+  function updateUiState() {
+    const std = standardSelect.value;
+    const sec = cleanSection(sectionInput.value);
+
+    // Reset button enabled only after both are present
+    btnOpenReset.disabled = !(std && sec);
+  }
+
+  standardSelect.addEventListener("change", () => {
+    hideMsg();
+    hideStats();
+    updateUiState();
+  });
+
+  // ✅ Auto-enable/disable on typing section
+  sectionInput.addEventListener("input", () => {
+    hideMsg();
+    hideStats();
+    updateUiState();
+  });
+
+  btnClear.addEventListener("click", () => {
+    standardSelect.value = "";
+    sectionInput.value = "";
+    hideMsg();
+    hideStats();
+    updateUiState();
+  });
+
+  // ===========================
+  // MODAL OPEN/CLOSE
+  // ===========================
+  function openModal() {
+    const std = standardSelect.value;
+    const sec = cleanSection(sectionInput.value);
+    confClass.textContent = `${std}-${sec}`;
+    confirmInput.value = "";
+    modalBackdrop.style.display = "flex";
+    confirmInput.focus();
+  }
+
+  function closeModal() {
+    modalBackdrop.style.display = "none";
+  }
+
+  btnOpenReset.addEventListener("click", () => openModal());
+  btnCancel.addEventListener("click", () => closeModal());
+  modalBackdrop.addEventListener("click", (e) => {
+    if (e.target === modalBackdrop) closeModal();
+  });
+
+  // ===========================
+  // RESET API CALL
+  // ===========================
+  btnConfirmReset.addEventListener("click", async () => {
+    const std = standardSelect.value;
+    const sec = cleanSection(sectionInput.value);
+
+    if (!std || !sec) {
+      showMsg("err", "Select class & section first.");
+      closeModal();
+      return;
+    }
+
+    const confirmText = (confirmInput.value || "").trim();
+    if (confirmText.toUpperCase() !== "RESET") {
+      showMsg("err", "Confirmation failed. Please type <b>RESET</b>.");
+      return;
+    }
+
+    btnConfirmReset.disabled = true;
+    btnConfirmReset.textContent = "Resetting...";
+
+    try {
+      const payload = {
+        standard: Number(std),   // ✅ Nursery=-2, LKG=-1, UKG=0, others normal
+        section: sec,            // ✅ typed by admin
+        confirmText: confirmText
+      };
+
+      const res = await postJson(`${API_BASE}/admin/api/attendance/reset`, payload);
+
+      showMsg("ok", `<b>✅ Done.</b> ${res.message || "Attendance reset completed."}`);
+      showStats(res.deletedDailyAttendance, res.deletedAttendanceSessions, res.deletedSubjectAttendance);
+      closeModal();
+
+    } catch (e) {
+      const msg = String(e && e.message ? e.message : e);
+      showMsg("err", `<b>❌ Failed:</b> ${msg}`);
+    } finally {
+      btnConfirmReset.disabled = false;
+      btnConfirmReset.textContent = "Confirm Reset";
+    }
+  });
+
+  // init
+  updateUiState();
+</script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<div class="diary-scope">
+  <div class="td-wrap">
+    <div class="card">
+      <div class="head">
+        <div>
+          <h2>Class Diary</h2>
+          <div class="muted">Create diary for your class & section (subject-wise)</div>
+        </div>
+        <button class="btn" id="btnRefresh" type="button">Refresh</button>
+      </div>
+
+      <div class="row">
+        <select class="inp" id="classSelect"></select>
+        <input class="inp" id="dateInp" type="date" />
+      </div>
+
+      <div class="row">
+        <div class="muted" id="subPill" style="font-size:12px;"></div>
+      </div>
+
+      <div class="row">
+        <input class="inp" id="topicInp" placeholder="Topic (e.g., Algebra - Linear Equations)" />
+      </div>
+
+      <div class="row">
+        <textarea class="inp" id="workInp" rows="5" placeholder="Work today / Homework / Notes..."></textarea>
+      </div>
+
+      <div class="row row-actions">
+        <button class="btn dark" id="btnSave" type="button">Save Diary</button>
+        <div class="muted" id="saveMsg"></div>
+      </div>
+
+      <div id="err" class="error hidden"></div>
+    </div>
+
+    <div class="card">
+      <div class="head">
+        <h3>My Recent Diary Entries</h3>
+      </div>
+      <div id="list" class="list"><div class="muted">Loading...</div></div>
+    </div>
+  </div>
+</div>

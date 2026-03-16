@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduConnect - Quiz & Fun Zone</title>
+    <link rel="stylesheet" href="quiz.css">
+</head>
+
+<body>
+    <!-- Floating Shapes -->
+    <div class="floating-shapes">
+        <div class="shape shape1"></div>
+        <div class="shape shape2"></div>
+        <div class="shape shape3"></div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <div class="page-header">
+            <h1>📚 Quiz & Fun Zone 🎮</h1>
+            <p>Learn, Practice & Have Fun!</p>
+        </div>
+
+        <!-- Fun Activities Section (MOVED TO TOP) -->
+        <div class="section-title">🎮 Fun Activities</div>
+        <div class="fun-grid">
+            <div class="fun-card" onclick="openModal('memoryModal')">
+                <div class="card-icon">🧠</div>
+                <h3>Memory Match</h3>
+                <p>Challenge your memory with this exciting matching game!</p>
+            </div>
+
+            <div class="fun-card" onclick="openModal('wordScrambleModal')">
+                <div class="card-icon">🔤</div>
+                <h3>Word Scramble</h3>
+                <p>Unscramble the letters to form the correct word!</p>
+            </div>
+
+            <div class="fun-card" onclick="openModal('numberPuzzleModal')">
+                <div class="card-icon">🔢</div>
+                <h3>Number Puzzle</h3>
+                <p>Arrange the numbers in the correct order!</p>
+            </div>
+
+            <div class="fun-card" onclick="openModal('simonSaysModal')">
+                <div class="card-icon">🎵</div>
+                <h3>Simon Says</h3>
+                <p>Remember and repeat the color sequence!</p>
+            </div>
+
+            <div class="fun-card" onclick="openModal('diaryModal')">
+                <div class="card-icon">📔</div>
+                <h3>My Diary</h3>
+                <p>Write your thoughts, dreams, and daily memories!</p>
+            </div>
+
+            <div class="fun-card" onclick="openModal('drawingModal')">
+                <div class="card-icon">🎨</div>
+                <h3>Drawing Board</h3>
+                <p>Unleash your creativity with our digital canvas!</p>
+            </div>
+
+            <div class="fun-card" onclick="openModal('jokeModal')">
+                <div class="card-icon">😂</div>
+                <h3>Joke Time</h3>
+                <p>Laugh out loud with hilarious jokes and puns!</p>
+            </div>
+        </div>
+
+        <!-- Educational Quiz Section (MOVED BELOW) -->
+        <div class="section-title">🎓 Edu Quizzes</div>
+        <div class="quiz-grid">
+            <div class="quiz-card" onclick="openQuiz('math')">
+                <div class="quiz-card-image math-bg">
+                    <span style="position: relative; z-index: 1;">➗</span>
+                </div>
+                <h3>Mathematics</h3>
+            </div>
+
+            <div class="quiz-card" onclick="openQuiz('science')">
+                <div class="quiz-card-image science-bg">
+                    <span style="position: relative; z-index: 1;">🔬</span>
+                </div>
+                <h3>Science</h3>
+            </div>
+
+            <div class="quiz-card" onclick="openQuiz('history')">
+                <div class="quiz-card-image history-bg">
+                    <span style="position: relative; z-index: 1;">🏛️</span>
+                </div>
+                <h3>History</h3>
+            </div>
+
+            <div class="quiz-card" onclick="openQuiz('geography')">
+                <div class="quiz-card-image geography-bg">
+                    <span style="position: relative; z-index: 1;">🌍</span>
+                </div>
+                <h3>Geography</h3>
+            </div>
+
+            <div class="quiz-card" onclick="openQuiz('english')">
+                <div class="quiz-card-image english-bg">
+                    <span style="position: relative; z-index: 1;">📖</span>
+                </div>
+                <h3>English</h3>
+            </div>
+
+            <div class="quiz-card" onclick="openQuiz('gk')">
+                <div class="quiz-card-image gk-bg">
+                    <span style="position: relative; z-index: 1;">🧠</span>
+                </div>
+                <h3>General Knowledge</h3>
+            </div>
+
+            <div class="quiz-card" onclick="openQuiz('physics')">
+                <div class="quiz-card-image physics-bg">
+                    <span style="position: relative; z-index: 1;">⚡</span>
+                </div>
+                <h3>Physics</h3>
+            </div>
+
+            <div class="quiz-card" onclick="openQuiz('chemistry')">
+                <div class="quiz-card-image chemistry-bg">
+                    <span style="position: relative; z-index: 1;">⚗️</span>
+                </div>
+                <h3>Chemistry</h3>
+            </div>
+
+            <div class="quiz-card" onclick="openQuiz('computer')">
+                <div class="quiz-card-image computer-bg">
+                    <span style="position: relative; z-index: 1;">💻</span>
+                </div>
+                <h3>Computer Science</h3>
+            </div>
+
+            <div class="quiz-card" onclick="openQuiz('sports')">
+                <div class="quiz-card-image sports-bg">
+                    <span style="position: relative; z-index: 1;">⚽</span>
+                </div>
+                <h3>Sports</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Educational Quiz Modal -->
+    <div id="educationalQuizModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('educationalQuizModal')">&times;</span>
+            <div class="quiz-container">
+                <div class="quiz-header">
+                    <div class="quiz-progress">
+                        <span>Question <span id="currentQuestion">1</span>/<span id="totalQuestions">10</span></span>
+                        <span>Score: <span id="currentScore">0</span></span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+                <h2 id="quizTitle" style="color: #667eea; margin-bottom: 30px;"></h2>
+                <div class="quiz-question" id="eduQuizQuestion"></div>
+                <div class="quiz-options" id="eduQuizOptions"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Result Modal -->
+    <div id="resultModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('resultModal')">&times;</span>
+            <div class="result-container">
+                <div class="result-emoji" id="resultEmoji"></div>
+                <div class="result-score" id="finalScore"></div>
+                <div class="result-message" id="resultMessage"></div>
+                <button class="btn-primary" onclick="closeModal('resultModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Memory Game Modal -->
+    <div id="memoryModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('memoryModal')">&times;</span>
+            <h2 style="color: #667eea; text-align: center; margin-bottom: 20px;">🧠 Memory Match Game</h2>
+            <div class="score-display">Moves: <span id="moves">0</span> | Matches: <span id="matches">0</span></div>
+            <div class="memory-grid" id="memoryGrid"></div>
+            <button class="btn-primary" onclick="resetMemoryGame()" style="display: block; margin: 20px auto;">New Game</button>
+        </div>
+    </div>
+
+    <!-- Word Scramble Modal -->
+    <div id="wordScrambleModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('wordScrambleModal')">&times;</span>
+            <h2 style="color: #667eea; text-align: center; margin-bottom: 20px;">🔤 Word Scramble</h2>
+            <div class="score-display">Score: <span id="scrambleScore">0</span> | Level: <span id="scrambleLevel">1</span></div>
+            <div style="text-align: center; padding: 30px;">
+                <div style="font-size: 16px; color: #666; margin-bottom: 15px;">Hint: <span id="wordHint"></span></div>
+                <div style="font-size: 48px; color: #667eea; font-weight: bold; margin: 30px 0; letter-spacing: 10px;" id="scrambledWord"></div>
+                <input type="text" id="wordAnswer" placeholder="Type your answer..." style="width: 100%; max-width: 400px; padding: 15px; font-size: 18px; border: 2px solid #667eea; border-radius: 10px; margin-bottom: 20px;" />
+                <div>
+                    <button class="btn-primary" onclick="checkWord()">Submit Answer</button>
+                    <button class="btn-primary" onclick="skipWord()" style="background: #999;">Skip</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Number Puzzle Modal -->
+    <div id="numberPuzzleModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('numberPuzzleModal')">&times;</span>
+            <h2 style="color: #667eea; text-align: center; margin-bottom: 20px;">🔢 Number Puzzle</h2>
+            <div class="score-display">Moves: <span id="puzzleMoves">0</span></div>
+            <div class="number-puzzle-grid" id="numberPuzzleGrid"></div>
+            <button class="btn-primary" onclick="resetNumberPuzzle()" style="display: block; margin: 20px auto;">New Game</button>
+        </div>
+    </div>
+
+    <!-- Simon Says Modal -->
+    <div id="simonSaysModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('simonSaysModal')">&times;</span>
+            <h2 style="color: #667eea; text-align: center; margin-bottom: 20px;">🎵 Simon Says</h2>
+            <div class="score-display">Level: <span id="simonLevel">1</span> | Score: <span id="simonScore">0</span></div>
+            <div class="simon-grid" id="simonGrid">
+                <div class="simon-btn simon-red" data-color="red"></div>
+                <div class="simon-btn simon-blue" data-color="blue"></div>
+                <div class="simon-btn simon-green" data-color="green"></div>
+                <div class="simon-btn simon-yellow" data-color="yellow"></div>
+            </div>
+            <button class="btn-primary" onclick="startSimonGame()" style="display: block; margin: 20px auto;">Start Game</button>
+        </div>
+    </div>
+
+    <!-- Diary Modal -->
+    <div id="diaryModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('diaryModal')">&times;</span>
+            <h2 style="color: #667eea; text-align: center; margin-bottom: 30px;">📔 My Personal Diary</h2>
+            <div class="diary-entry">
+                <input type="text" id="diaryTitle" placeholder="Title of your memory..." />
+                <textarea id="diaryText" placeholder="Write your thoughts, feelings, or memories here..."></textarea>
+                <button class="btn-primary" onclick="saveDiaryEntry()">💾 Save Entry</button>
+            </div>
+            <div class="saved-entries" id="savedEntries"></div>
+        </div>
+    </div>
+
+    <!-- Drawing Modal -->
+    <div id="drawingModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('drawingModal')">&times;</span>
+            <div style="text-align: center;">
+                <h2 style="color: #667eea; margin-bottom: 20px;">🎨 Drawing Board</h2>
+                <div class="color-palette">
+                    <div class="color-btn" style="background: #667eea;" onclick="changeColor('#667eea')"></div>
+                    <div class="color-btn" style="background: #764ba2;" onclick="changeColor('#764ba2')"></div>
+                    <div class="color-btn" style="background: #ff6b6b;" onclick="changeColor('#ff6b6b')"></div>
+                    <div class="color-btn" style="background: #4ecdc4;" onclick="changeColor('#4ecdc4')"></div>
+                    <div class="color-btn" style="background: #ffd93d;" onclick="changeColor('#ffd93d')"></div>
+                    <div class="color-btn" style="background: #95e1d3;" onclick="changeColor('#95e1d3')"></div>
+                    <div class="color-btn" style="background: #f38181;" onclick="changeColor('#f38181')"></div>
+                    <div class="color-btn" style="background: #000000;" onclick="changeColor('#000000')"></div>
+                </div>
+                <canvas id="drawingCanvas" width="500" height="400"></canvas>
+                <div style="margin-top: 20px;">
+                    <button class="btn-primary" onclick="clearCanvas()">🗑️ Clear Canvas</button>
+                    <button class="btn-primary" onclick="saveDrawing()">💾 Save Drawing</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Joke Modal -->
+    <div id="jokeModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('jokeModal')">&times;</span>
+            <h2 style="color: #667eea; text-align: center; margin-bottom: 30px;">😂 Joke Time!</h2>
+            <div style="text-align: center; padding: 30px; font-size: 20px; line-height: 1.8;">
+                <p style="color: #333; margin-bottom: 20px;" id="jokeText"></p>
+            </div>
+            <button class="btn-primary" onclick="getNewJoke()" style="display: block; margin: 0 auto;">🎲 Get Another Joke</button>
+        </div>
+    </div>
+
+    <script src="quiz.js"></script>
+</body>
+
+</html>

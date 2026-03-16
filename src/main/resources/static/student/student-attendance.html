@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Attendance</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="student-attendance.css"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<body>
+
+  <!-- ✅ TOPBAR: only Back + Month dropdown (no heading) -->
+ 
+    <!-- <div class="left">
+      <a class="back" href="/student/student-dashboard.html"></a>
+    </div> -->
+    
+  
+
+  <main class="container">
+
+    <!-- ✅ START FROM HERE: Attendance Tracking -->
+    <div class="progress-container">
+      <div class="progress-header">
+        <h2>Attendance Tracking</h2>
+        <p class="muted" id="progressSub">Loading...</p>
+      </div>
+
+      <div class="circular-progress">
+        <svg width="250" height="250">
+          <defs>
+            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#11998e;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#38ef7d;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+
+          <circle class="progress-circle-bg" cx="125" cy="125" r="100"></circle>
+          <circle class="progress-circle" cx="125" cy="125" r="100"
+                  stroke-dasharray="628" stroke-dashoffset="628"
+                  id="progressCircle"></circle>
+        </svg>
+
+        <div class="progress-text">
+          <div class="percentage" id="progressPercent">0%</div>
+          <div class="label">Overall Attendance</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ✅ Two Stat Cards -->
+    <div class="stats-container">
+      <div class="stat-card">
+        <div class="stat-icon present-icon">✓</div>
+        <div class="stat-number" id="presentDays">0</div>
+        <div class="stat-label">Days Present</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon absent-icon">✗</div>
+        <div class="stat-number" id="absentDays">0</div>
+        <div class="stat-label">Days Absent</div>
+      </div>
+    </div>
+
+    <div class="month-selector-container">
+  
+  <label class="month-label">
+    📅 Select Month
+  </label>
+
+  <div class="month-select-wrapper">
+    <select id="monthSelect" class="month-select">
+      <!-- JS will populate months -->
+    </select>
+
+    <!-- dropdown icon -->
+    <span class="month-icon">▼</span>
+  </div>
+
+</div>
+ 
+
+    <!-- ✅ Calendar (month title appears here, below tracking + cards) -->
+    <div class="calendar-section">
+      <div class="calendar-header">
+        <h2 id="calendarMonth">Month</h2>
+        <div class="calendar-nav">
+          <button id="btnPrev" type="button">← Previous</button>
+          <button id="btnNext" type="button">Next →</button>
+        </div>
+      </div>
+
+      <div id="loading" class="loading">Loading attendance...</div>
+      <div id="error" class="error" style="display:none;"></div>
+
+      <div class="calendar-grid" id="calendarGrid"></div>
+
+      <div id="empty" class="empty" style="display:none;">
+        No attendance records found for this month.
+      </div>
+
+      <div class="legend">
+        <div class="legend-item">
+          <div class="legend-color present"></div><span>Present</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color absent"></div><span>Absent</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color future"></div><span>No Data / Future</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color weekend"></div><span>Sunday</span>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="student-attendance.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

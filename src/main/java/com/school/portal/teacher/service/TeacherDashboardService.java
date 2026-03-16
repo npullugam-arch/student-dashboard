@@ -19,19 +19,23 @@ public class TeacherDashboardService {
     private final StudentCoreRepository studentCoreRepository;
 
     public List<TeacherAssignmentDto> getMyAssignments(String teacherId) {
+
         List<TeacherAssignment> assignments =
-                teacherAssignmentRepository.findByTeacher_TeacherId(teacherId);
+                teacherAssignmentRepository.findByTeacher_TeacherIdAndActiveTrue(teacherId);
 
         return assignments.stream()
                 .map(a -> new TeacherAssignmentDto(
-                        a.getStandard(),
+                        // ✅ standard now comes from standardSubject
+                        a.getStandardSubject().getStandard(),
                         a.getSection(),
-                        a.getSubject().name()
+                        // ✅ subject name now comes from DB subject entity
+                        a.getStandardSubject().getSubject().getName()
                 ))
                 .toList();
     }
 
     public List<StudentListDto> getStudents(Integer standard, String section) {
+
         List<Student> students = studentCoreRepository.findByStandardAndSection(standard, section);
 
         return students.stream()

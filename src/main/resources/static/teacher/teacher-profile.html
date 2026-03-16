@@ -1,0 +1,265 @@
+<div class="panel profile-panel">
+  <div class="panel-header profile-header">
+    <div class="title-wrap">
+      <h2>My Profile</h2>
+      <p>Your complete details</p>
+    </div>
+
+    <div class="header-actions">
+      <span class="status-pill" id="p_statusPill">—</span>
+    </div>
+  </div>
+
+  <div id="profileLoading" class="info">Loading profile...</div>
+  <div id="profileError" class="error" style="display:none;"></div>
+
+  <div class="profile-grid" id="profileGrid" style="display:none; margin-top:14px;">
+
+    <!-- LEFT: MAIN CARD -->
+    <div class="profile-card profile-main">
+      <div class="profile-top">
+        <div class="avatar-wrap">
+          <img
+            id="p_photo"
+            class="avatar-img"
+            src=""
+            alt="Teacher Photo"
+            loading="lazy"
+          />
+          <div id="p_photoFallback" class="avatar-fallback" style="display:none;">?</div>
+        </div>
+
+        <div class="profile-name">
+          <div class="name" id="p_fullName">-</div>
+          <div class="meta">
+            <span class="meta-item">
+              <i class="fa-solid fa-id-card"></i>
+              <span>Teacher ID:</span> <b id="p_teacherId">-</b>
+            </span>
+          </div>
+
+          <div class="chips">
+            <span class="chip chip-primary" id="p_subject">-</span>
+            <span class="chip chip-soft" id="p_experience">Experience: -</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-divider"></div>
+
+      <div class="quick-grid">
+        <div class="quick-item">
+          <div class="q-label"><i class="fa-solid fa-phone"></i> Mobile</div>
+          <div class="q-value" id="p_mobile">-</div>
+        </div>
+        <div class="quick-item">
+          <div class="q-label"><i class="fa-solid fa-envelope"></i> Email</div>
+          <div class="q-value" id="p_email">-</div>
+        </div>
+        <div class="quick-item quick-wide">
+          <div class="q-label"><i class="fa-solid fa-location-dot"></i> Address</div>
+          <div class="q-value" id="p_address">-</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: DETAILS -->
+    <div class="profile-card">
+      <div class="card-title">
+        <i class="fa-solid fa-user"></i>
+        <span>Personal Details</span>
+      </div>
+
+      <div class="detail-list">
+        <div class="detail-row">
+          <div class="d-label">DOB</div>
+          <div class="d-value" id="p_dob">-</div>
+        </div>
+        <div class="detail-row">
+          <div class="d-label">Gender</div>
+          <div class="d-value" id="p_gender">-</div>
+        </div>
+        <div class="detail-row">
+          <div class="d-label">Religion</div>
+          <div class="d-value" id="p_religion">-</div>
+        </div>
+        <div class="detail-row">
+          <div class="d-label">Aadhaar</div>
+          <div class="d-value mono" id="p_aadhaar">-</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="profile-card" id="workDetailsCard">
+      <div class="card-title">
+        <i class="fa-solid fa-briefcase"></i>
+        <span>Work Details</span>
+      </div>
+
+      <div class="detail-list">
+        <div class="detail-row">
+          <div class="d-label">Experience</div>
+          <div class="d-value" id="p_experience2">-</div>
+        </div>
+        <div class="detail-row">
+          <div class="d-label">Status</div>
+          <div class="d-value" id="p_status">-</div>
+        </div>
+        <div class="detail-row">
+          <div class="d-label">Profile URL</div>
+          <div class="d-value">
+            <a id="p_profileLink" href="#" target="_blank" rel="noopener" class="link">Open Photo</a>
+            <span class="muted-inline" id="p_profileUrlText" style="display:none;"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ✅✅ NEW: Change Password section (ONE TIME) -->
+      <div class="profile-divider" style="margin:14px 0;"></div>
+
+      <div id="tpChangeWrap" style="display:none;">
+        <div class="card-title" style="margin-bottom:10px;">
+          <i class="fa-solid fa-lock"></i>
+          <span>Change Password</span>
+        </div>
+
+        <div class="detail-list">
+          <div class="detail-row" style="align-items:flex-start;">
+            <div class="d-label">One Time</div>
+            <div class="d-value">
+              <div style="color:var(--muted, #64748b); font-size:12px; line-height:1.35;">
+                You can update your password only once. After updating, this option will disappear.
+              </div>
+
+              <button id="tpBtnOpen" type="button"
+                style="
+                  margin-top:10px;
+                  border:0;
+                  cursor:pointer;
+                  padding:10px 12px;
+                  border-radius:12px;
+                  font-weight:900;
+                  background:#0f172a;
+                  color:#fff;
+                ">
+                Update Password
+              </button>
+
+              <div id="tpSmallMsg" style="margin-top:8px; font-size:12px; color:var(--muted,#64748b); display:none;">
+                Password updated successfully.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ✅✅ END -->
+    </div>
+
+  </div>
+</div>
+
+<!-- ✅✅ NEW: Change Password Modal (Teacher) -->
+<div id="tpBackdrop" class="tp-backdrop" style="display:none;">
+  <div class="tp-modal" role="dialog" aria-modal="true" aria-labelledby="tpTitle">
+    <div class="tp-head">
+      <div>
+        <h3 class="tp-title" id="tpTitle">Change Password</h3>
+        <p class="tp-sub">You can update password only one time.</p>
+      </div>
+      <button class="tp-close" id="tpClose" type="button" aria-label="Close">×</button>
+    </div>
+
+    <div class="tp-body">
+      <div class="tp-row">
+        <div class="tp-label">New Password</div>
+        <input id="tpNew" class="tp-input" type="password" placeholder="Enter new password"/>
+      </div>
+
+      <div class="tp-row">
+        <div class="tp-label">Confirm New Password</div>
+        <input id="tpConfirm" class="tp-input" type="password" placeholder="Re-enter new password"/>
+      </div>
+
+      <div id="tpErr" class="tp-err" style="display:none;"></div>
+    </div>
+
+    <div class="tp-actions">
+      <button class="tp-btn cancel" id="tpCancel" type="button">Cancel</button>
+      <button class="tp-btn update" id="tpUpdate" type="button">Update Password</button>
+    </div>
+  </div>
+</div>
+
+<!-- ✅✅ Minimal modal + toast styles (no need to touch your css file) -->
+<style>
+  .tp-backdrop{
+    position:fixed; inset:0; background:rgba(2,6,23,.55);
+    display:flex; align-items:center; justify-content:center;
+    z-index:9999; padding:16px;
+  }
+  .tp-modal{
+    width:min(520px, 100%);
+    background:#fff;
+    border-radius:18px;
+    border:1px solid rgba(2,6,23,.12);
+    box-shadow:0 20px 60px rgba(0,0,0,.25);
+    overflow:hidden;
+    animation: tpPop .18s ease-out;
+    font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, Arial;
+  }
+  @keyframes tpPop{from{transform:translateY(10px);opacity:.6}to{transform:none;opacity:1}}
+  .tp-head{
+    padding:14px 16px;
+    display:flex; align-items:center; justify-content:space-between;
+    border-bottom:1px solid rgba(2,6,23,.10);
+    background:linear-gradient(135deg, rgba(79,70,229,.12), rgba(6,182,212,.10));
+  }
+  .tp-title{margin:0; font-size:16px; font-weight:950; color:#0f172a;}
+  .tp-sub{margin:3px 0 0; font-size:12px; color:#475569;}
+  .tp-close{
+    border:0; background:transparent; font-size:22px; cursor:pointer;
+    line-height:1; color:#0f172a; padding:4px 8px;
+  }
+  .tp-body{padding:16px;}
+  .tp-row{display:grid; gap:8px; margin-bottom:12px;}
+  .tp-label{font-size:12px; color:#334155; font-weight:900;}
+  .tp-input{
+    width:100%; padding:12px 12px;
+    border-radius:12px; border:1px solid rgba(2,6,23,.18);
+    outline:none;
+  }
+  .tp-input:focus{border-color:rgba(79,70,229,.75); box-shadow:0 0 0 4px rgba(79,70,229,.18);}
+  .tp-err{
+    margin-top:10px;
+    color:#b91c1c;
+    background:rgba(185,28,28,.08);
+    border:1px solid rgba(185,28,28,.18);
+    padding:10px 12px; border-radius:12px;
+    font-size:12px;
+  }
+  .tp-actions{
+    display:flex; gap:10px; justify-content:flex-end;
+    padding:14px 16px;
+    border-top:1px solid rgba(2,6,23,.10);
+    background:#f8fafc;
+  }
+  .tp-btn{
+    border:0; cursor:pointer; padding:10px 14px; border-radius:12px;
+    font-weight:950;
+  }
+  .tp-btn.cancel{background:#e2e8f0; color:#0f172a;}
+  .tp-btn.update{background:#4f46e5; color:#fff;}
+  .tp-toast{
+    position:fixed;
+    right:16px;
+    bottom:16px;
+    z-index:99999;
+    background:#0f172a;
+    color:#fff;
+    padding:12px 14px;
+    border-radius:14px;
+    box-shadow:0 16px 50px rgba(0,0,0,.25);
+    font-size:13px;
+    max-width:min(520px, 95vw);
+  }
+</style>

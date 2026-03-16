@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student • Leave Application</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="leave.css"/>
+</head>
+
+<body>
+  <!-- Floating Particles (same UI vibe) -->
+  <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+  <div class="particle" style="left: 30%; animation-delay: 2s;"></div>
+  <div class="particle" style="left: 50%; animation-delay: 4s;"></div>
+  <div class="particle" style="left: 70%; animation-delay: 1s;"></div>
+  <div class="particle" style="left: 90%; animation-delay: 3s;"></div>
+
+  <div class="container">
+    <div class="main-content">
+      <!-- LEFT: Subject Teachers (NO SCROLL) -->
+      <div class="teachers-section">
+        <h2 class="section-title">Subject Teachers</h2>
+        <p class="section-sub">Click “Apply” to send leave request to your teacher</p>
+
+        <div class="tools-row">
+          <input id="teacherSearch" class="search-input" placeholder="Search teacher / subject..." />
+          <button class="refresh-btn" id="btnRefreshTeachers" type="button" title="Refresh">
+            ↻
+          </button>
+        </div>
+
+        <div id="teacherList" class="teachers-list">
+          <div class="muted">Loading...</div>
+        </div>
+
+        <div id="teacherErr" class="error hidden"></div>
+      </div>
+
+      <!-- RIGHT: My Leave Requests (ONLY THIS SCROLLS) -->
+      <div class="requests-section">
+        <h2 class="section-title">My Leave Requests</h2>
+        <p class="section-sub">Track your leave application status + teacher remarks</p>
+
+        <div class="tools-row">
+          <div></div>
+          <button class="refresh-btn" id="btnRefreshLeaves" type="button" title="Refresh">
+            ↻
+          </button>
+        </div>
+
+        <div class="leave-requests" id="leaveList">
+          <div class="muted">Loading...</div>
+        </div>
+
+        <div id="leaveErr" class="error hidden"></div>
+
+        <div class="note-legend">
+          <b>Status:</b> PENDING ⏳ • APPROVED ✅ • REJECTED ❌
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal" id="leaveModal">
+    <div class="modal-content">
+      <button class="close-modal" id="btnCloseModal" type="button">×</button>
+
+      <div class="modal-header">
+        <h2>Apply Leave</h2>
+        <p id="modalTeacher">Applying to: —</p>
+      </div>
+
+      <form id="leaveForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label>From Date</label>
+            <input type="date" id="fromDate" required>
+          </div>
+          <div class="form-group">
+            <label>To Date</label>
+            <input type="date" id="toDate" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Purpose</label>
+          <input id="purpose" placeholder="Sick / Function / Personal..." required>
+        </div>
+
+        <div class="form-group">
+          <label>Description / Reason</label>
+          <textarea id="desc" placeholder="Enter leave reason..." required></textarea>
+        </div>
+
+        <div id="formErr" class="error hidden"></div>
+
+        <div class="modal-buttons">
+          <button type="button" class="btn-cancel" id="btnCancel">Cancel</button>
+          <button type="submit" class="btn-submit">Send Leave Application</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="leave.js"></script>
+</body>
+</html>

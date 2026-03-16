@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin • Timetable</title>
+  <link rel="stylesheet" href="/admin/admin-timetable.css"/>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <div class="title">Admin • Time Table</div>
+        <div class="muted">Select class, enter section, add time slots, fill subjects, then save.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="bar">
+        <div class="left">
+          <label>
+            <div class="muted label">Standard</div>
+            <select id="standard" class="inp">
+              <option value="-2">Nursery</option>
+              <option value="-1">LKG</option>
+              <option value="0">UKG</option>
+              <option value="1">Class 1</option>
+              <option value="2">Class 2</option>
+              <option value="3">Class 3</option>
+              <option value="4">Class 4</option>
+              <option value="5">Class 5</option>
+              <option value="6">Class 6</option>
+              <option value="7">Class 7</option>
+              <option value="8">Class 8</option>
+              <option value="9">Class 9</option>
+              <option value="10" selected>Class 10</option>
+              <option value="11">Class 11</option>
+              <option value="12">Class 12</option>
+            </select>
+          </label>
+
+          <label>
+            <div class="muted label">Section</div>
+            <input id="section" class="inp" placeholder="Enter section (e.g., A)" autocomplete="off"/>
+          </label>
+
+          <button class="btn" id="btnLoad" type="button">Load</button>
+          <button class="btn" id="btnAddSlot" type="button">+ Add Time Slot</button>
+        </div>
+
+        <div class="rowTools">
+          <button class="btn dark" id="btnSave" type="button">Save Timetable</button>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="tableWrap">
+          <table id="ttTable">
+            <thead>
+              <tr>
+                <th style="width:150px">Time</th>
+                <th>Monday</th><th>Tuesday</th><th>Wednesday</th>
+                <th>Thursday</th><th>Friday</th><th>Saturday</th>
+              </tr>
+            </thead>
+            <tbody id="ttBody">
+              <tr><td colspan="7" class="muted">Load a class to begin…</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="err" id="err"></div>
+        <div class="ok" id="ok"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/admin/admin-timetable.js"></script>
+</body>
+</html>

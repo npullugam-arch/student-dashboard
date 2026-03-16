@@ -1115,3 +1115,244 @@ body::after {
     background-color: white;
      
 }
+
+
+/* =========================================
+   ✅ FINAL Bubble Fix (Desktop no overlap)
+   Desktop: right side, BELOW role toggle
+   Mobile: on slate (same as before)
+   ========================================= */
+
+/* allow bubble to sit outside form */
+#loginForm{ overflow: visible !important; }
+
+/* shared bubble base */
+#pandaRightBubble.panda-right-bubble{
+  position: absolute !important;
+  z-index: 9999 !important;
+
+  background: #fff;
+  color: #ff0000;
+  font-weight: 900;
+  font-size: 15px;
+  line-height: 1.25;
+
+  padding: 12px 14px;
+  border-radius: 999px;
+
+  box-shadow: 0 10px 22px rgba(0,0,0,0.18);
+  pointer-events: none;
+
+  opacity: 0;
+  transform: scale(0.88);
+  transform-origin: left center;
+  transition: transform 200ms ease, opacity 200ms ease;
+}
+
+/* show on wrong-entry */
+.wrong-entry #pandaRightBubble{
+  opacity: 1 !important;
+  transform: scale(1) !important;
+}
+
+/* little tail */
+#pandaRightBubble.panda-right-bubble::after,
+#pandaRightBubble.panda-right-bubble::before{
+  content:"";
+  position:absolute;
+  background:#fff;
+  border-radius:50%;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+}
+#pandaRightBubble.panda-right-bubble::after{
+  width: 16px; height: 16px;
+  left: -10px; bottom: 8px;
+}
+#pandaRightBubble.panda-right-bubble::before{
+  width: 9px; height: 9px;
+  left: -22px; bottom: -1px;
+}
+
+/* =========================================
+   ✅ DESKTOP / LAPTOP
+   Keep bubble to right of slate, but NOT on role toggle
+   ========================================= */
+@media (min-width: 521px){
+
+  #pandaRightBubble.panda-right-bubble{
+    /* ✅ move bubble BELOW the Student/Teacher toggle area */
+    top: 150px !important;      /* <-- key fix: no overlap with toggle */
+    left: calc(100% + 18px) !important;  /* right side of slate */
+    right: auto !important;
+
+    /* wrap nicely if message is long */
+    max-width: 360px;
+    white-space: normal;
+  }
+
+  /* Optional: make long message look clean */
+  #pandaRightBubble.panda-right-bubble{
+    border-radius: 18px;        /* nicer for multi-line */
+  }
+}
+
+/* =========================================
+   ✅ MOBILE (unchanged behavior)
+   Bubble appears ON the slate
+   ========================================= */
+@media (max-width: 520px){
+  #pandaRightBubble.panda-right-bubble{
+    top: 118px !important;
+    left: 12px !important;
+    right: 12px !important;
+    max-width: none !important;
+
+    border-radius: 18px !important;
+    padding: 10px 12px !important;
+    font-size: 14px !important;
+    text-align: center !important;
+    white-space: normal !important;
+  }
+
+  #pandaRightBubble.panda-right-bubble::after,
+  #pandaRightBubble.panda-right-bubble::before{
+    display:none !important;
+  }
+}
+
+/* ===========================
+   ✅ APPEND THIS AT BOTTOM
+   (Right-side bubble + shake)
+   =========================== */
+
+/* right-side bubble like original demo */
+.panda-right-bubble{
+  position: absolute;
+  right: -180px;     /* same vibe as your demo */
+  top: 55px;         /* near the top of the slate */
+  z-index: 999;
+
+  padding: 26px 22px;
+  border-radius: 50%;
+  background: #fff;
+  color: #f00;
+  font-size: 16px;
+  font-weight: 800;
+
+  box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+
+  opacity: 0;
+  transform: scale(0);
+  transition: 0.25s ease;
+}
+
+/* bubble tail */
+.panda-right-bubble::after,
+.panda-right-bubble::before{
+  content:"";
+  position:absolute;
+  background:#fff;
+  border-radius:50%;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.panda-right-bubble::after{
+  width: 24px; height: 24px;
+  left: -18px; bottom: -8px;
+}
+.panda-right-bubble::before{
+  width: 14px; height: 14px;
+  left: -34px; bottom: -22px;
+}
+
+/* show bubble only during wrong-entry */
+.wrong-entry #pandaRightBubble{
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* smooth pop */
+.bubble-pop{
+  animation: bubblePop 420ms cubic-bezier(.2, 1.6, .2, 1);
+}
+@keyframes bubblePop{
+  0%{ transform: scale(0.7); opacity: 0; }
+  100%{ transform: scale(1); opacity: 1; }
+}
+
+/* improve shake (your existing wrong-entry already shakes form) */
+.wrong-entry{
+  animation: wrong-log 0.35s;
+}
+
+/* mobile: keep bubble inside screen */
+@media (max-width: 520px){
+  .panda-right-bubble{
+    right: 10px;     /* bring inside screen */
+    top: -90px;      /* move above slate */
+    border-radius: 18px;
+    padding: 12px 14px;
+    width: min(250px, 86vw);
+    text-align: left;
+  }
+  .panda-right-bubble::after,
+  .panda-right-bubble::before{
+    display:none;    /* tail looks weird on mobile */
+  }
+}
+
+/* =========================================
+   ✅ Desktop: single-line bubble + higher position
+   ✅ Mobile: keep multi-line on slate (unchanged)
+   ========================================= */
+
+#loginForm{ overflow: visible !important; }
+
+@media (min-width: 521px){
+
+  /* bubble box */
+  #pandaRightBubble.panda-right-bubble{
+    /* ✅ place near top-right of slate */
+    top: -50px !important;                 /* was too low */
+    left: calc(100% + 16px) !important;   /* right side of slate */
+    right: auto !important;
+
+    /* ✅ force single line on big screens */
+    white-space: nowrap !important;
+    width: max-content !important;        /* auto fit text */
+    max-width: 520px !important;          /* safety cap */
+    min-width: 220px !important;          /* prevents skinny bubble */
+
+    /* ✅ nice shape */
+    border-radius: 999px !important;
+    padding: 14px 18px !important;
+    font-size: 15px !important;
+  }
+}
+
+/* ✅ On medium screens, allow wrap (2 lines max) if needed */
+@media (min-width: 521px) and (max-width: 900px){
+  #pandaRightBubble.panda-right-bubble{
+    white-space: normal !important;
+    width: 320px !important;
+    max-width: 360px !important;
+    border-radius: 18px !important;
+  }
+}
+
+/* ✅ Mobile (same behavior: bubble ON slate, wrapping allowed) */
+@media (max-width: 520px){
+  #pandaRightBubble.panda-right-bubble{
+    top: 118px !important;
+    left: 12px !important;
+    right: 12px !important;
+    width: auto !important;
+    max-width: none !important;
+
+    white-space: normal !important;
+    border-radius: 18px !important;
+    padding: 10px 12px !important;
+    font-size: 14px !important;
+    text-align: center !important;
+  }
+}

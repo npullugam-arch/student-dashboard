@@ -1,0 +1,25 @@
+<div class="panel">
+  <div class="panel-header">
+    <h2>Take Daily Attendance</h2>
+    <p>One submission per section per day (locked).</p>
+  </div>
+
+  <div class="attendance-controls">
+    <div class="select">
+      <label>Class</label>
+      <select id="classSelect"></select>
+    </div>
+
+    <div class="select">
+      <label>Date</label>
+      <input type="date" id="dateSelect"/>
+    </div>
+
+    <button class="success" id="submitAttendanceBtn" disabled>Submit Attendance</button>
+  </div>
+
+  <div id="studentsLoading" class="info" style="display:none;">Loading students...</div>
+  <div id="studentsError" class="error" style="display:none;"></div>
+
+  <div class="students" id="studentsList"></div>
+</div>

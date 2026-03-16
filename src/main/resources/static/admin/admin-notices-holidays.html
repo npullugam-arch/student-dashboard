@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Admin • Notices & Holidays</title>
+  <style>
+    :root{
+      --bg:#0b1020;
+      --card:#101a33;
+      --card2:#0f1730;
+      --text:#eaf0ff;
+      --muted:#a9b3d3;
+      --brand:#6c7bff;
+      --good:#2bd576;
+      --bad:#ff4d6d;
+      --stroke:rgba(255,255,255,.10);
+      --shadow:0 18px 70px rgba(0,0,0,.35);
+      --r:18px;
+      --r2:14px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, Arial;
+      background: radial-gradient(1200px 600px at 20% 0%, rgba(108,123,255,.25), transparent 60%),
+                  radial-gradient(900px 500px at 90% 20%, rgba(43,213,118,.12), transparent 60%),
+                  var(--bg);
+      color:var(--text);
+      min-height:100vh;
+    }
+    .wrap{max-width:1200px;margin:0 auto;padding:22px}
+    .topbar{
+      display:flex;align-items:center;justify-content:space-between;gap:14px;
+      padding:16px 18px;border:1px solid var(--stroke);
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border-radius:22px; box-shadow:var(--shadow);
+    }
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{
+      width:46px;height:46px;border-radius:16px;
+      background:linear-gradient(135deg,var(--brand),#9b7bff);
+      display:grid;place-items:center;font-size:20px;
+      box-shadow:0 12px 30px rgba(108,123,255,.25);
+    }
+    .title{font-weight:800;font-size:18px;letter-spacing:.3px}
+    .sub{color:var(--muted);font-size:13px;margin-top:2px}
+    .pill{
+      display:inline-flex;gap:8px;align-items:center;
+      padding:8px 12px;border:1px solid var(--stroke); border-radius:999px;
+      background:rgba(255,255,255,.04); color:var(--muted); font-size:12px;
+    }
+    .btn{
+      border:0;cursor:pointer;
+      padding:10px 12px;border-radius:12px;
+      background:rgba(255,255,255,.08);color:var(--text);
+      border:1px solid var(--stroke);
+      font-weight:700;
+    }
+    .btn.primary{background:linear-gradient(135deg,var(--brand),#9b7bff); border:0}
+    .btn.danger{background:rgba(255,77,109,.15); border:1px solid rgba(255,77,109,.35)}
+    .btn.good{background:rgba(43,213,118,.15); border:1px solid rgba(43,213,118,.35)}
+    .btn:disabled{opacity:.6; cursor:not-allowed}
+    .tabs{display:flex;gap:10px;margin:18px 0}
+    .tab{
+      padding:10px 14px;border-radius:999px;border:1px solid var(--stroke);
+      background:rgba(255,255,255,.04); color:var(--muted); cursor:pointer;
+      font-weight:800;
+    }
+    .tab.active{background:linear-gradient(135deg, rgba(108,123,255,.25), rgba(155,123,255,.18)); color:var(--text)}
+    .grid{display:grid;grid-template-columns: 420px 1fr; gap:16px}
+    @media(max-width:980px){.grid{grid-template-columns:1fr}}
+    .card{
+      border:1px solid var(--stroke);
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border-radius:var(--r); box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .card .head{
+      padding:14px 16px;border-bottom:1px solid var(--stroke);
+      display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+    }
+    .card h2{margin:0;font-size:16px}
+    .muted{color:var(--muted);font-size:13px}
+    .body{padding:14px 16px}
+    label{display:block;font-size:12px;color:var(--muted);margin:10px 0 6px}
+    input, textarea, select{
+      width:100%; padding:10px 12px;border-radius:12px;
+      border:1px solid var(--stroke); background:rgba(0,0,0,.18); color:var(--text);
+      outline:none;
+    }
+    textarea{min-height:120px;resize:vertical}
+    .row{display:grid;grid-template-columns:1fr 1fr; gap:12px}
+    @media(max-width:520px){.row{grid-template-columns:1fr}}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .tableWrap{overflow:auto}
+    table{width:100%;border-collapse:collapse;min-width:760px}
+    th,td{padding:10px 10px;border-bottom:1px solid var(--stroke);vertical-align:top}
+    th{color:var(--muted);text-align:left;font-size:12px}
+    td{font-size:13px}
+    .tag{
+      display:inline-flex;align-items:center;gap:6px;
+      padding:6px 10px;border-radius:999px;border:1px solid var(--stroke);
+      background:rgba(255,255,255,.04); color:var(--muted); font-size:12px;
+    }
+    .tag.p{border-color:rgba(43,213,118,.35); background:rgba(43,213,118,.12); color:#bff5d6}
+    .tag.u{border-color:rgba(255,77,109,.35); background:rgba(255,77,109,.12); color:#ffd0d9}
+    .err{display:none;margin:12px 0;padding:10px 12px;border-radius:14px;
+      background:rgba(255,77,109,.15);border:1px solid rgba(255,77,109,.35);color:#ffd0d9}
+    .ok{display:none;margin:12px 0;padding:10px 12px;border-radius:14px;
+      background:rgba(43,213,118,.15);border:1px solid rgba(43,213,118,.35);color:#bff5d6}
+    .kbtn{padding:7px 10px;border-radius:10px;font-size:12px}
+    .rightTools{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .small{font-size:12px}
+    .split{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .pager{display:flex;gap:10px;align-items:center;justify-content:flex-end;margin-top:10px}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo">🛎️</div>
+      <div>
+        <div class="title">EduConnect Admin</div>
+        <div class="sub">Create & manage notices + holidays</div>
+      </div>
+    </div>
+    <div class="rightTools">
+      <span class="pill" id="authPill">Auth: checking…</span>
+      <button class="btn" id="btnReload" type="button">Reload</button>
+      <button class="btn danger" id="btnLogout" type="button">Logout</button>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="notices" type="button">Notices</button>
+    <button class="tab" data-tab="holidays" type="button">Holidays</button>
+  </div>
+
+  <div id="msgErr" class="err"></div>
+  <div id="msgOk" class="ok"></div>
+
+  <!-- NOTICES -->
+  <div id="tab-notices" class="grid">
+    <div class="card">
+      <div class="head">
+        <div>
+          <h2>Create / Update Notice</h2>
+          <div class="muted">Audience + publish timing</div>
+        </div>
+        <span class="tag" id="noticeModeTag">Mode: Create</span>
+      </div>
+      <div class="body">
+        <input type="hidden" id="noticeId" value=""/>
+
+        <label>Title</label>
+        <input id="nTitle" placeholder="Ex: Parent Meeting on Friday"/>
+
+        <label>Message</label>
+        <textarea id="nMessage" placeholder="Write notice details…"></textarea>
+
+        <label>Audience</label>
+        <select id="nAudience">
+          <option value="ALL">ALL</option>
+          <option value="STUDENTS_ALL">STUDENTS_ALL</option>
+          <option value="TEACHERS_ALL">TEACHERS_ALL</option>
+          <option value="STUDENTS_CLASS_SECTION">STUDENTS_CLASS_SECTION</option>
+          <option value="TEACHERS_CLASS_SECTION">TEACHERS_CLASS_SECTION</option>
+        </select>
+
+        <div class="row">
+          <div>
+            <label>Class Id (for CLASS_SECTION)</label>
+            <input id="nClassId" type="number" placeholder="Ex: 10"/>
+          </div>
+          <div>
+            <label>Section (for CLASS_SECTION)</label>
+            <input id="nSection" placeholder="Ex: A"/>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label>Publish At (YYYY-MM-DDTHH:mm)</label>
+            <input id="nPublishAt" placeholder="2026-02-20T10:30"/>
+          </div>
+          <div>
+            <label>Expire At (optional)</label>
+            <input id="nExpireAt" placeholder="2026-02-28T23:59"/>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label>Published?</label>
+            <select id="nPublished">
+              <option value="false">false</option>
+              <option value="true">true</option>
+            </select>
+          </div>
+          <div></div>
+        </div>
+
+        <div class="actions">
+          <button class="btn primary" id="btnSaveNotice" type="button">Save</button>
+          <button class="btn" id="btnResetNotice" type="button">Reset</button>
+        </div>
+
+        <div class="muted small" style="margin-top:10px">
+          Tip: For CLASS_SECTION audience, classId + section are required.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="head">
+        <div>
+          <h2>Notices List</h2>
+          <div class="muted">Search, publish/unpublish, edit, delete</div>
+        </div>
+        <div class="split">
+          <input id="qNotice" placeholder="Search..." style="width:220px"/>
+          <select id="fPublished" style="width:160px">
+            <option value="">All</option>
+            <option value="true">Published</option>
+            <option value="false">Unpublished</option>
+          </select>
+          <button class="btn" id="btnSearchNotice" type="button">Search</button>
+        </div>
+      </div>
+      <div class="body">
+        <div class="tableWrap">
+          <table>
+            <thead>
+            <tr>
+              <th>ID</th>
+              <th>Title</th>
+              <th>Audience</th>
+              <th>Target</th>
+              <th>Publish</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody id="noticeTbody">
+              <tr><td colspan="7" class="muted">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pager">
+          <button class="btn kbtn" id="nPrev" type="button">Prev</button>
+          <span class="muted small" id="nPageInfo">Page 1</span>
+          <button class="btn kbtn" id="nNext" type="button">Next</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOLIDAYS -->
+  <div id="tab-holidays" class="grid" style="display:none">
+    <div class="card">
+      <div class="head">
+        <div>
+          <h2>Create / Update Holiday</h2>
+          <div class="muted">Single day or date range</div>
+        </div>
+        <span class="tag" id="holidayModeTag">Mode: Create</span>
+      </div>
+      <div class="body">
+        <input type="hidden" id="holidayId" value=""/>
+
+        <label>Name</label>
+        <input id="hName" placeholder="Ex: Maha Shivaratri"/>
+
+        <div class="row">
+          <div>
+            <label>Start Date (YYYY-MM-DD)</label>
+            <input id="hStart" placeholder="2026-03-08"/>
+          </div>
+          <div>
+            <label>End Date (optional)</label>
+            <input id="hEnd" placeholder="2026-03-09"/>
+          </div>
+        </div>
+
+        <label>Description (optional)</label>
+        <textarea id="hDesc" placeholder="Optional notes…"></textarea>
+
+        <label>Active?</label>
+        <select id="hActive">
+          <option value="true">true</option>
+          <option value="false">false</option>
+        </select>
+
+        <div class="actions">
+          <button class="btn primary" id="btnSaveHoliday" type="button">Save</button>
+          <button class="btn" id="btnResetHoliday" type="button">Reset</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="head">
+        <div>
+          <h2>Upcoming Holidays</h2>
+          <div class="muted">Admin can activate/deactivate</div>
+        </div>
+        <div class="split">
+          <input id="hYear" type="number" placeholder="Year (ex: 2026)" style="width:160px"/>
+          <button class="btn" id="btnLoadYear" type="button">Load Year</button>
+          <button class="btn" id="btnLoadUpcoming" type="button">Upcoming</button>
+        </div>
+      </div>
+      <div class="body">
+        <div class="tableWrap">
+          <table style="min-width:720px">
+            <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Dates</th>
+              <th>Active</th>
+              <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody id="holidayTbody">
+              <tr><td colspan="5" class="muted">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="muted small" style="margin-top:10px">
+          Year load shows only active holidays created for that year (by startDate).
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const API_BASE = "http://localhost:8080";
+  const token = () => localStorage.getItem("token") || "";
+  const el = id => document.getElementById(id);
+
+  function showErr(msg){
+    el("msgOk").style.display="none";
+    el("msgErr").style.display="block";
+    el("msgErr").textContent = msg;
+  }
+  function showOk(msg){
+    el("msgErr").style.display="none";
+    el("msgOk").style.display="block";
+    el("msgOk").textContent = msg;
+    setTimeout(()=> el("msgOk").style.display="none", 2500);
+  }
+
+  async function api(path, opts={}){
+    const headers = opts.headers || {};
+    headers["Content-Type"] = "application/json";
+    if (token()) headers["Authorization"] = "Bearer " + token();
+    const res = await fetch(API_BASE + path, {...opts, headers});
+    const text = await res.text();
+    let data = null;
+    try{ data = text ? JSON.parse(text) : null; }catch(e){ data = text; }
+    if(!res.ok){
+      const msg = (data && data.message) ? data.message : (typeof data === "string" ? data : ("HTTP " + res.status));
+      throw new Error(msg);
+    }
+    return data;
+  }
+
+  function toLocalDateTimeInputValue(d=new Date()){
+    // returns YYYY-MM-DDTHH:mm
+    const pad = n => String(n).padStart(2,'0');
+    const yyyy = d.getFullYear();
+    const mm = pad(d.getMonth()+1);
+    const dd = pad(d.getDate());
+    const hh = pad(d.getHours());
+    const mi = pad(d.getMinutes());
+    return `${yyyy}-${mm}-${dd}T${hh}:${mi}`;
+  }
+
+  // Tabs
+  document.querySelectorAll(".tab").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+      const tab = btn.dataset.tab;
+      el("tab-notices").style.display = tab==="notices" ? "grid":"none";
+      el("tab-holidays").style.display = tab==="holidays" ? "grid":"none";
+    });
+  });
+
+  // Auth pill
+  function setAuthPill(){
+    const t = token();
+    el("authPill").textContent = t ? "Auth: token found" : "Auth: token missing";
+  }
+
+  // Logout
+  el("btnLogout").addEventListener("click", ()=>{
+    localStorage.removeItem("token");
+    showOk("Logged out (token removed).");
+    setAuthPill();
+  });
+
+  el("btnReload").addEventListener("click", ()=> init());
+
+  // =========================
+  // Notices Admin
+  // =========================
+  let noticePage = 0;
+  const noticeSize = 8;
+
+  function resetNoticeForm(){
+    el("noticeId").value="";
+    el("nTitle").value="";
+    el("nMessage").value="";
+    el("nAudience").value="ALL";
+    el("nClassId").value="";
+    el("nSection").value="";
+    el("nPublishAt").value = toLocalDateTimeInputValue(new Date());
+    el("nExpireAt").value="";
+    el("nPublished").value="false";
+    el("noticeModeTag").textContent = "Mode: Create";
+  }
+
+  function noticePayloadFromForm(isUpdate){
+    const audience = el("nAudience").value;
+    const classId = el("nClassId").value ? Number(el("nClassId").value) : null;
+    const section = el("nSection").value ? el("nSection").value.trim().toUpperCase() : null;
+
+    const payload = {
+      title: el("nTitle").value.trim(),
+      message: el("nMessage").value.trim(),
+      audienceType: audience,
+      classId: classId,
+      section: section,
+      publishAt: el("nPublishAt").value.trim(),
+      expireAt: el("nExpireAt").value.trim() ? el("nExpireAt").value.trim() : null,
+      published: el("nPublished").value === "true"
+    };
+
+    if(!payload.title || !payload.message) throw new Error("Title and message are required.");
+
+    if((audience === "STUDENTS_CLASS_SECTION" || audience === "TEACHERS_CLASS_SECTION")
+      && (!payload.classId || !payload.section)){
+      throw new Error("For CLASS_SECTION audience, classId and section are required.");
+    }
+    return payload;
+  }
+
+  async function saveNotice(){
+    try{
+      const id = el("noticeId").value;
+      const isUpdate = !!id;
+      const payload = noticePayloadFromForm(isUpdate);
+
+      if(isUpdate){
+        await api(`/admin/notices/${id}`, {method:"PUT", body: JSON.stringify(payload)});
+        showOk("Notice updated.");
+      }else{
+        await api(`/admin/notices`, {method:"POST", body: JSON.stringify(payload)});
+        showOk("Notice created.");
+      }
+      resetNoticeForm();
+      await loadNotices();
+    }catch(e){
+      showErr(e.message);
+    }
+  }
+
+  function renderNoticeRow(n){
+    const target = (n.classId && n.section) ? (`${n.classId}-${n.section}`) : "-";
+    const st = n.published ? `<span class="tag p">Published</span>` : `<span class="tag u">Unpublished</span>`;
+    return `
+      <tr>
+        <td>${n.id}</td>
+        <td><b>${escapeHtml(n.title)}</b><div class="muted small">${escapeHtml(short(n.message, 80))}</div></td>
+        <td><span class="tag">${n.audienceType}</span></td>
+        <td>${target}</td>
+        <td>
+          <div class="small">At: ${fmtDT(n.publishAt)}</div>
+          ${n.expireAt ? `<div class="muted small">Exp: ${fmtDT(n.expireAt)}</div>` : `<div class="muted small">Exp: -</div>`}
+        </td>
+        <td>${st}</td>
+        <td style="white-space:nowrap">
+          <button class="btn kbtn" onclick="editNotice(${n.id})">Edit</button>
+          <button class="btn kbtn ${n.published ? 'danger' : 'good'}" onclick="togglePublish(${n.id}, ${!n.published})">${n.published ? 'Unpublish' : 'Publish'}</button>
+          <button class="btn kbtn danger" onclick="deleteNotice(${n.id})">Delete</button>
+        </td>
+      </tr>
+    `;
+  }
+
+  function escapeHtml(s){
+    return (s||"").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  function short(s,n){ return (s||"").length>n ? (s.slice(0,n-1)+"…") : (s||""); }
+  function fmtDT(s){ return s ? s.replace("T"," ").slice(0,16) : "-"; }
+
+  async function loadNotices(){
+    try{
+      const q = el("qNotice").value.trim();
+      const pub = el("fPublished").value;
+      const params = new URLSearchParams();
+      if(q) params.set("q", q);
+      if(pub) params.set("published", pub);
+      params.set("page", String(noticePage));
+      params.set("size", String(noticeSize));
+
+      const page = await api(`/admin/notices?${params.toString()}`, {method:"GET"});
+      const rows = (page.content || []).map(renderNoticeRow).join("");
+      el("noticeTbody").innerHTML = rows || `<tr><td colspan="7" class="muted">No notices found.</td></tr>`;
+
+      const current = (page.number ?? noticePage) + 1;
+      const totalPages = page.totalPages ?? 1;
+      el("nPageInfo").textContent = `Page ${current} / ${Math.max(1,totalPages)}`;
+
+      el("nPrev").disabled = (page.first === true) || noticePage<=0;
+      el("nNext").disabled = (page.last === true);
+    }catch(e){
+      showErr(e.message);
+      el("noticeTbody").innerHTML = `<tr><td colspan="7" class="muted">Failed to load notices.</td></tr>`;
+    }
+  }
+
+  // expose actions
+  window.editNotice = async function(id){
+    try{
+      // simplest approach: load current page data and find.
+      // Better: add /admin/notices/{id} endpoint. But we keep minimal.
+      // We’ll just prompt user for full edit by selecting row -> using current DOM not reliable.
+      // So we’ll load page 0 size 50 quickly and find it.
+      const page = await api(`/admin/notices?page=0&size=50`, {method:"GET"});
+      const n = (page.content || []).find(x => x.id === id);
+      if(!n) throw new Error("Notice not found in current fetch. Search and try again.");
+
+      el("noticeId").value = n.id;
+      el("nTitle").value = n.title || "";
+      el("nMessage").value = n.message || "";
+      el("nAudience").value = n.audienceType || "ALL";
+      el("nClassId").value = n.classId ?? "";
+      el("nSection").value = n.section ?? "";
+      el("nPublishAt").value = (n.publishAt || "").slice(0,16);
+      el("nExpireAt").value = n.expireAt ? n.expireAt.slice(0,16) : "";
+      el("nPublished").value = String(!!n.published);
+      el("noticeModeTag").textContent = "Mode: Update (ID " + n.id + ")";
+      showOk("Loaded notice into form.");
+    }catch(e){
+      showErr(e.message);
+    }
+  }
+
+  window.togglePublish = async function(id, value){
+    try{
+      await api(`/admin/notices/${id}/publish?value=${value}`, {method:"PATCH"});
+      showOk(value ? "Published." : "Unpublished.");
+      await loadNotices();
+    }catch(e){
+      showErr(e.message);
+    }
+  }
+
+  window.deleteNotice = async function(id){
+    if(!confirm("Delete notice ID " + id + "?")) return;
+    try{
+      await api(`/admin/notices/${id}`, {method:"DELETE"});
+      showOk("Deleted.");
+      await loadNotices();
+    }catch(e){
+      showErr(e.message);
+    }
+  }
+
+  el("btnSaveNotice").addEventListener("click", saveNotice);
+  el("btnResetNotice").addEventListener("click", resetNoticeForm);
+  el("btnSearchNotice").addEventListener("click", ()=>{ noticePage=0; loadNotices(); });
+  el("nPrev").addEventListener("click", ()=>{ noticePage=Math.max(0, noticePage-1); loadNotices(); });
+  el("nNext").addEventListener("click", ()=>{ noticePage=noticePage+1; loadNotices(); });
+
+  // =========================
+  // Holidays Admin
+  // =========================
+  function resetHolidayForm(){
+    el("holidayId").value="";
+    el("hName").value="";
+    el("hStart").value="";
+    el("hEnd").value="";
+    el("hDesc").value="";
+    el("hActive").value="true";
+    el("holidayModeTag").textContent="Mode: Create";
+  }
+
+  function holidayPayloadFromForm(){
+    const p = {
+      name: el("hName").value.trim(),
+      startDate: el("hStart").value.trim(),
+      endDate: el("hEnd").value.trim() ? el("hEnd").value.trim() : null,
+      description: el("hDesc").value.trim() ? el("hDesc").value.trim() : null,
+      active: el("hActive").value === "true"
+    };
+    if(!p.name || !p.startDate) throw new Error("Holiday name and startDate are required.");
+    return p;
+  }
+
+  async function saveHoliday(){
+    try{
+      const id = el("holidayId").value;
+      const isUpdate = !!id;
+      const payload = holidayPayloadFromForm();
+
+      if(isUpdate){
+        await api(`/admin/holidays/${id}`, {method:"PUT", body: JSON.stringify(payload)});
+        showOk("Holiday updated.");
+      }else{
+        await api(`/admin/holidays`, {method:"POST", body: JSON.stringify(payload)});
+        showOk("Holiday created.");
+      }
+      resetHolidayForm();
+      await loadUpcomingHolidays();
+    }catch(e){
+      showErr(e.message);
+    }
+  }
+
+  function renderHolidayRow(h){
+    const dates = h.endDate ? `${h.startDate} → ${h.endDate}` : `${h.startDate}`;
+    const st = h.active ? `<span class="tag p">Active</span>` : `<span class="tag u">Inactive</span>`;
+    return `
+      <tr>
+        <td>${h.id}</td>
+        <td><b>${escapeHtml(h.name)}</b><div class="muted small">${escapeHtml(h.description||"")}</div></td>
+        <td>${dates}</td>
+        <td>${st}</td>
+        <td style="white-space:nowrap">
+          <button class="btn kbtn" onclick="editHoliday(${h.id})">Edit</button>
+          <button class="btn kbtn ${h.active ? 'danger':'good'}" onclick="toggleHoliday(${h.id}, ${!h.active})">${h.active?'Deactivate':'Activate'}</button>
+          <button class="btn kbtn danger" onclick="deleteHoliday(${h.id})">Delete</button>
+        </td>
+      </tr>
+    `;
+  }
+
+  async function loadUpcomingHolidays(){
+    try{
+      const list = await api(`/holidays/upcoming?limit=50`, {method:"GET"});
+      el("holidayTbody").innerHTML = (list||[]).map(renderHolidayRow).join("")
+        || `<tr><td colspan="5" class="muted">No upcoming holidays.</td></tr>`;
+    }catch(e){
+      showErr(e.message);
+      el("holidayTbody").innerHTML = `<tr><td colspan="5" class="muted">Failed to load holidays.</td></tr>`;
+    }
+  }
+
+  async function loadYearHolidays(){
+    try{
+      const year = Number(el("hYear").value || new Date().getFullYear());
+      const list = await api(`/holidays/year/${year}`, {method:"GET"});
+      el("holidayTbody").innerHTML = (list||[]).map(renderHolidayRow).join("")
+        || `<tr><td colspan="5" class="muted">No active holidays found in year ${year}.</td></tr>`;
+      showOk("Loaded year " + year);
+    }catch(e){
+      showErr(e.message);
+    }
+  }
+
+  window.editHoliday = async function(id){
+    try{
+      // no admin list endpoint; simplest: pull year and upcoming and match
+      // We'll fetch upcoming and also year current.
+      const upcoming = await api(`/holidays/upcoming?limit=100`, {method:"GET"});
+      let h = (upcoming||[]).find(x=>x.id===id);
+
+      if(!h){
+        const y = new Date().getFullYear();
+        const yearList = await api(`/holidays/year/${y}`, {method:"GET"});
+        h = (yearList||[]).find(x=>x.id===id);
+      }
+      if(!h) throw new Error("Holiday not found in current fetch.");
+
+      el("holidayId").value = h.id;
+      el("hName").value = h.name || "";
+      el("hStart").value = h.startDate || "";
+      el("hEnd").value = h.endDate || "";
+      el("hDesc").value = h.description || "";
+      el("hActive").value = String(!!h.active);
+      el("holidayModeTag").textContent = "Mode: Update (ID " + h.id + ")";
+      showOk("Loaded holiday into form.");
+    }catch(e){
+      showErr(e.message);
+    }
+  }
+
+  window.toggleHoliday = async function(id, value){
+    try{
+      await api(`/admin/holidays/${id}/active?value=${value}`, {method:"PATCH"});
+      showOk(value ? "Activated." : "Deactivated.");
+      await loadUpcomingHolidays();
+    }catch(e){
+      showErr(e.message);
+    }
+  }
+
+  window.deleteHoliday = async function(id){
+    if(!confirm("Delete holiday ID " + id + "?")) return;
+    try{
+      await api(`/admin/holidays/${id}`, {method:"DELETE"});
+      showOk("Deleted.");
+      await loadUpcomingHolidays();
+    }catch(e){
+      showErr(e.message);
+    }
+  }
+
+  el("btnSaveHoliday").addEventListener("click", saveHoliday);
+  el("btnResetHoliday").addEventListener("click", resetHolidayForm);
+  el("btnLoadUpcoming").addEventListener("click", loadUpcomingHolidays);
+  el("btnLoadYear").addEventListener("click", loadYearHolidays);
+
+  function init(){
+    setAuthPill();
+    resetNoticeForm();
+    resetHolidayForm();
+    loadNotices();
+    loadUpcomingHolidays();
+  }
+
+  init();
+</script>
+</body>
+</html>

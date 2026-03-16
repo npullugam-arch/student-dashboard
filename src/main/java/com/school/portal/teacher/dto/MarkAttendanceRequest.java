@@ -13,6 +13,6 @@ public class MarkAttendanceRequest {
     private String section;
     private String subject; // MATHS
     private String attendanceDate; // YYYY-MM-DD
-
+    
     private List<StudentAttendanceRequest> students;
 }

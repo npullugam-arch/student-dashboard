@@ -2,50 +2,293 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Student Profile</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Portal - Profile</title>
+
   <link rel="stylesheet" href="student-profile.css" />
+
+  <!-- ✅ Minimal modal styling (so no need to edit CSS file) -->
+  <style>
+    .cp-hidden{display:none !important;}
+    .cp-backdrop{
+      position:fixed; inset:0; background:rgba(2,6,23,.55);
+      display:flex; align-items:center; justify-content:center;
+      z-index:9999; padding:16px;
+    }
+    .cp-modal{
+      width:min(520px, 100%);
+      background:#fff;
+      border-radius:18px;
+      border:1px solid rgba(2,6,23,.12);
+      box-shadow:0 20px 60px rgba(0,0,0,.25);
+      overflow:hidden;
+      animation: cpPop .18s ease-out;
+      font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, Arial;
+    }
+    @keyframes cpPop{from{transform:translateY(10px);opacity:.6}to{transform:none;opacity:1}}
+    .cp-head{
+      padding:14px 16px;
+      display:flex; align-items:center; justify-content:space-between;
+      border-bottom:1px solid rgba(2,6,23,.10);
+      background:linear-gradient(135deg, rgba(102,126,234,.12), rgba(118,75,162,.10));
+    }
+    .cp-title{margin:0; font-size:16px; font-weight:800; color:#0f172a;}
+    .cp-sub{margin:3px 0 0; font-size:12px; color:#475569;}
+    .cp-close{
+      border:0; background:transparent; font-size:22px; cursor:pointer;
+      line-height:1; color:#0f172a; padding:4px 8px;
+    }
+    .cp-body{padding:16px;}
+    .cp-row{display:grid; gap:8px; margin-bottom:12px;}
+    .cp-label{font-size:12px; color:#334155; font-weight:700;}
+    .cp-input{
+      width:100%; padding:12px 12px;
+      border-radius:12px; border:1px solid rgba(2,6,23,.18);
+      outline:none;
+    }
+    .cp-input:focus{border-color:rgba(102,126,234,.75); box-shadow:0 0 0 4px rgba(102,126,234,.18);}
+    .cp-err{
+      margin-top:10px;
+      color:#b91c1c;
+      background:rgba(185,28,28,.08);
+      border:1px solid rgba(185,28,28,.18);
+      padding:10px 12px; border-radius:12px;
+      font-size:12px;
+    }
+    .cp-actions{
+      display:flex; gap:10px; justify-content:flex-end;
+      padding:14px 16px;
+      border-top:1px solid rgba(2,6,23,.10);
+      background:#f8fafc;
+    }
+    .cp-btn{
+      border:0; cursor:pointer; padding:10px 14px; border-radius:12px;
+      font-weight:800;
+    }
+    .cp-btn.cancel{background:#e2e8f0; color:#0f172a;}
+    .cp-btn.update{background:#667eea; color:#fff;}
+    .cp-toast{
+      position:fixed; right:16px; bottom:16px; z-index:99999;
+      background:#0f172a; color:#fff; padding:12px 14px;
+      border-radius:14px; box-shadow:0 16px 50px rgba(0,0,0,.25);
+      font-size:13px; max-width:min(520px, 95vw);
+    }
+  </style>
 </head>
+
 <body>
+  <!-- Animated Background -->
+  <div class="bg-animation" aria-hidden="true">
+    <div class="floating-shape shape1"></div>
+    <div class="floating-shape shape2"></div>
+    <div class="floating-shape shape3"></div>
+  </div>
 
-  <div class="profile-container">
+  <div class="container">
 
-    <div class="profile-card">
-      <img id="profilePic" src="/assets/images/default-student.png" alt="Profile" />
-      <h2 id="studentName">Student Name</h2>
-      <p id="studentClass">Class - Section</p>
+    <div class="main-content">
+
+      <!-- Profile Card -->
+      <section class="profile-card">
+        <div class="decorative-circle circle-1" aria-hidden="true"></div>
+        <div class="decorative-circle circle-2" aria-hidden="true"></div>
+
+        <div class="profile-image-wrapper">
+          <div class="profile-image-ring"></div>
+          <img
+            id="profilePic"
+            class="profile-image"
+            src="https://ui-avatars.com/api/?name=Student&size=150&background=667eea&color=fff&bold=true"
+            alt="Student profile picture"
+          />
+        </div>
+
+        <h2 class="student-name" id="studentName">Student Name</h2>
+        <span class="student-class" id="studentClass">Class - Section</span>
+
+        <!-- Optional engaging activity (static for now) -->
+        <div class="activity-feed">
+          <div class="feed-title">
+            Activity <span>Live</span>
+          </div>
+
+          <div class="feed-item" role="button" tabindex="0">
+            <div class="feed-icon">📌</div>
+            <div class="feed-content">
+              <h4>Profile loaded</h4>
+              <p>
+                <span class="feed-badge">Student</span>
+                <span class="feed-time" id="feedTime">Just now</span>
+              </p>
+            </div>
+          </div>
+
+          <!-- <div class="feed-item" role="button" tabindex="0">
+            <div class="feed-icon">📢</div>
+            <div class="feed-content">
+              <h4>Check Notices</h4>
+              <p>
+                <span class="feed-badge">Dashboard</span>
+                <span class="feed-time">Tap to open</span>
+              </p>
+            </div>
+          </div> -->
+
+          <!-- <div class="feed-item" role="button" tabindex="0">
+            <div class="feed-icon">📚</div>
+            <div class="feed-content">
+              <h4>Review Academics</h4>
+              <p>
+                <span class="feed-badge">Courses</span>
+                <span class="feed-time">Tap to open</span>
+              </p>
+            </div>
+          </div> -->
+
+          <!-- ✅✅ NEW: Change Password button (will be hidden automatically after one-time change) -->
+          <div class="feed-item" id="btnChangePwd" role="button" tabindex="0" style="margin-top:8px;">
+            <div class="feed-icon">🔒</div>
+            <div class="feed-content">
+              <h4>Change Password</h4>
+              <p>
+                <span class="feed-badge">One time</span>
+                <span class="feed-time">Tap to update</span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Error message -->
+        <div id="errBox" class="err hidden"></div>
+      </section>
+
+      <!-- Details Section -->
+      <section class="details-section">
+
+        <!-- Personal Details -->
+        <div class="detail-card">
+          <div class="card-header">
+            <div class="card-icon">👤</div>
+            <h3 class="card-title">Personal Details</h3>
+          </div>
+
+          <div class="detail-grid">
+            <div class="detail-item">
+              <div class="detail-label">Student ID</div>
+              <div class="detail-value" id="studentId">—</div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-label">Date of Birth</div>
+              <div class="detail-value" id="dob">—</div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-label">Gender</div>
+              <div class="detail-value" id="gender">—</div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-label">Caste</div>
+              <div class="detail-value" id="caste">—</div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-label">Religion</div>
+              <div class="detail-value" id="religion">—</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Academic Details -->
+        <div class="detail-card">
+          <div class="card-header">
+            <div class="card-icon">📚</div>
+            <h3 class="card-title">Academic Details</h3>
+          </div>
+
+          <div class="detail-grid">
+            <div class="detail-item">
+              <div class="detail-label">Standard</div>
+              <div class="detail-value" id="standard">—</div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-label">Section</div>
+              <div class="detail-value" id="section">—</div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-label">Academic Year</div>
+              <div class="detail-value" id="academicYear">—</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Details -->
+        <div class="detail-card">
+          <div class="card-header">
+            <div class="card-icon">📞</div>
+            <h3 class="card-title">Contact Information</h3>
+          </div>
+
+          <div class="detail-grid">
+            <div class="detail-item">
+              <div class="detail-label">Phone</div>
+              <div class="detail-value" id="phone">—</div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-label">Email</div>
+              <div class="detail-value" id="studentEmail">—</div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-label">Parent Phone</div>
+              <div class="detail-value" id="parentPhone">—</div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-label">Parent Email</div>
+              <div class="detail-value" id="parentEmail">—</div>
+            </div>
+          </div>
+        </div>
+
+      </section>
     </div>
+  </div>
 
-    <div class="details-card">
-      <h3>Personal Details</h3>
-      <div class="grid">
-        <div><b>Student ID:</b> <span id="studentId"></span></div>
-        <div><b>Date of Birth:</b> <span id="dob"></span></div>
-        <div><b>Gender:</b> <span id="gender"></span></div>
-        <div><b>Caste:</b> <span id="caste"></span></div>
-        <div><b>Religion:</b> <span id="religion"></span></div>
+  <!-- ✅✅ NEW: Change Password Modal -->
+  <div id="cpBackdrop" class="cp-backdrop cp-hidden" aria-hidden="true">
+    <div class="cp-modal" role="dialog" aria-modal="true" aria-labelledby="cpTitle">
+      <div class="cp-head">
+        <div>
+          <h3 class="cp-title" id="cpTitle">Change Password</h3>
+          <p class="cp-sub">You can update password only one time.</p>
+        </div>
+        <button class="cp-close" id="cpClose" type="button" aria-label="Close">×</button>
+      </div>
+
+      <div class="cp-body">
+        <div class="cp-row">
+          <div class="cp-label">New Password</div>
+          <input id="cpNew" class="cp-input" type="password" placeholder="Enter new password" />
+        </div>
+
+        <div class="cp-row">
+          <div class="cp-label">Confirm New Password</div>
+          <input id="cpConfirm" class="cp-input" type="password" placeholder="Re-enter new password" />
+        </div>
+
+        <div id="cpErr" class="cp-err cp-hidden"></div>
+      </div>
+
+      <div class="cp-actions">
+        <button class="cp-btn cancel" id="cpCancel" type="button">Cancel</button>
+        <button class="cp-btn update" id="cpUpdate" type="button">Update Password</button>
       </div>
     </div>
-
-    <div class="details-card">
-      <h3>Academic Details</h3>
-      <div class="grid">
-        <div><b>Standard:</b> <span id="standard"></span></div>
-        <div><b>Section:</b> <span id="section"></span></div>
-        <div><b>Academic Year:</b> <span id="academicYear"></span></div>
-      </div>
-    </div>
-
-    <div class="details-card">
-      <h3>Contact Details</h3>
-      <div class="grid">
-        <div><b>Phone:</b> <span id="phone"></span></div>
-        <div><b>Parent Phone:</b> <span id="parentPhone"></span></div>
-        <div><b>Email:</b> <span id="studentEmail"></span></div>
-        <div><b>Parent Email:</b> <span id="parentEmail"></span></div>
-      </div>
-    </div>
-
   </div>
 
   <script src="student-profile.js"></script>

@@ -1,206 +1,509 @@
+<!-- ================================
+✅ UPDATED FULL FILE: student-dashboard.html
+✅ Only change (SAFE / Frontend-only):
+1) Added Offline Guard registration script (inline, no backend change)
+2) Added Service Worker register + offline redirect logic (inside this HTML)
+✅ Your existing layout/iframes/navigation untouched
+================================== -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Student Portal • Dashboard</title>
+  <title>Student Portal - EduConnect</title>
 
-  <link rel="stylesheet" href="/shared/reset.css" />
-  <link rel="stylesheet" href="/shared/variables.css" />
-  <link rel="stylesheet" href="/student/student-dashboard.css" />
+  <link rel="stylesheet" href="student-dashboard.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+
+  <!-- ✅ ADD: Edge-to-edge iframe mode styles (NO backend impact) -->
+  <style>
+    html, body { height: 100%; }
+
+    /* ✅ iframe-mode: remove card look */
+    body.iframe-mode .content-area { padding:0 !important; }
+    body.iframe-mode .page.active{
+      padding:0 !important;
+      margin:0 !important;
+      background:transparent !important;
+      border-radius:0 !important;
+      box-shadow:none !important;
+    }
+
+    /* ✅ IMPORTANT: height chain so iframe can fill correctly */
+    body.iframe-mode .main-wrapper{
+      height: 100vh !important;
+      overflow: hidden !important;
+    }
+
+    body.iframe-mode .content-area{
+      height: calc(100vh - var(--topbar-h, 72px)) !important;
+      overflow: hidden !important;      /* ✅ no outer scroll */
+    }
+
+    body.iframe-mode .page.has-iframe.active{
+      height: 100% !important;          /* ✅ key fix */
+      overflow: hidden !important;
+    }
+
+    /* ✅ iframe takes full area and scrolls inside */
+    .embed-frame{
+      width:100% !important;
+      height:100% !important;
+      border:0 !important;
+      border-radius:0 !important;
+      display:block !important;
+    }
+
+    /* ✅ Cursor fix: make clickable things show pointer */
+    button,
+    a,
+    .nav-item,
+    .nav-item a,
+    .menu-toggle,
+    .header-icon,
+    .header-profile,
+    .sidebar-close,
+    .dash-btn,
+    .dash-item {
+      cursor: pointer;
+    }
+
+    /* ✅ Also ensure overlay doesn't block clicks when hidden */
+    .mobile-overlay {
+      pointer-events: none;
+    }
+    .mobile-overlay.active {
+      pointer-events: auto;
+    }
+  </style>
+
+  <!-- ✅ OFFLINE GUARD (Frontend only)
+       - If internet goes OFF -> redirect to /offline.html
+       - When internet returns -> offline.html redirects back
+       - Registers service worker /sw.js (optional but recommended)
+  -->
+  <script>
+    (function () {
+      function rememberUrl() {
+        try {
+          if (navigator.onLine) {
+            sessionStorage.setItem("last_online_url", location.pathname + location.search + location.hash);
+          }
+        } catch {}
+      }
+
+      // Save current URL at start
+      rememberUrl();
+
+      // Keep saving when online
+      window.addEventListener("online", rememberUrl);
+      window.addEventListener("beforeunload", rememberUrl);
+
+      // Redirect immediately when offline
+      window.addEventListener("offline", () => {
+        try {
+          sessionStorage.setItem("last_online_url", location.pathname + location.search + location.hash);
+        } catch {}
+        // ✅ offline page should be public static
+        if (location.pathname !== "/offline.html") {
+          location.href = "/offline.html";
+        }
+      });
+
+      // Register service worker (if file exists)
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/sw.js").catch(() => {});
+      }
+    })();
+  </script>
+
 </head>
 
 <body>
-  <!-- Floating background shapes -->
-  <div class="bg">
-    <span class="blob b1"></span>
-    <span class="blob b2"></span>
-    <span class="blob b3"></span>
-    <span class="spark s1"></span>
-    <span class="spark s2"></span>
-    <span class="spark s3"></span>
-  </div>
+  <div class="mobile-overlay" id="mobileOverlay"></div>
 
-  <header class="topbar">
-    <div class="brand">
-      <div class="logo">🎓</div>
-      <div>
-        <div class="brand-title">Student Portal</div>
-        <div class="brand-sub">Welcome back, Superstar ⭐</div>
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="profile-section">
+        <div class="profile-avatar">
+          <img id="sidebarAvatar"
+               src="https://ui-avatars.com/api/?name=Student&background=667eea&color=fff&size=80"
+               alt="Profile">
+        </div>
+        <div class="profile-info">
+          <h3 id="sidebarStudentName">Student</h3>
+          <p id="sidebarClassSection">Class — - Section —</p>
+        </div>
       </div>
+      <button class="sidebar-close" id="sidebarClose">
+        <i class="fas fa-times"></i>
+      </button>
     </div>
 
-    <div class="top-actions">
-      <div class="chip" id="studentChip">ID: —</div>
-      <button class="btn ghost" id="logoutBtn" title="Logout">Logout</button>
-    </div>
-  </header>
-
-  <main class="layout">
-    <!-- Sidebar -->
-    <aside class="sidebar" id="sidebar">
-      <div class="profile-card">
-        <div class="avatar" aria-hidden="true">🧒</div>
-        <div class="pinfo">
-          <div class="pname" id="studentName">Student</div>
-          <div class="pmeta" id="classMeta">Class: —</div>
-        </div>
-      </div>
-
-      <nav class="nav">
-        <button class="nav-item active" data-tab="faculties">
-          <span class="ico">👩‍🏫</span>
-          <span>My Faculties</span>
-          <span class="pill" id="facCount">0</span>
-        </button>
-
-        <button class="nav-item" data-tab="attendance">
-          <span class="ico">📅</span>
-          <span>Attendance</span>
-          <span class="pill" id="attCount">0</span>
-        </button>
-
-        <button class="nav-item" data-tab="profile">
-          <span class="ico">🪪</span>
-          <span>Profile</span>
-        </button>
-
-        <button class="nav-item" data-tab="help">
-          <span class="ico">🆘</span>
-          <span>Help</span>
-        </button>
-      </nav>
-
-      <div class="sidebar-footer">
-        <div class="tip">
-          <div class="tip-title">Tip ✨</div>
-          <div class="tip-text">Click “Attendance” to see your latest updates instantly.</div>
-        </div>
-      </div>
-    </aside>
-
-    <!-- Content -->
-    <section class="content">
-      <div class="content-header">
-        <div>
-          <h1 id="pageTitle">My Faculties</h1>
-          <p id="pageDesc">Your teachers for your class & section.</p>
-        </div>
-        <div class="content-actions">
-          <button class="btn" id="refreshBtn">Refresh</button>
-          <button class="btn ghost mobile-menu" id="menuBtn">Menu</button>
-        </div>
-      </div>
-
-      <!-- Tabs -->
-      <div class="tabs">
-        <!-- Faculties -->
-        <section class="tab show" id="tab-faculties">
-          <div class="grid" id="facGrid">
-            <!-- cards injected -->
-          </div>
-
-          <div class="empty" id="facEmpty" style="display:none;">
-            <div class="empty-emoji">🕵️‍♂️</div>
-            <div class="empty-title">No faculties found</div>
-            <div class="empty-text">Your class teacher assignments might not be added yet.</div>
-          </div>
-        </section>
-
-        <!-- Attendance -->
-        <section class="tab" id="tab-attendance">
-          <div class="card table-card">
-            <div class="card-head">
-              <div>
-                <div class="card-title">Attendance History</div>
-                <div class="card-sub">Latest first (real-time from database)</div>
-              </div>
-              <div class="filters">
-                <select id="subjectFilter" class="select">
-                  <option value="">All Subjects</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="table-wrap">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Subject</th>
-                    <th>Status</th>
-                    <th>Teacher</th>
-                  </tr>
-                </thead>
-                <tbody id="attTbody">
-                  <!-- rows injected -->
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <div class="empty" id="attEmpty" style="display:none;">
-            <div class="empty-emoji">📭</div>
-            <div class="empty-title">No attendance yet</div>
-            <div class="empty-text">Once your teacher marks attendance, it will appear here.</div>
-          </div>
-        </section>
-
-       <!-- Profile -->
-<section class="tab" id="tab-profile">
-  <div class="card">
-    <div class="card-head">
-      <div>
-        <!-- clickable Profile -->
-        <div class="card-title">
-          <a href="/student/student-profile.html" class="profile-link">
-            My Profile
+    <nav class="sidebar-nav">
+      <ul>
+        <li class="nav-item active" data-page="dashboard">
+          <a href="#dashboard">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
           </a>
+        </li>
+
+        <li class="nav-item expandable">
+          <a href="#academics" class="nav-link">
+            <i class="fas fa-graduation-cap"></i>
+            <span>Academics</span>
+            <i class="fas fa-chevron-down expand-icon"></i>
+          </a>
+
+          <ul class="sub-menu">
+            <li class="nav-item" data-page="attendance">
+              <a href="#attendance">
+                <i class="fas fa-calendar-check"></i>
+                <span>Attendance</span>
+              </a>
+            </li>
+
+            <li class="nav-item" data-page="doubt-clarification">
+              <a href="#doubt-clarification">
+                <i class="fas fa-question-circle"></i>
+                <span>Doubts Clarification</span>
+              </a>
+            </li>
+
+            <li class="nav-item" data-page="courses">
+              <a href="#courses"><i class="fas fa-book"></i> <span>Courses</span></a>
+            </li>
+
+            <li class="nav-item" data-page="short-notes">
+              <a href="#short-notes"><i class="fas fa-sticky-note"></i> <span>Short Notes</span></a>
+            </li>
+
+            <li class="nav-item" data-page="leave-application">
+              <a href="#leave-application">
+                <i class="fas fa-envelope-open-text"></i>
+                <span>Leave-application</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+
+        <li class="nav-item" data-page="timetable">
+          <a href="#timetable"><i class="fas fa-table"></i><span>Time Table</span></a>
+        </li>
+
+        <li class="nav-item expandable">
+          <a href="#examination" class="nav-link">
+            <i class="fas fa-edit"></i>
+            <span>Examination</span>
+            <i class="fas fa-chevron-down expand-icon"></i>
+          </a>
+          <ul class="sub-menu">
+            <li class="nav-item" data-page="hall-ticket">
+              <a href="#hall-ticket"><i class="fas fa-id-card"></i>
+                <span>Hall Ticket</span></a>
+            </li>
+
+            <li class="nav-item" data-page="exam-timetable">
+              <a href="#exam-timetable"><i class="fas fa-clock"></i>
+                <span>Exam Time Table</span></a>
+            </li>
+
+            <li class="nav-item" data-page="exam-results">
+              <a href="#exam-results"><i class="fas fa-trophy"></i>
+                <span>Exam Results</span></a>
+            </li>
+
+            <li class="nav-item" data-page="answer-sheets">
+              <a href="#answer-sheets"><i class="fas fa-file-alt"></i>
+                <span>Corrected AnswerSheets</span></a>
+            </li>
+          </ul>
+        </li>
+
+        <li class="nav-item" data-page="quiz">
+          <a href="#quiz">
+            <i class="fas fa-question-circle"></i>
+            <span>Quiz</span>
+          </a>
+        </li>
+
+        <li class="nav-item expandable">
+          <a href="#payments" class="nav-link">
+            <i class="fas fa-credit-card"></i>
+            <span>Payments</span>
+            <i class="fas fa-chevron-down expand-icon"></i>
+          </a>
+          <ul class="sub-menu">
+            <li class="nav-item" data-page="fee-overview">
+              <a href="#fee-overview"><i class="fas fa-receipt"></i> <span>Fee Overview</span></a>
+            </li>
+
+            <li class="nav-item" data-page="transaction-history">
+              <a href="#transaction-history"><i class="fas fa-history"></i> <span>Transaction History</span></a>
+            </li>
+
+            <li class="nav-item" data-page="fee-payments">
+              <a href="#fee-payments"><i class="fas fa-money-bill-wave"></i> <span>Fee Payments</span></a>
+            </li>
+          </ul>
+        </li>
+
+        <li class="nav-item" data-page="assignments">
+          <a href="#assignments"><i class="fas fa-tasks"></i><span>Assignments</span></a>
+        </li>
+
+        <li class="nav-item" data-page="bus-tracking">
+          <a href="#bus-tracking"><i class="fas fa-bus"></i><span>Bus Tracking</span></a>
+        </li>
+
+        <li class="nav-item expandable">
+          <a href="#help-support" class="nav-link">
+            <i class="fas fa-headset"></i>
+            <span>Help & Support</span>
+            <i class="fas fa-chevron-down expand-icon"></i>
+          </a>
+          <ul class="sub-menu">
+            <li class="nav-item" data-page="faqs"><a href="#faqs"><i class="fas fa-question"></i>
+                <span>FAQs</span></a></li>
+            <li class="nav-item" data-page="contact-support"><a href="#contact-support"><i class="fas fa-phone"></i>
+                <span>Contact Support</span></a></li>
+          </ul>
+        </li>
+
+        <li class="nav-item logout" data-page="logout">
+          <a href="#logout"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Main Content Area -->
+  <div class="main-wrapper">
+    <header class="top-header">
+      <div class="header-left">
+        <button class="menu-toggle" id="menuToggle">
+          <i class="fas fa-bars"></i>
+        </button>
+        <div class="logo">
+          <i class="fas fa-graduation-cap" id="schoolLogoIcon"></i>
+          <span id="schoolNameText">EduConnect</span>
         </div>
-        <div class="card-sub">We will connect this to backend next.</div>
       </div>
-    </div>
 
-    <div class="profile-grid">
-      <div class="pitem"><span>Student ID</span><b id="pStudentId">—</b></div>
-      <div class="pitem"><span>Class</span><b id="pClass">—</b></div>
-      <div class="pitem"><span>Section</span><b id="pSection">—</b></div>
-      <div class="pitem"><span>Email</span><b id="pEmail">—</b></div>
-      <div class="pitem"><span>Parent Phone</span><b id="pParentPhone">—</b></div>
-      <div class="pitem"><span>Status</span><b id="pStatus">—</b></div>
-    </div>
+      <div class="header-right">
+        <button class="header-icon" id="notifBtnStudent" type="button" title="Notifications" style="position:relative;">
+          <i class="fas fa-bell"></i>
+          <span id="notifCountStudent"
+            style="display:none; position:absolute; top:-6px; right:-6px; min-width:18px; height:18px; padding:0 5px;
+                   border-radius:999px; font-size:12px; line-height:18px; text-align:center; font-weight:700;
+                   background:#ff3b30; color:#fff;">0</span>
+        </button>
 
-    <div class="note">
-      ✅ Next backend step: create <code>/student/profile/{studentId}</code> API and fill these.
-    </div>
-  </div>
-</section>
+        <button class="header-profile" id="headerProfileBtn" title="Profile">
+          <img id="headerAvatar"
+            src="https://ui-avatars.com/api/?name=Student&background=667eea&color=fff&size=40" alt="Profile">
+        </button>
+      </div>
+    </header>
 
-        <!-- Help -->
-        <section class="tab" id="tab-help">
-          <div class="card">
-            <div class="card-head">
+    <main class="content-area" id="contentArea">
+
+      <div class="page active" id="dashboard-page">
+        <div class="page-header">
+          <h1 class="page-title" id="welcomeTitle">Welcome Back, Student! 👋</h1>
+          <p class="page-subtitle">Here's what's happening with your learning today</p>
+        </div>
+
+        <!-- ✅ DASHBOARD GRID (Diary + Notices + Holidays) -->
+        <div class="dash-grid">
+
+          <!-- ✅ BIG: Diary (loads diary.html with its own CSS/JS) -->
+          <div class="dash-card dash-card--diary card-3d">
+            <div class="dash-card-head">
               <div>
-                <div class="card-title">Help & Support</div>
-                <div class="card-sub">Quick tips for students</div>
+                <h3 class="dash-title">Class Diary</h3>
+                <p class="dash-sub">Teacher updates for your class & section</p>
               </div>
+              <button class="dash-btn" type="button" id="dashDiaryRefresh">Refresh</button>
             </div>
 
-            <ul class="help-list">
-              <li>📅 Attendance updates appear instantly after teacher submits.</li>
-              <li>👩‍🏫 Faculties list is based on your class/section mapping.</li>
-              <li>🔒 If you see “Unauthorized”, please login again.</li>
-            </ul>
+            <iframe
+              id="dashDiaryFrame"
+              class="dash-iframe"
+              src="/student/diary.html"
+              title="Student Diary"
+              loading="lazy">
+            </iframe>
           </div>
-        </section>
+
+          <!-- ✅ Notices -->
+          <div class="dash-card dash-card--notices card-3d">
+            <div class="dash-card-head">
+              <h3 class="dash-title">Notices</h3>
+              <p class="dash-sub">Latest announcements</p>
+            </div>
+
+            <div class="dash-list" id="dashNoticeBox">
+              <div class="dash-item muted">📌 Loading notices...</div>
+            </div>
+          </div>
+
+          <!-- ✅ Holidays -->
+          <div class="dash-card dash-card--holidays card-3d">
+            <div class="dash-card-head">
+              <h3 class="dash-title">Holidays</h3>
+              <p class="dash-sub">Upcoming holidays</p>
+            </div>
+
+            <div class="dash-list" id="dashHolidayBox">
+              <div class="dash-item muted">🎉 Loading holidays...</div>
+            </div>
+          </div>
+
+        </div>
       </div>
-    </section>
-  </main>
 
-  <!-- Toast -->
-  <div class="toast" id="toast" aria-live="polite"></div>
+      <!-- ✅ IFRAME PAGES -->
+      <div class="page has-iframe" id="attendance-page">
+        <iframe id="attendanceFrame" class="embed-frame" src="about:blank"></iframe>
+      </div>
 
-  <script src="./student-dashboard.js"></script>
+      <div class="page has-iframe" id="courses-page">
+        <iframe id="coursesFrame" class="embed-frame" src="about:blank"></iframe>
+      </div>
 
+      <div class="page has-iframe" id="profile-page">
+        <iframe id="profileFrame" class="embed-frame" src="about:blank"></iframe>
+      </div>
+
+      <div class="page has-iframe" id="doubt-clarification-page">
+        <iframe id="doubtsFrame" class="embed-frame" src="about:blank"></iframe>
+      </div>
+
+      <div class="page has-iframe" id="short-notes-page">
+        <iframe id="shortNotesFrame" class="embed-frame" src="about:blank"></iframe>
+      </div>
+
+      <div class="page has-iframe" id="leave-application-page">
+        <iframe id="leaveFrame" class="embed-frame" src="about:blank"></iframe>
+      </div>
+
+      <div class="page has-iframe" id="timetable-page">
+        <iframe id="timetableFrame" class="embed-frame" src="about:blank"></iframe>
+      </div>
+
+      <div class="page has-iframe" id="notifications-page">
+        <iframe id="notificationsFrame" class="embed-frame" src="about:blank"></iframe>
+      </div>
+
+      <div class="page has-iframe" id="exam-timetable-page">
+        <iframe id="examTimetableFrame" class="embed-frame" src="about:blank"></iframe>
+      </div>
+
+      <div class="page has-iframe" id="exam-results-page">
+        <iframe id="examResultsFrame" class="embed-frame" src="about:blank"></iframe>
+      </div>
+
+      <div class="page has-iframe" id="answer-sheets-page">
+        <iframe id="answerSheetsFrame" class="embed-frame" src="about:blank"></iframe>
+      </div>
+
+      <div class="page has-iframe" id="quiz-page">
+        <iframe id="quizFrame" class="embed-frame" src="about:blank"></iframe>
+      </div>
+
+      <div class="page has-iframe" id="faqs-page">
+        <iframe id="faqsFrame" class="embed-frame" src="about:blank"></iframe>
+      </div>
+
+      <div class="page has-iframe" id="fee-overview-page">
+        <iframe id="feeOverviewFrame" class="embed-frame" src="about:blank"></iframe>
+      </div>
+
+      <div class="page has-iframe" id="transaction-history-page">
+        <iframe id="feeTransactionsFrame" class="embed-frame" src="about:blank"></iframe>
+      </div>
+
+      <div class="page has-iframe" id="hall-ticket-page">
+        <iframe id="hallTicketFrame" class="embed-frame" src="about:blank"></iframe>
+      </div>
+
+      <!-- other placeholder pages unchanged -->
+      <div class="page" id="assignments-page">
+        <div class="page-header">
+          <h1 class="page-title">Assignments</h1>
+          <p class="page-subtitle">Track and submit your assignments</p>
+        </div>
+        <div class="placeholder-content card-3d"><i class="fas fa-tasks"></i>
+          <h3>Assignments Page</h3>
+          <p>Content will be added later</p>
+        </div>
+      </div>
+
+      <div class="page" id="bus-tracking-page">
+        <div class="page-header">
+          <h1 class="page-title">Bus Tracking</h1>
+          <p class="page-subtitle">Track your school bus</p>
+        </div>
+        <div class="placeholder-content card-3d"><i class="fas fa-bus"></i>
+          <h3>Bus Tracking Page</h3>
+          <p>Content will be added later</p>
+        </div>
+      </div>
+
+      <div class="page" id="contact-support-page">
+        <div class="page-header">
+          <h1 class="page-title">Contact Support</h1>
+          <p class="page-subtitle">Get help</p>
+        </div>
+        <div class="placeholder-content card-3d"><i class="fas fa-phone"></i>
+          <h3>Support Page</h3>
+          <p>Content will be added later</p>
+        </div>
+      </div>
+
+      <div class="page" id="diary-page">
+        <div class="page-header">
+          <h1 class="page-title">Student Diary</h1>
+          <p class="page-subtitle">Record daily activities</p>
+        </div>
+        <div class="placeholder-content card-3d"><i class="fas fa-book-open"></i>
+          <h3>Diary Page</h3>
+          <p>Content will be added later</p>
+        </div>
+      </div>
+
+      <div class="page" id="fee-payments-page">
+        <div class="page-header">
+          <h1 class="page-title">Fee Payments</h1>
+          <p class="page-subtitle">Pay fees</p>
+        </div>
+        <div class="placeholder-content card-3d"><i class="fas fa-money-bill-wave"></i>
+          <h3>Fee Payments</h3>
+          <p>Content will be added later</p>
+        </div>
+      </div>
+
+      <div class="page" id="logout-page">
+        <div class="page-header">
+          <h1 class="page-title">Logout</h1>
+          <p class="page-subtitle">See you soon!</p>
+        </div>
+        <div class="placeholder-content card-3d"><i class="fas fa-sign-out-alt"></i>
+          <h3>Logout</h3>
+          <p>Content will be added later</p>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="student-dashboard.js"></script>
 </body>
+
 </html>

@@ -1,0 +1,593 @@
+:root{
+  --bg: #f6f7ff;
+  --stroke: #e8e8ff;
+  --text: #1f2340;
+  --muted: #6a6f93;
+
+  --primary: #6b5cff;
+  --primary2: #8a7dff;
+
+  --shadow: 0 18px 50px rgba(34, 39, 79, .15);
+  --shadow2: 0 10px 24px rgba(34, 39, 79, .12);
+  --radius: 18px;
+}
+
+*{ box-sizing:border-box; }
+
+html, body{ height:100%; }
+
+body{
+  margin:0;
+  font-family:"Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  font-size: 15.75px;
+  line-height: 1.38;
+  color: var(--text);
+  background:
+    radial-gradient(1100px 680px at 12% 12%, #efeaff 0%, transparent 58%),
+    radial-gradient(900px 560px at 90% 10%, #e8f1ff 0%, transparent 55%),
+    radial-gradient(900px 560px at 60% 92%, #f3e7ff 0%, transparent 60%),
+    var(--bg);
+  overflow: hidden; /* ✅ no page scroll */
+}
+
+
+body{
+  font-family:'Poppins', sans-serif;
+  min-height:100vh;
+  background: linear-gradient(135deg, #dfe4f2 0%, #d4dbea 100%);
+  overflow-x:hidden;
+  position:relative;
+}
+
+/* ✅ Fix mobile horizontal space + ✅ don't block clicks */
+body::before,
+body::after{
+  content:"";
+  position:fixed;              /* ✅ fixed instead of absolute (no layout overflow) */
+  border-radius:50%;
+  filter: blur(120px);
+  opacity:0.6;
+  z-index:-1;                  /* ✅ keep it behind everything */
+  pointer-events:none;         /* ✅ blur area won’t capture clicks/touches */
+  max-width:100vw;             /* ✅ extra safety */
+  max-height:100vh;
+}
+
+/* blobs */
+body::before{
+  width:400px;height:400px;
+  background:#9aa8ff;
+  top:100px; left:-150px;
+}
+body::after{
+  width:450px;height:450px;
+  background:#b39dfb;
+  bottom:-180px; right:-150px;
+}
+
+/* ✅ Optional extra safety (prevents small mobile overflow bugs) */
+html, body{
+  width:100%;
+  overflow-x:hidden;
+}
+
+/* If you ever open this page alone on mobile, allow normal scroll */
+@media (max-width: 980px){
+  body{ overflow:auto; }
+}
+
+/* Background orbs */
+/* .bg-orbs{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-1;
+  filter: blur(8px);
+}
+.orb{
+  position:absolute;
+  border-radius:999px;
+  opacity:.55;
+  animation: floaty 10s ease-in-out infinite;
+}
+.orb--1{
+  width:320px;height:320px;
+  left:-80px;top:120px;
+  background: linear-gradient(135deg, #8a7dff, #ffb6e6);
+  animation-duration:12s;
+}
+.orb--2{
+  width:260px;height:260px;
+  right:-70px;top:40px;
+  background: linear-gradient(135deg, #6b5cff, #86d9ff);
+  animation-duration:11s;
+}
+.orb--3{
+  width:340px;height:340px;
+  left:40%;bottom:-140px;
+  background: linear-gradient(135deg, #caa8ff, #93ffdf);
+  animation-duration:13s;
+} */
+@keyframes floaty{
+  0%,100%{ transform: translate3d(0,0,0) scale(1); }
+  50%{ transform: translate3d(0,-18px,0) scale(1.03); }
+}
+
+/* Hide topbar UI but keep elements for JS */
+.hidden-ui{
+  display:none !important;
+}
+
+/* Layout */
+.shell{
+  max-width: 1180px;
+  margin: 0 auto;
+  height: 100vh;
+  padding: 22px 18px 26px;
+  display:flex;
+}
+
+/* Two cards grid takes full height */
+.grid{
+  width: 100%;
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  align-items: stretch;
+  height: 100%;
+  overflow: hidden; /* ✅ important */
+}
+
+@media (max-width: 980px){
+  .shell{ height:auto; }
+  .grid{ grid-template-columns: 1fr; height:auto; overflow: visible; }
+}
+
+/* Card */
+.card{
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, #ffffffd9, #ffffffa6);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  position: relative;
+
+  display:flex;
+  flex-direction: column;
+  min-height: 0; /* ✅ allows inner scroll areas to work */
+}
+
+.card::before{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  background:
+    radial-gradient(500px 200px at 15% 0%, rgba(107, 92, 255, .18), transparent 60%),
+    radial-gradient(420px 180px at 95% 0%, rgba(134, 217, 255, .18), transparent 65%);
+  pointer-events:none;
+}
+
+.card__head{
+  position:relative;
+  padding: 16px 16px 12px;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+
+.card__title{
+  margin:0;
+  font-size: 17px;
+  font-weight: 900;
+}
+
+.card__hint{
+  margin: 4px 0 0;
+  font-size: 12.5px;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.card__tools{
+  display:flex;
+  gap: 10px;
+  align-items:center;
+}
+
+/* Inputs */
+.select, .input{
+  height: 36px;
+  border-radius: 12px;
+  border: 1px solid var(--stroke);
+  background:#fff;
+  padding: 0 10px;
+  color:#3a3d66;
+  font-weight: 900;
+  outline:none;
+  transition: box-shadow .2s ease, transform .2s ease;
+}
+.select:focus, .input:focus{
+  box-shadow: 0 0 0 4px rgba(107, 92, 255, .16);
+}
+
+/* Buttons */
+.btn{
+  position:relative;
+  border:1px solid var(--stroke);
+  background:#fff;
+  color:#2b2f52;
+  border-radius: 14px;
+  height: 36px;
+  padding: 0 12px;
+  font-weight: 900;
+  cursor:pointer;
+  transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+  overflow:hidden;
+  box-shadow: 0 10px 16px rgba(34, 39, 79, .08);
+}
+.btn:hover{
+  transform: translateY(-3px);
+  box-shadow: 0 16px 28px rgba(34, 39, 79, .14);
+}
+.btn:active{ transform: translateY(0); }
+
+.btn--ghost{
+  background: linear-gradient(180deg, #ffffff, #fbfbff);
+}
+
+.btn--primary{
+  color:#fff;
+  border: 1px solid rgba(255,255,255,.22);
+  background: linear-gradient(135deg, var(--primary), var(--primary2));
+  box-shadow: 0 14px 28px rgba(107, 92, 255, .25);
+}
+
+.btn--dark{
+  background:#111827;
+  border-color: transparent;
+  color:#fff;
+}
+
+/* shine */
+.btn__shine{
+  position:absolute;
+  inset:0;
+  transform: translateX(-130%) skewX(-18deg);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.48), transparent);
+  transition: transform .45s ease;
+}
+.btn:hover .btn__shine{
+  transform: translateX(130%) skewX(-18deg);
+}
+
+/* Lists areas */
+.teacher-list{
+  position:relative;
+  padding: 0 10px 12px;
+  flex: 1 1 auto;
+  overflow: hidden;   /* ✅ NO scroll here */
+}
+
+/* ✅ Only "My Doubts" list scrolls */
+.my-list{
+  position:relative;
+  padding: 0 16px 16px;
+  flex: 1 1 auto;
+  overflow: auto;     /* ✅ ONLY scroll here */
+  display:grid;
+  gap: 10px;
+  min-height: 0;
+}
+
+/* nice scrollbar */
+.my-list::-webkit-scrollbar{ width: 10px; }
+.my-list::-webkit-scrollbar-thumb{
+  background: #e6e7ff;
+  border-radius: 999px;
+  border: 2px solid rgba(255,255,255,.8);
+}
+.my-list::-webkit-scrollbar-track{ background: transparent; }
+
+.muted{
+  color: var(--muted);
+  font-weight: 700;
+  font-size: 13px;
+  padding: 12px 6px;
+}
+
+/* Teacher item (matches JS markup class "teacher") */
+.teacher{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+
+  padding: 12px 10px;
+  margin: 10px 6px;
+
+  border:1px solid rgba(232, 232, 255, .9);
+  border-radius: 16px;
+  background:#fff;
+  box-shadow: 0 10px 18px rgba(34, 39, 79, .08);
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.teacher:hover{
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(34, 39, 79, .18);
+  border-color: rgba(107, 92, 255, .20);
+}
+
+.avatar{
+  width:48px;height:48px;border-radius:16px;
+  object-fit:cover;
+  background: linear-gradient(135deg, #f4f1ff, #eaf2ff);
+  border: 1px solid rgba(232,232,255,.9);
+}
+
+.tmeta{ flex:1; }
+.tname{ font-weight: 900; }
+.tsub{ font-size: 12.5px; color: var(--muted); font-weight: 800; margin-top: 2px; }
+.pill{
+  display:inline-flex;
+  gap:6px;
+  align-items:center;
+  padding: 6px 10px;
+  border-radius:999px;
+  background: rgba(91,94,247,.12);
+  font-weight: 900;
+  font-size: 12px;
+}
+
+/* Doubt item (matches JS markup class "doubt") */
+.doubt{
+  border:1px solid rgba(232,232,255,.9);
+  border-radius: 16px;
+  padding: 12px;
+  background:#fff;
+  box-shadow: 0 10px 18px rgba(34, 39, 79, .08);
+  display:flex;
+  justify-content:space-between;
+  gap: 12px;
+  align-items:center;
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.doubt:hover{
+  transform: translateY(-2px);
+  box-shadow: var(--shadow2);
+}
+.dtitle{ font-weight: 900; margin-bottom: 4px; }
+.dmeta{ font-size: 12.5px; color: var(--muted); font-weight: 800; }
+
+/* Status badges (JS uses: badge open/answered/closed) */
+.badge{
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: .6px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,.06);
+}
+.badge.open{ background: rgba(245,158,11,.14); color:#b45b00; }
+.badge.answered{ background: rgba(34,197,94,.14); color:#0f8f62; }
+.badge.closed{ background: rgba(148,163,184,.22); color:#475569; }
+
+/* Errors */
+.error{
+  margin-top:10px;
+  padding:10px 12px;
+  border-radius:14px;
+  border:1px solid rgba(239,68,68,.35);
+  background: rgba(239,68,68,.10);
+  color:#b91c1c;
+  white-space: pre-line;
+}
+
+/* Modal */
+.modal{
+  position:fixed;
+  inset:0;
+  display:grid;
+  place-items:center;
+  padding:14px;
+  z-index: 9999;
+}
+.modal__backdrop{
+  position:absolute;
+  inset:0;
+  background: rgba(10,12,25,.36);
+  backdrop-filter: blur(6px);
+}
+.modal-card{
+  position:relative;
+  width: min(720px, 96vw);
+  background: linear-gradient(180deg, #ffffff, #ffffffee);
+  border:1px solid rgba(232,232,255,.9);
+  border-radius: 18px;
+  box-shadow: 0 30px 90px rgba(10,12,25,.35);
+  padding: 14px;
+}
+.modal-card.large{
+  width: min(920px, 96vw);
+}
+
+.modal-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(232,232,255,.9);
+}
+.modal-title{
+  font-weight: 950;
+  font-size: 18px;
+}
+.iconbtn{
+  border:1px solid var(--stroke);
+  background:#fff;
+  width:40px;height:40px;
+  border-radius: 14px;
+  cursor:pointer;
+  box-shadow: 0 8px 18px rgba(34,39,79,.10);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.iconbtn:hover{
+  transform: translateY(-2px);
+  box-shadow: var(--shadow2);
+}
+
+/* modal hidden override */
+.hidden{ display:none !important; }
+.modal.hidden{ display:none !important; }
+
+/* Forms inside modal */
+.form{
+  padding-top: 12px;
+  display:grid;
+  gap: 12px;
+}
+.field span{
+  display:block;
+  font-weight: 900;
+  margin-bottom: 6px;
+  font-size: 12.5px;
+  color:#3d416d;
+}
+.input{
+  width:100%;
+  border:1px solid rgba(232,232,255,.95);
+  border-radius: 14px;
+  padding: 11px 12px;
+  outline:none;
+  font-weight: 800;
+  background: linear-gradient(180deg, #ffffff, #fcfcff);
+}
+.area{
+  min-height: 110px;
+  max-height: 240px;
+  resize: vertical;
+}
+
+.actions{
+  display:flex;
+  justify-content:flex-end;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.thread{ margin-top: 10px; }
+.msgs{
+  max-height: 360px;
+  overflow:auto;
+  border:1px solid var(--stroke);
+  border-radius: 16px;
+  padding: 10px;
+  display:grid;
+  gap: 10px;
+  background:#fbfbff;
+}
+.msg{
+  padding: 10px 12px;
+  border:1px solid var(--stroke);
+  border-radius: 14px;
+}
+.msg.me{ background: rgba(91,94,247,.08); }
+.msg .who{ font-size: 12px; font-weight: 900; }
+.msg .time{ font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+.reply{
+  display:flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+.reply .input{ flex:1; }
+
+/* 3D tilt helper */
+.tilt{
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* ✅ Always show pointer on teacher row + Ask Doubt button */
+.teacher { cursor: pointer; }
+.teacher * { cursor: inherit; }           /* makes all inside follow pointer */
+.teacher .btn, .teacher button { cursor: pointer !important; }
+
+/* ✅ Better spacing for meta row */
+.dmeta{
+  font-size: 12.5px;
+  color: var(--muted);
+  font-weight: 800;
+
+  display: flex;
+  flex-wrap: wrap;      /* wraps nicely instead of sticking */
+  align-items: center;
+  gap: 8px;             /* ✅ space between badge/topic/view/date */
+  row-gap: 6px;
+}
+
+.badge{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;  /* keeps badge text clean */
+}
+
+/* ✅ Slightly bigger cards */
+.card{
+  padding: 18px;              /* was 14px */
+}
+
+/* ✅ Bigger teacher rows & doubt rows */
+.teacher{
+  padding: 14px 12px;         /* was smaller */
+  border-radius: 18px;
+}
+
+.doubt{
+  padding: 14px 14px;         /* more professional */
+  border-radius: 18px;
+}
+
+/* ✅ Title spacing inside doubt */
+.dtitle{
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+
+.doubt .btn{
+  min-width: 78px;
+  justify-content: center;
+}
+
+body{
+  font-family:'Poppins', sans-serif;
+  min-height:100vh;
+  background: linear-gradient(135deg, #dfe4f2 0%, #d4dbea 100%);
+  overflow-x:hidden;
+  position:relative;
+}
+
+/* Darker soft blur background */
+body::before, body::after{
+  content:"";
+  position:absolute;
+  border-radius:50%;
+  filter: blur(120px);
+  z-index:0;
+  opacity:0.6;
+}
+body::before{
+  width:400px;height:400px;
+  background:#9aa8ff;
+  top:100px;left:-150px;
+}
+body::after{
+  width:450px;height:450px;
+  background:#b39dfb;
+  bottom:-180px;right:-150px;
+}

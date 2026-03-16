@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Corrected-AnswerSheets • EduConnect</title>
+
+  <!-- Poppins font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="student-answer-sheets.css" />
+</head>
+
+<body>
+  <!-- Full width header -->
+  <!-- <div class="header">
+    <h1>
+      <span class="header-icon">📘</span>
+      Corrected-AnswerSheets
+    </h1>
+    <p>Student · check your evaluated answer sheets</p>
+  </div> -->
+
+  <div class="main-content">
+    <!-- Exam row -->
+    <div class="exam-row">
+      <div class="exam-field">
+        <span class="label">Exam</span>
+        <div class="select-wrapper">
+          <select id="stuExamSelect">
+            <option value="">Loading...</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="pdf-count" id="pdfCounter">PDFs: 0</div>
+    </div>
+
+    <!-- Initial state -->
+    <div id="initialState" class="empty-state">
+      <div class="big-emoji">📄✨</div>
+      <h3>Select an exam</h3>
+      <p>Choose from the dropdown to view answer sheets</p>
+      <small style="opacity:0.6;">PDF preview will appear here</small>
+    </div>
+
+    <!-- Error -->
+    <div id="stuErr" class="error-box hidden"></div>
+
+    <!-- Cards container -->
+    <div id="cardsContainer" class="cards-grid hidden"></div>
+
+    <!-- Empty for exam -->
+    <div id="stuEmpty" class="empty-state hidden">
+      <div class="big-emoji">📭</div>
+      <h3>No PDFs uploaded</h3>
+      <p>No answer sheets available for this exam.</p>
+    </div>
+  </div>
+
+  <script src="student-answer-sheets.js"></script>
+</body>
+</html>

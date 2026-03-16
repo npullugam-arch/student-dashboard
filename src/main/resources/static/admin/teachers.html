@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin • Teachers</title>
+  <link rel="stylesheet" href="teachers.css"/>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Header -->
+  <header class="header">
+    <div class="brand">
+      <div class="logo">🎓</div>
+      <div class="meta">
+        <div class="title">EduConnect</div>
+        <div class="sub">Admin • Teachers</div>
+      </div>
+    </div>
+
+    <div class="right">
+      <span class="pill" id="adminPill">ADMIN</span>
+      <button class="btn ghost" id="btnBack">← Back</button>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="grid">
+    <!-- Left: Teachers list -->
+    <section class="card">
+      <div class="card-head">
+        <div>
+          <h2>Teachers</h2>
+          <p class="muted">Create, edit, delete teachers and manage assignments (class/section/subject).</p>
+        </div>
+        <button class="btn primary" id="btnOpenAdd">➕ Add Teacher</button>
+      </div>
+
+      <div class="tools">
+        <input id="searchBox" class="input" placeholder="Search by ID / name / mobile / email..." />
+        <button class="btn" id="btnRefresh">Refresh</button>
+      </div>
+
+      <div class="table-wrap">
+        <table class="tbl">
+          <thead>
+          <tr>
+            <th>Teacher ID</th>
+            <th>Name</th>
+            <th>Mobile</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th class="right">Actions</th>
+          </tr>
+          </thead>
+          <tbody id="teachersTbody">
+          <tr><td colspan="6" class="muted">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <b>Rule ✅</b> One teacher can have <b>many assignments</b> (multiple classes/sections/subjects).  
+        Assignments are managed using admin-defined subjects (StandardSubject).
+      </div>
+    </section>
+
+    <!-- Right: Selected teacher details + assignments -->
+    <section class="card">
+      <div class="card-head">
+        <div>
+          <h2>Teacher Details</h2>
+          <p class="muted">Select a teacher to view assignments & manage course mapping.</p>
+        </div>
+      </div>
+
+      <div id="teacherEmpty" class="empty">
+        <div class="emoji">👈</div>
+        <div>
+          <div class="empty-title">Select a teacher</div>
+          <div class="muted">Assignments will appear here.</div>
+        </div>
+      </div>
+
+      <div id="teacherPanel" class="panel hidden">
+        <div class="profile">
+          <img id="tAvatar" class="avatar" alt="Teacher" />
+          <div class="pmeta">
+            <div class="pname" id="tName">—</div>
+            <div class="muted" id="tIdLine">—</div>
+          </div>
+          <div class="pactions">
+            <button class="btn" id="btnEditSelected">Edit</button>
+            <button class="btn danger" id="btnDeleteSelected">Delete</button>
+          </div>
+        </div>
+
+        <div class="info-grid">
+          <div class="info"><div class="k">Mobile</div><div class="v" id="tMobile">—</div></div>
+          <div class="info"><div class="k">Email</div><div class="v" id="tEmail">—</div></div>
+          <div class="info"><div class="k">DOB</div><div class="v" id="tDob">—</div></div>
+          <div class="info"><div class="k">Experience</div><div class="v" id="tExp">—</div></div>
+          <div class="info"><div class="k">Gender</div><div class="v" id="tGender">—</div></div>
+          <div class="info"><div class="k">Religion</div><div class="v" id="tReligion">—</div></div>
+          <div class="info wide"><div class="k">Address</div><div class="v" id="tAddress">—</div></div>
+          <div class="info wide"><div class="k">Aadhaar</div><div class="v" id="tAadhaar">—</div></div>
+          <div class="info"><div class="k">Status</div><div class="v" id="tStatus">—</div></div>
+        </div>
+
+        <hr class="sep"/>
+
+        <!-- Assignments -->
+        <div class="assign-head">
+          <div>
+            <h3>Assignments</h3>
+            <p class="muted">Mapped by (Standard + Section + Subject). Admin can add multiple assignments.</p>
+          </div>
+          <button class="btn primary" id="btnOpenAssign">➕ Assign Course</button>
+        </div>
+
+        <div class="table-wrap">
+          <table class="tbl small">
+            <thead>
+            <tr>
+              <th>Standard</th>
+              <th>Section</th>
+              <th>Subject</th>
+            </tr>
+            </thead>
+            <tbody id="assignmentsTbody">
+              <tr><td colspan="3" class="muted">Select a teacher to load assignments...</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div id="assignError" class="error hidden"></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Add/Edit Teacher Modal -->
+<div class="modal hidden" id="teacherModal">
+  <div class="modal-card">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title" id="teacherModalTitle">Add Teacher</div>
+        <div class="muted" id="teacherModalSub">Create teacher + initial assignments.</div>
+      </div>
+      <button class="iconbtn" id="teacherModalClose">✕</button>
+    </div>
+
+    <form id="teacherForm" class="form">
+      <div class="form-grid">
+        <label class="field">
+          <span>Teacher ID</span>
+          <input class="input" id="fTeacherId" placeholder="T1002" required />
+        </label>
+
+        <label class="field">
+          <span>Full Name</span>
+          <input class="input" id="fFullName" placeholder="Suresh Sir" required />
+        </label>
+
+        <label class="field">
+          <span>Mobile</span>
+          <input class="input" id="fMobile" placeholder="9999000011" />
+        </label>
+
+        <label class="field">
+          <span>Email</span>
+          <input class="input" id="fEmail" placeholder="teacher@gmail.com" />
+        </label>
+
+        <label class="field">
+          <span>Date of Birth</span>
+          <input class="input" id="fDob" type="date" />
+        </label>
+
+        <label class="field">
+          <span>Experience (years)</span>
+          <input class="input" id="fExp" type="number" min="0" placeholder="5" />
+        </label>
+
+        <label class="field">
+          <span>Aadhaar Number</span>
+          <input class="input" id="fAadhaar" maxlength="12" placeholder="123456789012" />
+        </label>
+
+        <label class="field">
+          <span>Gender</span>
+          <select class="input" id="fGender">
+            <option value="">—</option>
+            <option>MALE</option>
+            <option>FEMALE</option>
+            <option>OTHER</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span>Religion</span>
+          <input class="input" id="fReligion" placeholder="Hindu" />
+        </label>
+
+        <label class="field wide">
+          <span>Address</span>
+          <input class="input" id="fAddress" placeholder="Hyderabad..." />
+        </label>
+
+        <label class="field wide">
+          <span>Profile URL</span>
+          <input class="input" id="fProfileUrl" placeholder="https://example.com/teacher.jpg" />
+        </label>
+
+        <label class="check">
+          <input type="checkbox" id="fActive" checked />
+          <span>Active</span>
+        </label>
+      </div>
+
+      <div class="subhead">
+        <div>
+          <b>Initial Assignments</b>
+          <div class="muted">Add multiple rows: (Standard + Section + Subject).</div>
+        </div>
+        <button type="button" class="btn" id="btnAddRow">➕ Add Row</button>
+      </div>
+
+      <div class="assign-rows" id="assignRows"></div>
+
+      <div id="formError" class="error hidden"></div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn ghost" id="btnCancelTeacher">Cancel</button>
+        <button type="submit" class="btn primary" id="btnSaveTeacher">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Assign Course Modal (single row for existing teacher) -->
+<div class="modal hidden" id="assignModal">
+  <div class="modal-card">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title">Assign Course</div>
+        <div class="muted">Assign teacher to a subject for a class & section.</div>
+      </div>
+      <button class="iconbtn" id="assignModalClose">✕</button>
+    </div>
+
+    <form id="assignForm" class="form">
+      <div class="form-grid">
+        <label class="field">
+          <span>Standard</span>
+          <input class="input" id="aStandard" type="number" min="1" max="12" placeholder="7" required/>
+        </label>
+
+        <label class="field">
+          <span>Section</span>
+          <input class="input" id="aSection" placeholder="A" maxlength="5" required/>
+        </label>
+
+        <label class="field wide">
+          <span>Subject (for this standard)</span>
+          <select class="input" id="aStandardSubject" required>
+            <option value="">Select standard first…</option>
+          </select>
+        </label>
+      </div>
+
+      <div id="assignFormError" class="error hidden"></div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn ghost" id="btnCancelAssign">Cancel</button>
+        <button type="submit" class="btn primary" id="btnSaveAssign">Assign</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="teachers.js"></script>
+</body>
+</html>
