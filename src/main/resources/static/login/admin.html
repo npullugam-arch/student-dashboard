@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Login - EduConnect</title>
+  <link rel="stylesheet" href="admin.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div class="bg">
+    <span class="blob b1"></span>
+    <span class="blob b2"></span>
+    <span class="blob b3"></span>
+  </div>
+
+  <div class="wrap">
+    <div class="card">
+      <div class="head">
+        <div class="logo">🛡️</div>
+        <div>
+          <h1>Admin Login</h1>
+          <p>EduConnect Student Portal</p>
+        </div>
+      </div>
+
+      <div id="error" class="error" style="display:none;"></div>
+
+      <form id="form">
+        <label>Admin ID</label>
+        <input id="username" type="text" placeholder="ADMIN ID (ex: admin)" autocomplete="username" />
+
+        <label>Password</label>
+        <input id="password" type="password" placeholder="Password" autocomplete="current-password"/>
+
+        <button id="loginBtn" type="submit">Login</button>
+      </form>
+
+      <div class="hint">
+        Tip: Use the same admin credentials you created in backend.
+      </div>
+    </div>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>

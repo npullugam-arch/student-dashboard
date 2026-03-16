@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin • Hall Ticket / Admit Card</title>
+
+  <link rel="stylesheet" href="admin-hallticket.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="wrap">
+  <header class="topbar">
+    <div>
+      <div class="h1">Hall Ticket / Admit Card</div>
+      <div class="muted">Set header details and issue hall ticket for students.</div>
+    </div>
+    <div class="right">
+      <button class="btn ghost" id="btnBack" type="button">← Back</button>
+      <button class="btn dark" id="btnLogout" type="button">Logout</button>
+    </div>
+  </header>
+
+  <main class="grid">
+    <!-- LEFT: CONFIG -->
+    <section class="card">
+      <div class="cardHead">
+        <div>
+          <div class="cardTitle">Admit Card Header (Admin)</div>
+          <div class="muted">These will appear on every hall ticket.</div>
+        </div>
+      </div>
+
+      <div class="form">
+        <label class="field">
+          <span>Logo URL</span>
+          <input class="inp" id="logoUrl" placeholder="https://.../logo.png"/>
+        </label>
+
+        <label class="field">
+          <span>School Name</span>
+          <input class="inp" id="schoolName" placeholder="Your School Name"/>
+        </label>
+
+        <label class="field">
+          <span>Address</span>
+          <textarea class="inp" id="address" rows="3" placeholder="School address..."></textarea>
+        </label>
+
+        <div class="actions">
+          <button class="btn dark" id="btnSaveConfig" type="button">Save Config</button>
+          <span class="status" id="cfgStatus"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT: ISSUE -->
+    <section class="card">
+      <div class="cardHead">
+        <div>
+          <div class="cardTitle">Issue / Preview Hall Ticket</div>
+          <div class="muted">Select exam + enter studentId to generate admit card.</div>
+        </div>
+      </div>
+
+      <div class="filters">
+        <label class="field">
+          <span>Exam</span>
+          <select class="inp" id="examSelect">
+            <option value="">Loading...</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span>Student ID</span>
+          <input class="inp" id="studentIdInput" placeholder="S1001"/>
+        </label>
+
+        <button class="btn dark" id="btnPreview" type="button">Preview</button>
+      </div>
+
+      <div class="statusLine">
+        <span class="status" id="issueStatus"></span>
+        <button class="btn" id="btnPrint" type="button" style="display:none;">Print</button>
+      </div>
+
+      <div class="preview" id="previewArea" style="display:none;"></div>
+      <div class="err" id="err" style="display:none;"></div>
+    </section>
+  </main>
+</div>
+
+<script src="admin-hallticket.js"></script>
+</body>
+</html>

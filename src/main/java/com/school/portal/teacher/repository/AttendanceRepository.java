@@ -1,3 +1,7 @@
+// -------------------------------------------------
+// 3) UPDATE: AttendanceRepository (subject-wise attendance)
+// FILE: src/main/java/com/school/portal/teacher/repository/AttendanceRepository.java
+// -------------------------------------------------
 package com.school.portal.teacher.repository;
 
 import com.school.portal.common.enums.Subject;
@@ -17,4 +21,7 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
             Subject subject,
             LocalDate attendanceDate
     );
+
+    // ✅ NEW: Admin reset (delete all subject-wise rows for a class-section)
+    long deleteByStandardAndSection(Integer standard, String section);
 }

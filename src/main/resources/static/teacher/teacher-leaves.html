@@ -1,0 +1,98 @@
+<!-- DO NOT ADD <body> OR <header> HERE — this is for DASHBOARD PANEL ONLY -->
+
+<div class="leave-scope">
+
+  <div class="tl-wrap">
+
+    <!-- LEFT: LIST (scrollable) -->
+    <div class="tl-card tl-left">
+      <div class="tl-card-head">
+        <div>
+          <h2>Student Leave Requests</h2>
+          <p class="muted">Open a request, then approve/reject with remark.</p>
+        </div>
+        <button class="btn btn-ghost" id="btnRefresh" type="button">Refresh</button>
+      </div>
+
+      <div class="tools">
+        <input id="searchBox" class="inp" placeholder="Search by student ID / name / status..." />
+      </div>
+
+      <div id="reqList" class="list"><div class="muted">Loading...</div></div>
+
+      <div id="err" class="error hidden"></div>
+    </div>
+
+    <!-- RIGHT: PANEL (sticky) -->
+    <div class="tl-card tl-right">
+      <div class="tl-card-head">
+        <h2>Selected Leave</h2>
+      </div>
+
+      <div id="empty" class="empty">
+        <div class="emoji">👈</div>
+        <div>
+          <div class="empty-title">Select a request</div>
+          <div class="muted">Details appear here.</div>
+        </div>
+      </div>
+
+      <div id="panel" class="panel hidden">
+        <div class="box">
+          <div class="row">
+            <div><b id="sName">—</b> <span class="muted" id="sId">—</span></div>
+            <div id="statusBadge">—</div>
+          </div>
+          <div class="muted" id="clsLine">—</div>
+        </div>
+
+        <div class="box">
+          <div><b>Subject:</b> <span id="subj">—</span></div>
+          <div><b>Dates:</b> <span id="dates">—</span></div>
+          <div style="margin-top:8px"><b>Purpose:</b> <span id="purpose">—</span></div>
+          <div style="margin-top:8px"><b>Description:</b></div>
+          <div class="desc" id="desc">—</div>
+        </div>
+
+        <div class="box">
+          <div class="muted" style="margin-bottom:8px">Decision</div>
+
+          <label class="field">
+            <span>Status</span>
+            <select class="inp" id="decisionStatus">
+              <option value="APPROVED">APPROVE</option>
+              <option value="REJECTED">REJECT</option>
+            </select>
+          </label>
+
+          <label class="field" style="margin-top:10px">
+            <span>Remark (optional)</span>
+            <textarea class="inp" id="remark" rows="3" placeholder="Write remark..."></textarea>
+          </label>
+
+          <div class="actions">
+            <button class="btn btn-ghost" id="btnOpen" type="button">Open</button>
+            <button class="btn btn-primary" id="btnSubmitDecision" type="button">Submit</button>
+          </div>
+
+          <div id="panelErr" class="error hidden"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ✅ Center popup (ONLY for approve/reject) -->
+  <div id="leaveModal" class="modal hidden" aria-live="polite" aria-modal="true" role="dialog">
+    <div class="modal-backdrop"></div>
+
+    <div class="modal-box" role="document">
+      <div class="modal-icon" id="modalIcon">✅</div>
+      <div class="modal-title" id="modalTitle">Updated</div>
+      <div class="modal-msg" id="modalMsg">Done.</div>
+    </div>
+  </div>
+
+</div>
+
+<script src="teacher-leaves.js"></script>

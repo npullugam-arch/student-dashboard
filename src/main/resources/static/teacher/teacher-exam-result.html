@@ -1,0 +1,61 @@
+<div id="examResultRoot" class="page">
+  <header class="topbar">
+    <div>
+      <div class="title">Exam Results Entry</div>
+      <div class="subtitle">Enter marks for students in your assigned class</div>
+    </div>
+    <div class="chip" id="sessionChip">Teacher</div>
+  </header>
+
+  <main class="card">
+    <section class="filters">
+      <div class="field">
+        <label for="examSelect">Exam</label>
+        <select id="examSelect">
+          <option value="">Loading...</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="classSelect">Assigned Class</label>
+        <select id="classSelect">
+          <option value="">Loading...</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="totalMarks">Total Marks</label>
+        <input type="number" id="totalMarks" placeholder="100" min="1" />
+      </div>
+    </section>
+
+    <section class="tableWrap">
+      <div class="tableHead">
+        <div class="tableTitle">Students</div>
+        <div class="tableHint" id="tableHint">Select exam and class to load students</div>
+      </div>
+
+      <div class="tableContainer">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:72px;">Photo</th>
+              <th>Name</th>
+              <th style="width:160px;">Marks</th>
+            </tr>
+          </thead>
+          <tbody id="studentsBody"></tbody>
+        </table>
+
+        <div class="empty" id="emptyText">
+          Select exam and class to load students
+        </div>
+      </div>
+    </section>
+
+    <section class="actions">
+      <button id="saveBtn" class="btn primary" type="button">Save Results</button>
+      <div id="statusText" class="status"></div>
+    </section>
+  </main>
+</div>

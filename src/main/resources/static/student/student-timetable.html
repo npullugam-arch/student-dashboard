@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Class Time Table</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --purple1: #667eea;
+      --purple2: #764ba2;
+
+      --bg1:#e9ecf5;
+      --bg2:#f3f5fb;
+
+      --glass: rgba(255, 255, 255, 0.70);
+      --stroke: rgba(255,255,255,0.60);
+      --shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+
+      --text:#1f2430;
+      --muted:#6c757d;
+
+      /* subject palette (same vibe as your UI) */
+      /* --c-math-bg:#e5e9ff;   --c-math:#4c5bd4;
+      --c-eng-bg:#e1f1ff;    --c-eng:#2d7dd2;
+      --c-tel-bg:#f5e6ff;    --c-tel:#a84bd4;
+      --c-hin-bg:#fde6e6;    --c-hin:#d63384;
+      --c-evs-bg:#e3f7ed;    --c-evs:#1faa59;
+      --c-sport-bg:#fff1e0;  --c-sport:#ff8c00;
+      --c-music-bg:#ffe3f3;  --c-music:#e64980;
+      --c-act-bg:#fce8ff;    --c-act:#c225ff; */
+
+      /* fallback */
+      --c-default-bg:#f0f2f7; --c-default:#4b5563;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--bg1), var(--bg2));
+      padding: 40px;
+      color: var(--text);
+    }
+
+    body{
+  font-family:'Poppins', sans-serif;
+  min-height:100vh;
+  background: linear-gradient(135deg, #dfe4f2 0%, #d4dbea 100%);
+  overflow-x:hidden;
+  position:relative;
+}
+
+/* Darker soft blur background */
+body::before, body::after{
+  content:"";
+  position:absolute;
+  border-radius:50%;
+  filter: blur(120px);
+  z-index:0;
+  opacity:0.6;
+}
+body::before{
+  width:400px;height:400px;
+  background:#9aa8ff;
+  top:100px;left:-150px;
+}
+body::after{
+  width:450px;height:450px;
+  background:#b39dfb;
+  bottom:-180px;right:-150px;
+}
+
+    .page-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: #4c5bd4;
+      margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .top-row {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+      margin-bottom: 22px;
+    }
+
+    .pill {
+      background: rgba(255,255,255,0.8);
+      border: 1px solid rgba(210, 215, 235, 0.9);
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-weight: 700;
+      color: #2f3a82;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.04);
+      white-space: nowrap;
+    }
+
+    .timetable-wrapper {
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      overflow-x: auto; /* horizontal scroll on small screens */
+      border: 1px solid var(--stroke);
+    }
+
+    /* GRID */
+    .timetable {
+      display: grid;
+      grid-template-columns: 140px repeat(6, 1fr);
+      gap: 15px;
+      min-width: 900px; /* prevents squishing */
+    }
+
+    /* HEADER */
+    .header {
+      background: linear-gradient(135deg, var(--purple1), var(--purple2));
+      color: white;
+      padding: 14px;
+      border-radius: 14px;
+      text-align: center;
+      font-weight: 600;
+      user-select:none;
+    }
+
+    /* TIME CELL */
+    .time {
+      background: #f0f2f7;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: #555;
+      font-weight: 600;
+      white-space: nowrap;
+      padding: 10px 12px;
+    }
+
+    /* SUBJECT CELL (NO ICONS) */
+    .subject {
+      padding: 18px 10px;
+      border-radius: 16px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.25s ease;
+      cursor: default;
+      border: 1px solid rgba(255,255,255,0.85);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.03);
+      min-height: 54px;
+    }
+
+    .subject:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.08);
+    }
+
+    .subject.empty {
+      background: rgba(240,242,247,0.7);
+      color: #7b8196;
+      font-weight: 600;
+    }
+
+    /* mapped subject classes */
+    .sub-math { background: var(--c-math-bg); color: var(--c-math); }
+    .sub-english { background: var(--c-eng-bg); color: var(--c-eng); }
+    .sub-telugu { background: var(--c-tel-bg); color: var(--c-tel); }
+    .sub-hindi { background: var(--c-hin-bg); color: var(--c-hin); }
+    .sub-evs { background: var(--c-evs-bg); color: var(--c-evs); }
+    .sub-sports { background: var(--c-sport-bg); color: var(--c-sport); }
+    .sub-music { background: var(--c-music-bg); color: var(--c-music); }
+    .sub-activity { background: var(--c-act-bg); color: var(--c-act); }
+
+    .sub-default { background: var(--c-default-bg); color: var(--c-default); }
+
+    /* error */
+    .error {
+      margin-top: 14px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(255, 92, 92, 0.12);
+      border: 1px solid rgba(255, 92, 92, 0.25);
+      color: #8a1f1f;
+      font-weight: 700;
+      display: none;
+      white-space: pre-wrap;
+    }
+
+    .loading {
+      opacity: 0.9;
+    }
+
+    /* 📱 SMALL DEVICES ONLY */
+    @media(max-width:768px) {
+      body { padding: 20px; }
+      .timetable-wrapper { padding: 20px; }
+      .subject { font-size: 13px; padding: 16px 8px; }
+      .time { font-size: 13px; }
+      .page-title { font-size: 26px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="top-row">
+    <div>
+      <h1 class="page-title">Class Time Table</h1>
+      <p class="page-subtitle" id="subtitle">Loading your weekly schedule…</p>
+    </div>
+    <div class="pill" id="classPill">—</div>
+  </div>
+
+  <div class="timetable-wrapper">
+    <div class="timetable" id="grid">
+      <!-- Filled by JS -->
+    </div>
+    <div class="error" id="err"></div>
+  </div>
+
+  <script>
+    console.log("✅ student-function-timetable.html loaded");
+
+    // --------------------
+    // Session (same as your working backend-connected page)
+    // --------------------
+    function getSession() {
+      try { return JSON.parse(localStorage.getItem("smp_session") || "{}"); }
+      catch { return {}; }
+    }
+
+    function normalizeToken(raw) {
+      if (!raw) return "";
+      let tok = String(raw).trim();
+      if (/^basic\\s+/i.test(tok)) tok = tok.replace(/^basic\\s+/i, "").trim();
+
+      const looksBase64 = /^[A-Za-z0-9+/=]+$/.test(tok) && tok.length >= 12;
+      if (!looksBase64 && tok.includes(":")) tok = btoa(tok);
+
+      return tok;
+    }
+
+    const sess = getSession();
+    const role = String(sess.role || "").toUpperCase();
+
+    if (!sess.username || role !== "STUDENT") {
+      alert("Student session required");
+      window.location.href = "/login/login.html";
+    }
+
+    const studentId = sess.username;
+    const basicToken = normalizeToken(sess.basicToken);
+
+    async function api(url, opts = {}) {
+      const headers = { "Content-Type": "application/json", ...(opts.headers || {}) };
+      if (basicToken) headers.Authorization = "Basic " + basicToken;
+
+      const res = await fetch(url, { ...opts, headers });
+      const text = await res.text().catch(() => "");
+      if (!res.ok) throw new Error(text || ("HTTP " + res.status));
+      if (!text) return null;
+      try { return JSON.parse(text); } catch { return text; }
+    }
+
+    // --------------------
+    // DOM
+    // --------------------
+    const grid = document.getElementById("grid");
+    const errEl = document.getElementById("err");
+    const subtitleEl = document.getElementById("subtitle");
+    const classPill = document.getElementById("classPill");
+
+    const DAYS = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
+    const DAY_LABELS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+    function showErr(msg) {
+      errEl.style.display = "block";
+      errEl.textContent = msg || "Something went wrong";
+    }
+    function clearErr() {
+      errEl.style.display = "none";
+      errEl.textContent = "";
+    }
+
+    function escapeHtml(str) {
+      return String(str ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    // Optional: nice standard label
+    function formatStandardLabel(std) {
+      const n = Number(std);
+      if (Number.isNaN(n)) return `Class ${std ?? ""}`.trim();
+      if (n === -2) return "Nursery";
+      if (n === -1) return "LKG";
+      if (n === 0) return "UKG";
+      return `Class ${n}`;
+    }
+
+    function timeRange(r) {
+      const s = r.startTime ?? "";
+      const e = r.endTime ?? "";
+      if (!s && !e) return "—";
+      if (s && e) return `${s} - ${e}`;
+      return String(s || e);
+    }
+
+    // Map subject name -> CSS class (NO icons)
+    function subjectClass(name) {
+      const s = String(name || "").trim().toLowerCase();
+
+      // break/lunch can come from backend: make it look neutral (still valid cell)
+      if (s.includes("break") || s.includes("lunch")) return "sub-default";
+
+      if (s === "math" || s.includes("mathemat")) return "sub-math";
+      if (s === "english") return "sub-english";
+      if (s === "telugu") return "sub-telugu";
+      if (s === "hindi") return "sub-hindi";
+      if (s === "evs" || s.includes("environment")) return "sub-evs";
+      if (s.includes("sport")) return "sub-sports";
+      if (s.includes("music")) return "sub-music";
+      if (s.includes("activity") || s.includes("art") || s.includes("drawing")) return "sub-activity";
+
+      return "sub-default";
+    }
+
+    // --------------------
+    // Render grid (UI from your first code)
+    // data format expected (from your working backend page):
+    // data = { standard, section, days?, rows:[ {startTime,endTime,subjectsByDay:{MONDAY:"Math",...}} ] }
+    // --------------------
+    function render(data) {
+      const rows = Array.isArray(data?.rows) ? data.rows : [];
+      const days = Array.isArray(data?.days) && data.days.length ? data.days : DAYS;
+
+      const std = data?.standard;
+      const sec = data?.section;
+
+      classPill.textContent = `${formatStandardLabel(std)} - ${sec ?? ""}`.trim();
+      subtitleEl.textContent = rows.length
+        ? `Your weekly schedule – ${formatStandardLabel(std)}, Section ${sec}`
+        : `No timetable added yet – ${formatStandardLabel(std)}, Section ${sec}`;
+
+      // Build grid items
+      let html = "";
+
+      // Header row
+      html += `<div class="header">Time</div>`;
+      for (let i = 0; i < 6; i++) {
+        html += `<div class="header">${DAY_LABELS[i]}</div>`;
+      }
+
+      // Time rows
+      if (!rows.length) {
+        // show empty grid row for nice UI
+        html += `<div class="time">—</div>`;
+        for (let i = 0; i < 6; i++) html += `<div class="subject empty">No timetable</div>`;
+        grid.innerHTML = html;
+        return;
+      }
+
+      rows.forEach(r => {
+        html += `<div class="time">${escapeHtml(timeRange(r))}</div>`;
+
+        for (let i = 0; i < 6; i++) {
+          const key = days[i] || DAYS[i];
+          const val = (r.subjectsByDay && r.subjectsByDay[key]) ? r.subjectsByDay[key] : "—";
+          const vTrim = String(val ?? "").trim();
+          const isEmpty = !vTrim || vTrim === "—";
+
+          html += `
+            <div class="subject ${isEmpty ? "empty" : subjectClass(vTrim)}">
+              ${escapeHtml(isEmpty ? "—" : vTrim)}
+            </div>
+          `;
+        }
+      });
+
+      grid.innerHTML = html;
+    }
+
+    // --------------------
+    // Init (same backend logic as your working code)
+    // --------------------
+    async function init() {
+      try {
+        clearErr();
+        grid.classList.add("loading");
+
+        // get class from profile (same endpoint you used)
+        const profile = await api(`/student/profile/${encodeURIComponent(studentId)}`);
+        const standard = profile.standard ?? profile.classNumber ?? profile.class ?? null;
+        const section = profile.section ?? null;
+
+        if (standard === null || standard === undefined || !section) {
+          throw new Error("Your profile missing standard/section");
+        }
+
+        // ✅ same timetable endpoint (do not disturb backend)
+        const data = await api(`/student/api/timetable/${encodeURIComponent(standard)}/${encodeURIComponent(section)}`);
+
+        // If backend doesn’t include standard/section in response, attach from profile
+        const merged = {
+          standard,
+          section,
+          ...(typeof data === "object" && data ? data : {})
+        };
+
+        render(merged);
+      } catch (e) {
+        console.error(e);
+        showErr(e.message || "Unable to load timetable.");
+        subtitleEl.textContent = "Unable to load timetable.";
+        grid.innerHTML = `
+          <div class="header">Time</div>
+          <div class="header">Monday</div>
+          <div class="header">Tuesday</div>
+          <div class="header">Wednesday</div>
+          <div class="header">Thursday</div>
+          <div class="header">Friday</div>
+          <div class="header">Saturday</div>
+
+          <div class="time">—</div>
+          <div class="subject empty">—</div>
+          <div class="subject empty">—</div>
+          <div class="subject empty">—</div>
+          <div class="subject empty">—</div>
+          <div class="subject empty">—</div>
+          <div class="subject empty">—</div>
+        `;
+      } finally {
+        grid.classList.remove("loading");
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>

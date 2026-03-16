@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Notifications · EduConnect</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="notifications.css"/>
+
+  <!-- SockJS + STOMP (kept, not disturbed) -->
+  <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+</head>
+
+<body>
+  <!-- ✅ Clean top actions (NO name/class, NO blue background) -->
+  <div class="top-actions">
+    <div class="actions-right">
+      <button class="action-btn" id="btnMarkAllRead" type="button">✔️ Mark all read</button>
+      <button class="action-btn" id="btnClearAll" type="button">🗑️ Clear all</button>
+      <button class="action-btn refresh-btn" id="btnRefresh" type="button">🔄 Refresh</button>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div class="title-row">
+      <h2>📬 Notifications</h2>
+      <span class="badge-count" id="countLine">—</span>
+    </div>
+
+    <div class="notification-list" id="list">
+      <div class="muted">Loading...</div>
+    </div>
+
+    <div class="empty-state" id="emptyState">
+      <div class="empty-icon">📭</div>
+      <h3>No Notifications</h3>
+      <p>You're all caught up!</p>
+    </div>
+
+    <div class="error-box hidden" id="err"></div>
+  </div>
+
+  <script src="notifications.js"></script>
+</body>
+</html>

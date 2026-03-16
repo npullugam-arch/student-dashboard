@@ -22,12 +22,17 @@ public class StudentDashboardService {
         Student student = studentCoreRepository.findByStudentId(studentId)
                 .orElseThrow(() -> new RuntimeException("Student not found: " + studentId));
 
+        // ✅ NEW repository method (standardSubject.standard)
         List<TeacherAssignment> assignments =
-                teacherAssignmentRepository.findByStandardAndSection(student.getStandard(), student.getSection());
+                teacherAssignmentRepository.findByStandardSubject_StandardAndSectionAndActiveTrue(
+                        student.getStandard(),
+                        student.getSection()
+                );
 
         return assignments.stream()
                 .map(a -> new FacultyDto(
-                        a.getSubject().name(),
+                        // ✅ subject from DB
+                        a.getStandardSubject().getSubject().getName(),
                         a.getTeacher().getTeacherId(),
                         a.getTeacher().getFullName(),
                         a.getTeacher().getMobileNumber(),

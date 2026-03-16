@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>Student • Exam Results</title>
+
+<link rel="stylesheet" href="student-exam-result.css"/>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+
+</head>
+<body>
+
+<div class="page">
+
+  <!-- <header class="topbar">
+
+    <div class="brand">
+      <div class="logo">📊</div>
+
+      <div>
+        <div class="title">EduConnect</div>
+        <div class="subtitle">Student • Exam Results</div>
+      </div>
+
+    </div>
+
+  </header> -->
+
+
+  <main class="container">
+
+    <div class="card">
+
+      <div class="card-head">
+
+        <div>
+          <h2>Exam Results</h2>
+          <p class="muted">Select exam to view your marks</p>
+        </div>
+
+        <select id="stuExamSelect" class="inp"></select>
+
+      </div>
+
+
+      <div class="table-wrap">
+
+        <table class="table">
+
+          <thead>
+            <tr>
+              <th>Subject</th>
+              <th>Marks Obtained</th>
+              <th>Total Marks</th>
+              <th>Percentage</th>
+            </tr>
+          </thead>
+
+          <tbody id="stuResultBody"></tbody>
+
+        </table>
+
+        <div id="emptyBox" class="empty">
+          No results available
+        </div>
+
+      </div>
+
+
+    </div>
+
+  </main>
+
+</div>
+
+<script src="student-exam-result.js"></script>
+
+</body>
+</html>

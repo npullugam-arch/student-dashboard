@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Office • Transactions</title>
+  <link rel="stylesheet" href="office-transactions.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <div class="h1">Transactions</div>
+        <div class="muted">Select a student → View / Add / Edit transactions</div>
+      </div>
+
+      <div class="tools">
+        <select id="fClass" class="inp"></select>
+        <input id="fSection" class="inp" placeholder="Section (A/B/C)" />
+        <input id="q" class="inp" placeholder="Search studentId / name..." />
+        <button class="btn" id="btnClear" type="button">Clear</button>
+        <button class="btn dark" id="btnReload" type="button">Reload</button>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="panel">
+        <div class="panelHead">
+          <b>Students</b>
+          <div class="muted">Click a student to manage transactions</div>
+        </div>
+        <div class="list" id="studentList"></div>
+        <div class="err" id="errStudents" style="display:none"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panelHead row">
+          <div>
+            <b id="selTitle">No student selected</b>
+            <div class="muted" id="selSub">—</div>
+          </div>
+          <div class="row">
+            <button class="btn" id="btnView" type="button" disabled>View Transactions</button>
+            <button class="btn dark" id="btnAdd" type="button" disabled>Add Transaction</button>
+          </div>
+        </div>
+
+        <div class="tip">
+          <i class="fas fa-circle-info"></i>
+          <div>
+            When you edit/delete a transaction, fee totals will be recalculated.
+          </div>
+        </div>
+
+        <div class="err" id="errRight" style="display:none"></div>
+
+        <!-- ✅ Right side content rendered by office-transactions.js -->
+        <div id="rightRoot"></div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- View Modal -->
+  <div class="modal" id="viewModal" style="display:none">
+    <div class="modalCard">
+      <div class="mHead">
+        <div>
+          <b>Transactions</b>
+          <div class="muted" id="vmSub">—</div>
+        </div>
+        <button class="iconbtn" id="vmClose" type="button">✕</button>
+      </div>
+
+      <div class="tableWrap">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Paid</th>
+              <th>Paid Total After</th>
+              <th>Due After</th>
+              <th>Next Due</th>
+              <th>Remarks</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="vmBody"></tbody>
+        </table>
+      </div>
+
+      <div class="mActions">
+        <button class="btn" id="vmReload" type="button">Reload</button>
+        <button class="btn dark" id="vmOk" type="button">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div class="modal" id="editModal" style="display:none">
+    <div class="modalCard" style="width:min(520px,100%)">
+      <div class="mHead">
+        <div>
+          <b>Edit Transaction</b>
+          <div class="muted" id="emSub">—</div>
+        </div>
+        <button class="iconbtn" id="emClose" type="button">✕</button>
+      </div>
+
+      <div class="mBody">
+        <label class="field">
+          <span>Paid Date</span>
+          <input id="emPaidDate" class="inp" type="date" />
+        </label>
+
+        <label class="field">
+          <span>Paid Amount</span>
+          <input id="emPaidAmount" class="inp" type="number" min="0" />
+        </label>
+
+        <label class="field">
+          <span>Next Due Date</span>
+          <input id="emNextDue" class="inp" type="date" />
+        </label>
+
+        <label class="field">
+          <span>Remarks</span>
+          <input id="emRemarks" class="inp" maxlength="300" placeholder="optional" />
+        </label>
+
+        <div class="err" id="emErr" style="display:none"></div>
+      </div>
+
+      <div class="mActions">
+        <button class="btn danger" id="emDelete" type="button">Delete</button>
+        <div style="flex:1"></div>
+        <button class="btn" id="emCancel" type="button">Cancel</button>
+        <button class="btn dark" id="emSave" type="button">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Modal -->
+  <div class="modal" id="addModal" style="display:none">
+    <div class="modalCard" style="width:min(520px,100%)">
+      <div class="mHead">
+        <div>
+          <b>Add Transaction</b>
+          <div class="muted" id="amSub">—</div>
+        </div>
+        <button class="iconbtn" id="amClose" type="button">✕</button>
+      </div>
+
+      <div class="mBody">
+        <label class="field">
+          <span>Paid Date</span>
+          <input id="amPaidDate" class="inp" type="date" />
+        </label>
+
+        <label class="field">
+          <span>Paid Amount</span>
+          <input id="amPaidAmount" class="inp" type="number" min="0" />
+        </label>
+
+        <label class="field">
+          <span>Next Due Date</span>
+          <input id="amNextDue" class="inp" type="date" />
+        </label>
+
+        <label class="field">
+          <span>Remarks</span>
+          <input id="amRemarks" class="inp" maxlength="300" placeholder="optional" />
+        </label>
+
+        <div class="err" id="amErr" style="display:none"></div>
+      </div>
+
+      <div class="mActions">
+        <button class="btn" id="amCancel" type="button">Cancel</button>
+        <button class="btn dark" id="amSave" type="button">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="office-transactions.js"></script>
+</body>
+</html>

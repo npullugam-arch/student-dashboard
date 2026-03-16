@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Short Notes - EduConnect</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="short-notes.css">
+</head>
+
+<body>
+  <div class="container">
+
+    <!-- Header Section -->
+    <header class="header">
+      <div class="header-content">
+        <div class="header-left">
+          <i class="fas fa-book-open header-icon"></i>
+          <h1 class="header-title">My Short Notes</h1>
+        </div>
+
+        <div class="header-right">
+          <div class="search-box">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" id="searchInput" placeholder="Search for notes..." class="search-input">
+          </div>
+
+          <button class="refresh-btn" id="refreshBtn" type="button">
+            <i class="fas fa-sync-alt"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Filter Buttons (✅ dynamic now) -->
+    <div class="filter-section">
+      <h3 class="filter-title">📂 Filter by Subject:</h3>
+
+      <!-- ✅ keep same class names, just empty container -->
+      <div class="filter-buttons" id="filterButtons"></div>
+    </div>
+
+    <!-- Notes Grid -->
+    <div class="notes-grid" id="notesGrid"></div>
+
+    <!-- Empty State -->
+    <div class="empty-state" id="emptyState" style="display:none;">
+      <i class="fas fa-search"></i>
+      <h3>No notes found</h3>
+      <p>Try adjusting your search or filter to find what you're looking for.</p>
+    </div>
+
+  </div>
+
+  <script src="short-notes.js"></script>
+</body>
+
+</html>

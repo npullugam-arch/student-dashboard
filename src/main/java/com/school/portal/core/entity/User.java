@@ -21,7 +21,7 @@ public class User {
     private String username;   // studentId / teacherId / adminId
 
     @Column(nullable = false)
-    private String password;   // encrypted (BCrypt later)
+    private String password;   // encrypted (BCrypt)
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -29,4 +29,8 @@ public class User {
 
     @Column(nullable = false)
     private boolean active = true;
+
+    // ✅ NEW: student can change password only once
+    @Column(nullable = false)
+    private boolean passwordChanged = false;
 }

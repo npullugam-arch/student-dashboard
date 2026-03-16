@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Admin • Exam Timetable</title>
+  <link rel="stylesheet" href="admin-exam-timetable.css"/>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">🗓️</div>
+      <div>
+        <div class="title">EduConnect</div>
+        <div class="sub">Admin • Exam Timetable</div>
+      </div>
+    </div>
+    <div class="right">
+      <button class="btn ghost" id="btnBack">← Back</button>
+      <button class="btn dark" id="btnLogout">Logout</button>
+    </div>
+  </header>
+
+  <main class="grid">
+
+    <!-- LEFT: Create Exam -->
+    <section class="card">
+      <div class="card-head">
+        <div>
+          <h2>Create Exam</h2>
+          <p class="muted">Create one exam name (Quarterly / Half-Yearly etc).</p>
+        </div>
+      </div>
+
+      <form id="examForm" class="form">
+        <label class="field">
+          <span>Exam Name</span>
+          <input class="inp" id="examName" placeholder="Quarterly Exam 2026" required/>
+        </label>
+
+        <div id="examErr" class="error hidden"></div>
+
+        <div class="actions">
+          <button type="submit" class="btn dark">Create Exam</button>
+        </div>
+      </form>
+
+      <div class="note">
+        <b>Tip:</b> After creating exam, copy the Exam ID shown below.
+      </div>
+
+      <div class="result" id="examCreatedBox" style="display:none;">
+        <div><b>Created Exam ID:</b> <span id="createdExamId">—</span></div>
+      </div>
+
+      <!-- ✅ Created Exams Table (NOW FROM DB) -->
+      <div class="result" id="createdExamsTableBox" style="margin-top:12px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+          <div><b>Created Exams</b></div>
+          <button class="btn ghost" id="btnRefreshExamList" type="button" title="Refresh from database">Refresh</button>
+        </div>
+
+        <div style="margin-top:10px; overflow:auto;">
+          <table id="createdExamsTable" style="width:100%; border-collapse:collapse;">
+            <thead>
+              <tr>
+                <th style="text-align:left; padding:10px; border-bottom:1px solid rgba(0,0,0,.08);">Exam ID</th>
+                <th style="text-align:left; padding:10px; border-bottom:1px solid rgba(0,0,0,.08);">Exam Name</th>
+                <th style="text-align:left; padding:10px; border-bottom:1px solid rgba(0,0,0,.08);">Created</th>
+                <th style="text-align:right; padding:10px; border-bottom:1px solid rgba(0,0,0,.08);">Action</th>
+              </tr>
+            </thead>
+            <tbody id="createdExamsTbody"></tbody>
+          </table>
+
+          <div id="noCreatedExams" class="muted" style="padding:10px; display:none;">
+            No exams created yet.
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- RIGHT: Add Schedule -->
+    <section class="card">
+      <div class="card-head">
+        <div>
+          <h2>Add Exam Schedule</h2>
+          <p class="muted">Add subject rows (date/day/time/subject) for class.</p>
+        </div>
+      </div>
+
+      <form id="scheduleForm" class="form">
+        <div class="form-grid">
+
+          <label class="field">
+            <span>Exam ID</span>
+            <input class="inp" id="examId" type="number" placeholder="1" required/>
+          </label>
+
+          <label class="field">
+            <span>Class (Standard)</span>
+            <select class="inp" id="standard" required>
+              <option value="">Select</option>
+              <option value="-2">Nursery</option>
+              <option value="-1">LKG</option>
+              <option value="0">UKG</option>
+              <option value="1">Class 1</option>
+              <option value="2">Class 2</option>
+              <option value="3">Class 3</option>
+              <option value="4">Class 4</option>
+              <option value="5">Class 5</option>
+              <option value="6">Class 6</option>
+              <option value="7">Class 7</option>
+              <option value="8">Class 8</option>
+              <option value="9">Class 9</option>
+              <option value="10">Class 10</option>
+              <option value="11">Class 11</option>
+              <option value="12">Class 12</option>
+            </select>
+          </label>
+
+          <label class="field wide">
+            <span>Subject Name</span>
+            <select class="inp" id="subjectName" required>
+              <option value="">Select class first</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Exam Date</span>
+            <input class="inp" id="examDate" type="date" required/>
+          </label>
+
+          <label class="field">
+            <span>Day</span>
+            <select class="inp" id="day" required>
+              <option value="">Select</option>
+              <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
+              <option>Thursday</option><option>Friday</option><option>Saturday</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Start Time</span>
+            <input class="inp" id="startTime" type="time" required/>
+          </label>
+
+          <label class="field">
+            <span>End Time</span>
+            <input class="inp" id="endTime" type="time" required/>
+          </label>
+
+        </div>
+
+        <div id="schErr" class="error hidden"></div>
+
+        <div class="actions">
+          <button type="submit" class="btn dark">Add Schedule Row</button>
+        </div>
+      </form>
+
+      <div class="note">
+        <b>Note:</b> Subjects are loaded from Admin → Subjects page assignments.
+      </div>
+
+    </section>
+
+  </main>
+</div>
+
+<script src="admin-exam-timetable.js"></script>
+</body>
+</html>

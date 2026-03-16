@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student • Diary</title>
+  <link rel="stylesheet" href="diary.css"/>
+</head>
+<body>
+  <div class="wrap">
+    
+
+    <div id="err" class="error hidden"></div>
+
+    <section class="card">
+      <div class="table-wrap" aria-label="Diary table">
+        <table class="tbl" id="diaryTable">
+          <thead>
+            <tr>
+              <th class="col-subject">Subject</th>
+              <th class="col-homework">Homework / Work Today</th>
+            </tr>
+          </thead>
+          <tbody id="tbody">
+            <tr><td colspan="2" class="muted">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <script src="diary.js"></script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+/* ✅ SCOPE EVERYTHING inside diary-scope so classes page can't affect it */
+.diary-scope,
+.diary-scope * {
+  box-sizing: border-box;
+}
+
+.diary-scope .td-wrap {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  align-items: start;
+}
+
+.diary-scope .card {
+  background: #fff;
+  border: 1px solid #e7e9ff;
+  border-radius: 18px;
+  padding: 14px;
+  box-shadow: 0 16px 50px rgba(20, 22, 60, .10);
+}
+
+.diary-scope .head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.diary-scope .muted {
+  color: #6d7488;
+}
+
+.diary-scope .row {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  width: 100%;
+  min-width: 0;
+}
+
+.diary-scope .row > * {
+  min-width: 0;
+}
+
+/* ✅ Strong input selector */
+.diary-scope input.inp,
+.diary-scope select.inp,
+.diary-scope textarea.inp {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #e7e9ff;
+  border-radius: 12px;
+  outline: none;
+  background: #fff;
+  color: #1f2430;
+  font: inherit;
+  line-height: 1.2;
+  min-height: 42px;
+}
+
+.diary-scope textarea.inp {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* ✅ Strong button selector so classes page won't override */
+.diary-scope button.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e7e9ff;
+  background: #fff;
+  border-radius: 12px;
+  padding: 10px 12px;
+  cursor: pointer;
+
+  font: inherit;
+  line-height: 1;
+  height: 42px;
+  white-space: nowrap;
+  flex: 0 0 auto;
+  color: #1f2430;
+}
+
+.diary-scope button.btn.dark {
+  background: #1f2430;
+  color: #fff;
+  border-color: #1f2430;
+}
+
+.diary-scope .row-actions {
+  align-items: center;
+}
+
+.diary-scope #saveMsg {
+  flex: 1;
+}
+
+.diary-scope .list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.diary-scope .item {
+  border: 1px solid #e7e9ff;
+  border-radius: 14px;
+  padding: 12px;
+}
+
+.diary-scope .error {
+  margin-top: 10px;
+  background: #ffecec;
+  border: 1px solid #ffc7c7;
+  color: #a11;
+  padding: 10px;
+  border-radius: 12px;
+}
+
+.diary-scope .hidden {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .diary-scope .td-wrap {
+    grid-template-columns: 1fr;
+  }
+}

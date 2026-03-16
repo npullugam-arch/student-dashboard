@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin • Teacher Timetable</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+  <style>
+    *{box-sizing:border-box;font-family:Poppins,sans-serif}
+    body{margin:0;background:#0b1220;color:#e8ecf7;padding:16px}
+    .wrap{max-width:1100px;margin:0 auto}
+    .top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .title h1{margin:0;font-size:20px;font-weight:800}
+    .muted{opacity:.75;font-size:12px}
+    .card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;box-shadow:0 18px 50px rgba(0,0,0,.35);overflow:hidden;margin-top:12px}
+    .card-head{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .row{display:flex;gap:10px;flex-wrap:wrap}
+    .input, select{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.10);color:#e8ecf7;border-radius:12px;padding:10px 10px;font-weight:600;font-size:13px;outline:none}
+    .input:focus, select:focus{border-color:rgba(124,58,237,.65);box-shadow:0 0 0 4px rgba(124,58,237,.20)}
+    .btn{border:0;border-radius:12px;padding:10px 12px;font-weight:800;cursor:pointer}
+    .btn.primary{background:linear-gradient(135deg,#7c3aed,#4c1d95);color:#fff}
+    .btn.ghost{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.10);color:#fff}
+    .btn.danger{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.25);color:#ffd1d1}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.08);font-size:13px}
+    th{text-align:left;opacity:.8}
+    td.right{text-align:right}
+    .msg{padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.03);margin-top:10px;display:none}
+    .msg.ok{display:block;border-color:rgba(34,197,94,.25);background:rgba(34,197,94,.10);color:#c8f7d9}
+    .msg.err{display:block;border-color:rgba(239,68,68,.25);background:rgba(239,68,68,.10);color:#ffd1d1}
+    .pill{padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.03);font-size:12px;font-weight:800}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="title">
+      <h1>🗓️ Teacher Timetable</h1>
+      <div class="muted">Create timetable slots for a specific teacher (day + time + class/section + subject).</div>
+    </div>
+    <div class="row">
+  <select id="teacherSelect" class="input" style="min-width:240px;">
+    <option value="">Select Teacher…</option>
+  </select>
+
+  <span class="pill" id="teacherPill">Teacher: --</span>
+  <button class="btn ghost" id="btnBack">← Back</button>
+</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="row">
+        <select id="daySelect">
+          <option value="MONDAY">MONDAY</option>
+          <option value="TUESDAY">TUESDAY</option>
+          <option value="WEDNESDAY">WEDNESDAY</option>
+          <option value="THURSDAY">THURSDAY</option>
+          <option value="FRIDAY">FRIDAY</option>
+          <option value="SATURDAY">SATURDAY</option>
+        </select>
+
+        <button class="btn ghost" id="btnLoad">Load Day</button>
+      </div>
+
+      <button class="btn primary" id="btnAdd">+ Add Slot</button>
+    </div>
+
+    <div style="padding:12px 14px;">
+      <div class="msg" id="msg"></div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Class</th>
+            <th>Subject</th>
+            <th>Status</th>
+            <th class="right">Action</th>
+          </tr>
+        </thead>
+        <tbody id="tbody">
+          <tr><td colspan="5" class="muted">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card" id="formCard" style="display:none;">
+    <div class="card-head">
+      <b id="formTitle">Add Slot</b>
+      <button class="btn ghost" id="btnCloseForm">✕</button>
+    </div>
+
+    <div style="padding:12px 14px;">
+      <div class="row">
+        <input class="input" id="startTime" placeholder="Start (HH:mm)" value="08:00">
+        <input class="input" id="endTime" placeholder="End (HH:mm)" value="08:45">
+        <input class="input" id="standard" type="number" min="-2" max="12" placeholder="Standard (-2..12)" value="10">
+        <input class="input" id="section" maxlength="5" placeholder="Section (A)" value="A">
+        <select id="subjectSelect"></select>
+        <select id="activeSelect">
+          <option value="true">ACTIVE</option>
+          <option value="false">INACTIVE</option>
+        </select>
+      </div>
+
+      <div class="row" style="margin-top:10px;">
+        <button class="btn primary" id="btnSave">Save</button>
+        <button class="btn ghost" id="btnCancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ============================
+  // Admin session + auth (same style as your teachers.js)
+  // ============================
+  function getSession() {
+    try { return JSON.parse(localStorage.getItem("smp_session") || "{}"); }
+    catch { return {}; }
+  }
+  function normalizeToken(raw) {
+    if (!raw) return "";
+    let tok = String(raw).trim();
+    if (/^basic\s+/i.test(tok)) tok = tok.replace(/^basic\s+/i, "").trim();
+    const looksBase64 = /^[A-Za-z0-9+/=]+$/.test(tok) && tok.length >= 12;
+    if (!looksBase64 && tok.includes(":")) tok = btoa(tok);
+    return tok;
+  }
+  function requireAdmin() {
+    const s = getSession();
+    const tok = normalizeToken(s.basicToken);
+    if (!s.username || !tok || String(s.role || "").toUpperCase() !== "ADMIN") {
+      alert("Session expired. Please login again.");
+      window.location.href = "/login/admin.html";
+      throw new Error("No admin session");
+    }
+    if (tok !== s.basicToken) {
+      s.basicToken = tok;
+      localStorage.setItem("smp_session", JSON.stringify(s));
+    }
+    return { ...s, basicToken: tok };
+  }
+  const session = requireAdmin();
+
+  function authHeaders(json = true) {
+    const h = { Authorization: "Basic " + session.basicToken };
+    if (json) h["Content-Type"] = "application/json";
+    return h;
+  }
+  async function apiFetch(url, opts = {}) {
+    const res = await fetch(url, {
+      ...opts,
+      headers: { ...(opts.headers || {}), ...authHeaders(opts.json !== false) }
+    });
+
+    if (res.status === 401) {
+      localStorage.removeItem("smp_session");
+      alert("Session expired. Please login again.");
+      window.location.href = "/login/admin.html";
+      throw new Error("Unauthorized");
+    }
+
+    if (!res.ok) {
+      const t = await res.text().catch(() => "");
+      throw new Error(t || ("HTTP " + res.status));
+    }
+
+    const text = await res.text().catch(() => "");
+    if (!text) return null;
+    try { return JSON.parse(text); } catch { return text; }
+  }
+
+  // ============================
+  // DOM
+  // ============================
+  const teacherPill = document.getElementById("teacherPill");
+  const btnBack = document.getElementById("btnBack");
+  const daySelect = document.getElementById("daySelect");
+  const btnLoad = document.getElementById("btnLoad");
+  const btnAdd = document.getElementById("btnAdd");
+  const tbody = document.getElementById("tbody");
+  const msg = document.getElementById("msg");
+
+  const formCard = document.getElementById("formCard");
+  const formTitle = document.getElementById("formTitle");
+  const btnCloseForm = document.getElementById("btnCloseForm");
+  const btnCancel = document.getElementById("btnCancel");
+  const btnSave = document.getElementById("btnSave");
+
+  const startTime = document.getElementById("startTime");
+  const endTime = document.getElementById("endTime");
+  const standard = document.getElementById("standard");
+  const section = document.getElementById("section");
+  const subjectSelect = document.getElementById("subjectSelect");
+  const activeSelect = document.getElementById("activeSelect");
+
+  // ✅ teacher dropdown (must exist in HTML)
+  // <select id="teacherSelect"></select>
+  const teacherSelect = document.getElementById("teacherSelect");
+
+  // ============================
+  // State + helpers
+  // ============================
+  function getTeacherIdFromUrl() {
+    const qs = new URLSearchParams(location.search);
+    return (qs.get("teacherId") || "").trim();
+  }
+
+  function setTeacherIdInUrl(newTeacherId) {
+    const id = String(newTeacherId || "").trim();
+    const url = new URL(window.location.href);
+    if (id) url.searchParams.set("teacherId", id);
+    else url.searchParams.delete("teacherId");
+    window.history.replaceState({}, "", url.toString());
+  }
+
+  function updateTeacherPill() {
+    const tid = getTeacherIdFromUrl();
+    teacherPill.textContent = "Teacher: " + (tid || "--");
+  }
+
+  function showMsg(kind, text) {
+    msg.className = "msg " + kind;
+    msg.textContent = text;
+    msg.style.display = "block";
+  }
+  function clearMsg() {
+    msg.style.display = "none";
+    msg.textContent = "";
+    msg.className = "msg";
+  }
+
+  btnBack.addEventListener("click", () => window.history.back());
+
+  let editId = null;
+
+  function openForm(mode) {
+    formTitle.textContent = mode === "edit" ? "Edit Slot" : "Add Slot";
+    formCard.style.display = "";
+  }
+  function closeForm() {
+    formCard.style.display = "none";
+    editId = null;
+  }
+  btnCloseForm.addEventListener("click", closeForm);
+  btnCancel.addEventListener("click", closeForm);
+
+  function rowHtml(x) {
+    const time = `${x.startTime} - ${x.endTime}`;
+    const cls = `Class ${x.standard}-${x.section}`;
+    const subj = x.subjectName || ("Subject #" + x.standardSubjectId);
+    const st = x.active ? "ACTIVE" : "INACTIVE";
+    return `
+      <tr data-id="${x.id}">
+        <td>${time}</td>
+        <td>${cls}</td>
+        <td><b>${subj}</b></td>
+        <td>${st}</td>
+        <td class="right">
+          <button class="btn ghost" data-act="edit">Edit</button>
+          <button class="btn danger" data-act="del">Delete</button>
+        </td>
+      </tr>
+    `;
+  }
+
+  // ============================
+  // ✅ Teachers dropdown
+  // ============================
+  async function loadTeachersIntoDropdown() {
+    if (!teacherSelect) return;
+
+    teacherSelect.innerHTML = `<option value="">Loading teachers…</option>`;
+    try {
+      // Your existing list endpoint
+      const list = await apiFetch("/admin/teachers", { method: "GET", json: false });
+      const arr = Array.isArray(list) ? list : [];
+
+      teacherSelect.innerHTML =
+        `<option value="">Select Teacher…</option>` +
+        arr.map(t => {
+          const id = String(t.teacherId || "").trim();
+          const name = String(t.fullName || id || "Teacher").trim();
+          if (!id) return "";
+          return `<option value="${id}">${name} (${id})</option>`;
+        }).join("");
+
+      const tid = getTeacherIdFromUrl();
+
+      // If URL has teacherId -> select it
+      if (tid) {
+        teacherSelect.value = tid;
+      }
+
+      // If URL missing -> auto pick first teacher
+      if (!tid) {
+        const first = arr.find(x => x && x.teacherId);
+        if (first && first.teacherId) {
+          const firstId = String(first.teacherId).trim();
+          teacherSelect.value = firstId;
+          setTeacherIdInUrl(firstId);
+        }
+      }
+
+    } catch (e) {
+      teacherSelect.innerHTML = `<option value="">Unable to load teachers</option>`;
+    } finally {
+      updateTeacherPill();
+    }
+  }
+
+  teacherSelect?.addEventListener("change", async () => {
+    const id = String(teacherSelect.value || "").trim();
+    if (!id) {
+      setTeacherIdInUrl("");
+      updateTeacherPill();
+      tbody.innerHTML = `<tr><td colspan="5" class="muted">Select a teacher first.</td></tr>`;
+      subjectSelect.innerHTML = `<option value="">Select subject…</option>`;
+      return;
+    }
+
+    setTeacherIdInUrl(id);
+    updateTeacherPill();
+    clearMsg();
+
+    // reload list for selected teacher/day
+    await loadDay();
+  });
+
+  // ============================
+  // ✅ Subjects dropdown (IMPORTANT FIX)
+  // Only show subjects ASSIGNED to selected teacher for given standard+section
+  // Uses endpoint: GET /admin/teachers/{teacherId}/assignments
+  // ============================
+  async function loadSubjectsForTeacher(teacherId, std, sec) {
+    subjectSelect.innerHTML = `<option value="">Loading…</option>`;
+
+    const tId = String(teacherId || "").trim();
+    const standardNum = Number(std);
+    const sectionTxt = String(sec || "").trim().toUpperCase();
+
+    if (!tId) {
+      subjectSelect.innerHTML = `<option value="">Select teacher first</option>`;
+      return;
+    }
+    if (!standardNum || Number.isNaN(standardNum)) {
+      subjectSelect.innerHTML = `<option value="">Enter standard</option>`;
+      return;
+    }
+    if (!sectionTxt) {
+      subjectSelect.innerHTML = `<option value="">Enter section</option>`;
+      return;
+    }
+
+    try {
+      const list = await apiFetch(
+        `/admin/teachers/${encodeURIComponent(tId)}/assignments`,
+        { method: "GET", json: false }
+      );
+
+      const arr = Array.isArray(list) ? list : [];
+
+      const filtered = arr.filter(a =>
+        Number(a.standard) === standardNum &&
+        String(a.section || "").trim().toUpperCase() === sectionTxt
+      );
+
+      if (!filtered.length) {
+        subjectSelect.innerHTML =
+          `<option value="">No assigned subjects for Class ${standardNum}-${sectionTxt}</option>`;
+        return;
+      }
+
+      subjectSelect.innerHTML =
+        `<option value="">Select subject…</option>` +
+        filtered.map(a => {
+          const id = a.standardSubjectId ?? a.id;
+          const name = a.subjectName || "SUBJECT";
+          return `<option value="${id}">${name}</option>`;
+        }).join("");
+
+    } catch (e) {
+      subjectSelect.innerHTML = `<option value="">Unable to load subjects</option>`;
+    }
+  }
+
+  // when standard/section changes, reload teacher-assigned subjects
+  standard.addEventListener("change", () => {
+    const teacherIdNow = getTeacherIdFromUrl();
+    loadSubjectsForTeacher(teacherIdNow, standard.value, section.value);
+  });
+
+  section.addEventListener("input", () => {
+    const teacherIdNow = getTeacherIdFromUrl();
+    loadSubjectsForTeacher(teacherIdNow, standard.value, section.value);
+  });
+
+  // ============================
+  // Load day table
+  // ============================
+  async function loadDay() {
+    clearMsg();
+    tbody.innerHTML = `<tr><td colspan="5" class="muted">Loading…</td></tr>`;
+
+    const teacherIdNow = getTeacherIdFromUrl();
+    if (!teacherIdNow) {
+      tbody.innerHTML = `<tr><td colspan="5" class="muted">Select a teacher first.</td></tr>`;
+      return;
+    }
+
+    try {
+      const day = daySelect.value;
+      const list = await apiFetch(
+        `/api/admin/teachers/${encodeURIComponent(teacherIdNow)}/timetable?day=${encodeURIComponent(day)}`,
+        { method: "GET", json: false }
+      );
+
+      const arr = Array.isArray(list) ? list : [];
+      if (!arr.length) {
+        tbody.innerHTML = `<tr><td colspan="5" class="muted">No slots for ${day}. Add one ✅</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = arr.map(rowHtml).join("");
+
+    } catch (e) {
+      tbody.innerHTML = `<tr><td colspan="5" class="muted">Failed: ${String(e.message || e)}</td></tr>`;
+    }
+  }
+
+  btnLoad.addEventListener("click", loadDay);
+
+  // ============================
+  // Add slot
+  // ============================
+  btnAdd.addEventListener("click", async () => {
+    const teacherIdNow = getTeacherIdFromUrl();
+    if (!teacherIdNow) {
+      showMsg("err", "Select a teacher first.");
+      return;
+    }
+
+    editId = null;
+    startTime.value = "08:00";
+    endTime.value = "08:45";
+    if (!standard.value) standard.value = "10";
+    if (!section.value) section.value = "A";
+    activeSelect.value = "true";
+
+    // ✅ IMPORTANT: load teacher-assigned subjects (not all standard subjects)
+    await loadSubjectsForTeacher(teacherIdNow, standard.value, section.value);
+    subjectSelect.value = "";
+
+    openForm("add");
+  });
+
+  // ============================
+  // Edit / Delete
+  // ============================
+  tbody.addEventListener("click", async (e) => {
+    const btn = e.target.closest("button");
+    if (!btn) return;
+
+    const teacherIdNow = getTeacherIdFromUrl();
+    if (!teacherIdNow) {
+      showMsg("err", "Select a teacher first.");
+      return;
+    }
+
+    const tr = e.target.closest("tr");
+    const id = tr?.dataset?.id;
+    if (!id) return;
+
+    const act = btn.dataset.act;
+
+    if (act === "del") {
+      if (!confirm("Delete this slot?")) return;
+      try {
+        await apiFetch(
+          `/api/admin/teachers/${encodeURIComponent(teacherIdNow)}/timetable/${encodeURIComponent(id)}`,
+          { method: "DELETE", json: false }
+        );
+        showMsg("ok", "Deleted ✅");
+        await loadDay();
+      } catch (err) {
+        showMsg("err", err.message || String(err));
+      }
+    }
+
+    if (act === "edit") {
+      editId = id;
+
+      const tds = tr.querySelectorAll("td");
+      const time = (tds[0]?.textContent || "").split("-").map(s => s.trim());
+      const cls = (tds[1]?.textContent || "Class 10-A").replace("Class", "").trim();
+      const parts = cls.split("-");
+      const std = Number(parts[0] || 10);
+      const sec = (parts[1] || "A").trim();
+
+      startTime.value = time[0] || "08:00";
+      endTime.value = time[1] || "08:45";
+      standard.value = String(std);
+      section.value = sec;
+
+      // ✅ IMPORTANT: reload teacher-assigned subjects for this class/section
+      await loadSubjectsForTeacher(teacherIdNow, std, sec);
+
+      // keep unselected; user must pick if changing (safe)
+      subjectSelect.value = "";
+      activeSelect.value = "true";
+
+      openForm("edit");
+      showMsg("ok", "Now update fields and Save ✅");
+    }
+  });
+
+  // ============================
+  // Save (create/update)
+  // ============================
+  btnSave.addEventListener("click", async () => {
+    clearMsg();
+
+    const teacherIdNow = getTeacherIdFromUrl();
+    if (!teacherIdNow) return showMsg("err", "Select a teacher first.");
+
+    const payload = {
+      dayOfWeek: daySelect.value,
+      startTime: (startTime.value || "").trim(),
+      endTime: (endTime.value || "").trim(),
+      standard: Number(standard.value),
+      section: (section.value || "").trim(),
+      standardSubjectId: subjectSelect.value ? Number(subjectSelect.value) : null,
+      active: activeSelect.value === "true"
+    };
+
+    if (!payload.startTime || !payload.endTime) return showMsg("err", "Time is required");
+    if (!payload.section) return showMsg("err", "Section is required");
+    if (!payload.standardSubjectId) return showMsg("err", "Subject is required");
+
+    try {
+      if (editId) {
+        await apiFetch(
+          `/api/admin/teachers/${encodeURIComponent(teacherIdNow)}/timetable/${encodeURIComponent(editId)}`,
+          { method: "PUT", body: JSON.stringify(payload) }
+        );
+        showMsg("ok", "Updated ✅");
+      } else {
+        await apiFetch(
+          `/api/admin/teachers/${encodeURIComponent(teacherIdNow)}/timetable`,
+          { method: "POST", body: JSON.stringify(payload) }
+        );
+        showMsg("ok", "Saved ✅");
+      }
+
+      closeForm();
+      await loadDay();
+
+    } catch (err) {
+      showMsg("err", err.message || String(err));
+    }
+  });
+
+  // ============================
+  // init
+  // ============================
+  (async function init() {
+    updateTeacherPill();
+
+    await loadTeachersIntoDropdown();
+
+    // ✅ preload subjects only if teacher already selected
+    const teacherIdNow = getTeacherIdFromUrl();
+    if (teacherIdNow) {
+      await loadSubjectsForTeacher(
+        teacherIdNow,
+        Number(standard.value || 10),
+        (section.value || "A")
+      );
+    } else {
+      subjectSelect.innerHTML = `<option value="">Select teacher first</option>`;
+    }
+
+    await loadDay();
+  })();
+</script>
+</body>
+</html>

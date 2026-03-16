@@ -1,0 +1,76 @@
+<link rel="stylesheet" href="teacher-doubts.css">
+
+<div id="tdoubtsRoot" class="td-wrap">
+
+ 
+
+  <main class="td-grid">
+
+    <!-- ✅ LEFT: scrollable column -->
+    <section class="td-card td-left">
+      <div class="td-card-head">
+        <div>
+          <h2>Incoming Doubts</h2>
+          <p class="td-muted">Open a doubt, reply, mark Answered/Closed.</p>
+        </div>
+
+        <div class="td-filters">
+          <select id="statusFilter" class="td-input">
+            <option value="">ALL</option>
+            <option value="OPEN">PENDING</option>
+            <option value="ANSWERED">ANSWERED</option>
+            <option value="CLOSED">CLOSED</option>
+          </select>
+          <button class="td-btn" id="btnRefresh" type="button">Refresh</button>
+        </div>
+      </div>
+
+      <!-- ✅ list scrolls inside card -->
+      <div id="list" class="td-list td-list-scroll">
+        <div class="td-muted">Loading...</div>
+      </div>
+    </section>
+
+    <!-- ✅ RIGHT: sticky (static) column -->
+    <section class="td-card td-right-card">
+      <div class="td-card-head">
+        <div>
+          <h2>Thread</h2>
+          <p class="td-muted">Select a doubt to respond.</p>
+        </div>
+      </div>
+
+      <div id="empty" class="td-empty">
+        <div class="emoji">👈</div>
+        <div>
+          <div class="td-empty-title">Select a doubt</div>
+          <div class="td-muted">Messages will appear here.</div>
+        </div>
+      </div>
+
+      <div id="thread" class="td-thread hidden">
+        <div class="td-thread-top">
+          <div>
+            <div class="td-tTitle" id="tTitle">—</div>
+            <div class="td-muted" id="tMeta">—</div>
+          </div>
+          <div class="td-actions">
+            <button class="td-btn" id="btnMarkAnswered" type="button">Mark Answered</button>
+            <button class="td-btn danger" id="btnMarkClosed" type="button">Close</button>
+          </div>
+        </div>
+
+        <div id="msgs" class="td-msgs"></div>
+
+        <form id="replyForm" class="td-reply">
+          <input class="td-input" id="replyText" placeholder="Type reply..." />
+          <button class="td-btn primary" type="submit">Send</button>
+        </form>
+
+        <div id="err" class="td-error hidden"></div>
+      </div>
+    </section>
+
+  </main>
+
+</div>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student • Doubts Clarification</title>
+
+  <!-- Premium font like your 1st UI -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- ✅ Use this CSS file (below) -->
+  <link rel="stylesheet" href="student-doubts.css"/>
+</head>
+<body>
+
+  <!-- Background decor (same vibe as 1st UI) -->
+  <div class="bg-orbs" aria-hidden="true">
+    <span class="orb orb--1"></span>
+    <span class="orb orb--2"></span>
+    <span class="orb orb--3"></span>
+  </div>
+
+  <!-- ✅ Hidden topbar (keeps IDs for backend JS, but not visible in UI) -->
+  <header class="topbar hidden-ui" id="topbar">
+    <div class="brand">
+      <div class="logo">🧠</div>
+      <div>
+        <div class="title">EduConnect</div>
+        <div class="sub">Student • Doubts Clarification</div>
+      </div>
+    </div>
+    <div class="right">
+      <button class="btn btn--ghost" id="btnBack" type="button">← Back</button>
+      <button class="btn btn--dark" id="btnLogout" type="button">Logout</button>
+    </div>
+  </header>
+
+  <main class="shell">
+    <!-- ✅ NO page-head/title block (as you requested) -->
+
+    <section class="grid">
+      <!-- Assigned Teachers -->
+      <article class="card tilt" id="teachersCard">
+        <div class="card__head">
+          <div>
+            <h2 class="card__title">Assigned Teachers</h2>
+            <p class="card__hint">Choose a teacher &amp; send your doubt (no attachments).</p>
+          </div>
+
+          <!-- ✅ keep this id for your existing JS -->
+          <button class="btn btn--ghost" type="button" id="btnRefreshTeachers">
+            <span class="btn__shine"></span>
+            Refresh
+          </button>
+        </div>
+
+        <!-- ✅ keep this id for backend JS -->
+        <div id="teacherList" class="teacher-list">
+          <div class="muted">Loading...</div>
+        </div>
+      </article>
+
+      <!-- My Doubts -->
+      <article class="card" id="doubtsCard">
+        <div class="card__head">
+          <div>
+            <h2 class="card__title">My Doubts</h2>
+            <p class="card__hint">Track status: Pending / Answered / Closed + viewed.</p>
+          </div>
+
+          <div class="card__tools">
+            <!-- ✅ keep this id for backend JS -->
+            <select id="statusFilter" class="select" aria-label="Filter">
+              <option value="">ALL</option>
+              <option value="OPEN">PENDING</option>
+              <option value="ANSWERED">ANSWERED</option>
+              <option value="CLOSED">CLOSED</option>
+            </select>
+
+            <!-- ✅ keep this id for backend JS -->
+            <button class="btn btn--ghost" type="button" id="btnRefreshMy">
+              <span class="btn__shine"></span>
+              Refresh
+            </button>
+          </div>
+        </div>
+
+        <!-- ✅ only this area should scroll -->
+        <div id="myList" class="my-list">
+          <div class="muted">Loading...</div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <!-- ✅ Send Doubt Modal (keep IDs for JS) -->
+  <div class="modal hidden" id="sendModal">
+    <div class="modal__backdrop" data-close="true"></div>
+
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <div class="modal-head">
+        <div>
+          <div class="modal-title">Send Doubt</div>
+          <div class="muted" id="sendToLine">—</div>
+        </div>
+        <button class="iconbtn" id="sendClose" type="button" data-close="true">✕</button>
+      </div>
+
+      <form id="sendForm" class="form">
+        <label class="field">
+          <span>Title</span>
+          <input class="input" id="dTitle" placeholder="Ex: Doubt in Algebra" required/>
+        </label>
+
+        <label class="field">
+          <span>Topic</span>
+          <input class="input" id="dTopic" placeholder="Ex: Quadratic equations"/>
+        </label>
+
+        <label class="field">
+          <span>Description</span>
+          <textarea class="input area" id="dDesc" placeholder="Write your doubt clearly..." required></textarea>
+        </label>
+
+        <div id="sendErr" class="error hidden"></div>
+
+        <div class="actions">
+          <button type="button" class="btn btn--ghost" id="sendCancel">Cancel</button>
+          <button type="submit" class="btn btn--primary">Send</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ✅ Thread Modal (keep IDs for JS) -->
+  <div class="modal hidden" id="threadModal">
+    <div class="modal__backdrop" data-close="true"></div>
+
+    <div class="modal-card large" role="dialog" aria-modal="true">
+      <div class="modal-head">
+        <div>
+          <div class="modal-title" id="thTitle">—</div>
+          <div class="muted" id="thMeta">—</div>
+        </div>
+        <button class="iconbtn" id="threadClose" type="button" data-close="true">✕</button>
+      </div>
+
+      <div class="thread">
+        <div id="msgList" class="msgs"></div>
+
+        <form id="replyForm" class="reply">
+          <input class="input" id="replyText" placeholder="Type a reply..." />
+          <button class="btn btn--primary" type="submit">Send</button>
+        </form>
+
+        <div id="threadErr" class="error hidden"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ keep your backend-connected JS exactly -->
+  <script src="student-doubts.js"></script>
+</body>
+</html>

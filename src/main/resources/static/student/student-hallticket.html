@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student • Hall Ticket • EduConnect</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <link rel="stylesheet" href="student-hallticket.css" />
+</head>
+
+<body>
+  <div class="container">
+    <!-- ✅ Top header (same style as UI code) -->
+      <p id="btnBack"></p>
+     <p id = "btnLogout">  </p>
+
+    <main class="main-content">
+      <!-- ✅ Selection Card -->
+      <div class="dashboard-card no-print">
+        <div class="card-header">
+          <div class="card-header-left">
+            <i class="fas fa-file-alt"></i>
+            <h2>Select Exam to Generate Hall Ticket</h2>
+          </div>
+
+          <div class="header-class-badge">
+            <i class="fas fa-chalkboard-teacher"></i>
+            <span id="classPill">—</span>
+          </div>
+        </div>
+
+        <div class="exam-selection-section">
+          <div class="form-group">
+            <label for="examSelect">
+              <i class="fas fa-clipboard-list"></i> Exam
+            </label>
+
+            <select id="examSelect" class="exam-dropdown">
+              <option value="">Loading...</option>
+            </select>
+          </div>
+
+          <div class="button-group-under">
+            <button class="btn-generate" id="btnLoad" type="button" disabled>
+              <i class="fas fa-file-download"></i> Load Hall Ticket
+            </button>
+
+            <button class="btn-print" id="btnPrint" type="button" style="display:none;">
+              <i class="fas fa-print"></i> Print Hall Ticket
+            </button>
+          </div>
+
+          <div class="hint" style="margin-top:18px;">
+            <b id="statusText">Select Exam</b>
+            <div id="err" class="err" style="display:none;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ✅ Hall Ticket Section -->
+      <div id="hallTicketSection" class="hall-ticket-wrapper" style="display:none;">
+        <div class="hall-ticket">
+          <div class="ticket-header">
+            <div class="school-logo">
+              <!-- real logo from backend config -->
+              <div class="logo-placeholder" id="logoBox">
+                <img id="schoolLogo" alt="School Logo" />
+              </div>
+            </div>
+
+            <div class="school-info">
+              <h1 class="school-name" id="schoolName">School Name</h1>
+              <p class="school-location" id="schoolAddr">Address</p>
+            </div>
+          </div>
+
+          <div class="ticket-title">
+            <h2>ADMIT CARD / HALL TICKET</h2>
+            <p class="exam-name" id="examNameDisplay">—</p>
+          </div>
+
+          <div class="student-section">
+            <div class="student-photo">
+              <img id="stuPhoto" alt="Student Photo" />
+            </div>
+
+            <div class="student-details">
+              <div class="detail-row">
+                <span class="detail-label">Roll Number</span>
+                <span class="detail-value" id="rollNo">—</span>
+              </div>
+
+              <div class="detail-row">
+                <span class="detail-label">Candidate Name</span>
+                <span class="detail-value" id="stuName">—</span>
+              </div>
+
+              <div class="detail-row">
+                <span class="detail-label">Class / Section</span>
+                <span class="detail-value" id="stuClass">—</span>
+              </div>
+
+              <div class="detail-row">
+                <span class="detail-label">Father Name</span>
+                <span class="detail-value" id="fatherName">—</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="schedule-section">
+            <h3 class="section-title">Examination Schedule</h3>
+
+            <div class="table-responsive">
+              <table class="schedule-table">
+                <thead>
+                  <tr>
+                    <th>S.No</th>
+                    <th>Subject</th>
+                    <th>Date</th>
+                    <th>Day</th>
+                    <th>Time</th>
+                    <th>Signature</th>
+                  </tr>
+                </thead>
+                <tbody id="ttBody"></tbody>
+              </table>
+            </div>
+
+            <div class="empty" id="ttEmpty" style="display:none;">No exam schedule found.</div>
+          </div>
+
+          <div class="signature-section">
+            <div class="signature-box">
+              <div class="signature-line"></div>
+              <p class="signature-label">Signature of Student</p>
+            </div>
+            <div class="signature-box">
+              <div class="signature-line"></div>
+              <p class="signature-label">Controller of Examinations</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="student-hallticket.js"></script>
+</body>
+</html>

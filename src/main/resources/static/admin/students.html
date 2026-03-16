@@ -1,0 +1,223 @@
+<!-- students.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard - EduConnect</title>
+  <link rel="stylesheet" href="/admin/students.css"/>
+</head>
+
+<body>
+  <div class="wrap">
+
+    <!-- ✅ Top controls -->
+    <div class="topbar-controls">
+      <div class="filters-left">
+        <div class="filter-box">
+          <label for="classFilter">Class</label>
+          <select id="classFilter">
+            <option value="">All Classes</option>
+            <option value="-2">Nursery</option>
+            <option value="-1">LKG</option>
+            <option value="0">UKG</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+        </div>
+
+        <div class="filter-box">
+          <label for="sectionFilter">Section</label>
+          <input
+            id="sectionFilter"
+            type="text"
+            placeholder="A"
+            autocomplete="off"
+            maxlength="5"
+          />
+        </div>
+      </div>
+
+      <div class="searchbar">
+        <div class="searchbox">
+          <span class="search-ico">🔎</span>
+          <input id="searchInput" type="text" placeholder="Search by Student ID or Name..." autocomplete="off"/>
+          <button class="btn ghost" id="clearSearchBtn" type="button" title="Clear">✕</button>
+        </div>
+      </div>
+    </div>
+
+    <main class="grid">
+      <section class="card">
+        <div class="card-head">
+          <h2>Students</h2>
+          <div class="head-actions">
+            <button class="btn primary" id="openAddBtn" type="button">➕ Add Student</button>
+            <button class="btn" id="refreshBtn" type="button">Refresh</button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Class</th>
+                <th>Section</th>
+                <th>Active</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="studentsBody">
+              <tr>
+                <td colspan="5" class="muted">Loading...</td>
+              </tr>
+
+              <!--
+              ✅ Expected row UI structure for JS rendering reference:
+              <tr>
+                <td>
+                  <div class="student-cell">
+                    <div class="student-photo">
+                      <img src="PROFILE_URL" alt="Student Photo">
+                    </div>
+                    <div class="student-meta">
+                      <div class="student-id">S1001</div>
+                      <div class="student-name">Manoj Kumar</div>
+                    </div>
+                  </div>
+                </td>
+                <td>10</td>
+                <td>A</td>
+                <td>✅</td>
+                <td>
+                  <div class="actions-cell">
+                    <button class="btn small" type="button">Edit</button>
+                    <button class="btn small danger" type="button">Delete</button>
+                  </div>
+                </td>
+              </tr>
+              -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal-backdrop" id="modalBackdrop" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-head">
+        <h3 id="modalTitle">Add Student</h3>
+        <button class="icon-btn" id="closeModalBtn" type="button" aria-label="Close">✕</button>
+      </div>
+
+      <form id="studentForm" class="form">
+        <div class="form-grid">
+          <label>Student ID
+            <input id="studentId" placeholder="S1002" autocomplete="off"/>
+          </label>
+
+          <label>Full Name
+            <input id="fullName" required autocomplete="off"/>
+          </label>
+
+          <label>Date of Birth
+            <input id="dateOfBirth" type="date"/>
+          </label>
+
+          <label>Student Phone
+            <input id="phoneNumber" autocomplete="off"/>
+          </label>
+
+          <label>Parent Phone
+            <input id="parentPhoneNumber" autocomplete="off"/>
+          </label>
+
+          <label>Other Number
+            <input id="otherNumber" autocomplete="off"/>
+          </label>
+
+          <label>Address
+            <input id="address" autocomplete="off"/>
+          </label>
+
+          <label>Standard
+            <input id="standard" type="number" min="-2" max="12" step="1" placeholder="-2..12"/>
+            <small class="muted">Use: -2 = Nursery, -1 = LKG, 0 = UKG</small>
+          </label>
+
+          <label>Section
+            <input id="section" placeholder="A"/>
+          </label>
+
+          <label>Academic Year
+            <input id="academicYear" placeholder="2025-2026"/>
+          </label>
+
+          <label>Father Name
+            <input id="fatherName"/>
+          </label>
+
+          <label>Mother Name
+            <input id="motherName"/>
+          </label>
+
+          <label>Father Occupation
+            <input id="fatherOccupation"/>
+          </label>
+
+          <label>Student Email
+            <input id="studentEmailId"/>
+          </label>
+
+          <label>Parent Email
+            <input id="parentEmailId"/>
+          </label>
+
+          <label>Profile URL
+            <input id="profileUrl"/>
+          </label>
+
+          <label>Gender
+            <input id="gender" placeholder="MALE / FEMALE"/>
+          </label>
+
+          <label>Caste
+            <input id="caste"/>
+          </label>
+
+          <label>Religion
+            <input id="religion"/>
+          </label>
+
+          <label class="checkbox">
+            <input id="active" type="checkbox" checked />
+            Active
+          </label>
+        </div>
+
+        <p class="error" id="formError" hidden></p>
+
+        <div class="modal-foot">
+          <button type="button" class="btn" id="cancelBtn">Cancel</button>
+          <button type="submit" class="btn primary" id="saveBtn">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/admin/students.js"></script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!-- short-notes.html (EMBED FRAGMENT for Teacher Dashboard) -->
+<div class="tnotes">
+  
+
+  <main class="tn-grid">
+    <section class="tn-card">
+      <div class="tn-card-head">
+        <div>
+          <h2 class="tn-h2">Upload Short Notes (PDF)</h2>
+          <p class="tn-muted">Select class/section from your assignments, add title/topic, upload PDF.</p>
+        </div>
+      </div>
+
+      <div class="tn-form">
+        <div class="tn-row">
+          <label class="tn-field">
+            <span>Class + Section</span>
+            <select id="tnClassSection" class="tn-inp"></select>
+          </label>
+
+          <label class="tn-field">
+            <span>Title</span>
+            <input id="tnTitle" class="tn-inp" placeholder="Unit-1 Important Questions" />
+          </label>
+        </div>
+
+        <div class="tn-row">
+          <label class="tn-field tn-wide">
+            <span>Topic (optional)</span>
+            <input id="tnTopic" class="tn-inp" placeholder="Algebra / Grammar / Chapter name..." />
+          </label>
+        </div>
+
+        <div class="tn-row">
+          <label class="tn-field tn-wide">
+            <span>PDF File</span>
+            <input id="tnPdf" type="file" accept="application/pdf" class="tn-inp"/>
+          </label>
+        </div>
+
+        <div class="tn-actions">
+          <button class="tn-btn tn-primary" id="tnBtnUpload" type="button">Upload</button>
+          <span class="tn-muted" id="tnMsg"></span>
+        </div>
+
+        <div id="tnErr" class="tn-error tn-hidden"></div>
+      </div>
+    </section>
+
+    <section class="tn-card">
+      <div class="tn-card-head tn-between">
+        <h2 class="tn-h2">My Uploaded Notes</h2>
+        <button class="tn-btn" id="tnBtnRefresh" type="button">Refresh</button>
+      </div>
+
+      <div id="tnList" class="tn-list">
+        <div class="tn-muted">Loading...</div>
+      </div>
+    </section>
+  </main>
+</div>

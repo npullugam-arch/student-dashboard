@@ -4,9 +4,11 @@ import com.school.portal.security.user.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -21,36 +23,78 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-            // ❌ Disable CSRF (REST APIs)
-            .csrf(csrf -> csrf.disable())
+                .cors(Customizer.withDefaults())
+                .csrf(csrf -> csrf.disable())
+                .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
+                .authenticationProvider(authenticationProvider())
+                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-            // ✅ Authentication provider
-            .authenticationProvider(authenticationProvider())
+                .authorizeHttpRequests(auth -> auth
 
-            // ✅ Authorization rules
-            .authorizeHttpRequests(auth -> auth
+                        // ✅ allow preflight
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                // 🔓 Public endpoints
-                .requestMatchers("/auth/**").permitAll()
+                        // ---------- PUBLIC STATIC ----------
+                        .requestMatchers(
+                                "/", "/index.html",
+                                "/favicon.ico",
+                                "/error",
 
-                // 👨‍🎓 Student APIs
-                .requestMatchers("/student/**").hasAnyRole("STUDENT", "ADMIN")
+                                "/shared/**",
+                                "/login/**",
 
-                // 👨‍🏫 Teacher APIs
-                .requestMatchers("/teacher/**").hasAnyRole("TEACHER", "ADMIN")
+                                "/student/**",      // student static pages
+                                "/office/**",       // ✅ allow office HTML/JS/CSS
+                                "/teacher/**",      // teacher static
+                                "/admin/**",        // admin static
 
-                // 🧑‍💼 Admin APIs
-                .requestMatchers("/admin/**").hasRole("ADMIN")
+                                "/css/**",
+                                "/js/**",
+                                "/images/**",
+                                "/assets/**",
 
-                // 🏢 Office APIs
-                .requestMatchers("/office/**").hasRole("OFFICE")
+                                "/uploads/**",      // ✅ uploads public
 
-                // 🔒 Everything else must be authenticated
-                .anyRequest().authenticated()
-            )
+                                "/ws/**"
+                        ).permitAll()
 
-            // ✅ Basic Auth (temporary, for backend testing)
-            .httpBasic(Customizer.withDefaults());
+                        // ---------- AUTH ----------
+                        .requestMatchers("/auth/**").permitAll()
+
+                        // ✅✅ NEW: Secure password APIs for students
+                        // Must be placed BEFORE "/student/api/** permitAll"
+                        .requestMatchers("/student/api/password/**").hasRole("STUDENT")
+
+                        // ---------- STUDENT APIs ----------
+                        .requestMatchers("/student/api/**").permitAll()
+
+                        // ✅ Notices/Holidays view
+                        .requestMatchers("/notices/**", "/holidays/**")
+                        .hasAnyRole("STUDENT", "TEACHER", "ADMIN", "OFFICE")
+
+                        // ---------- OFFICE APIs ----------
+                        .requestMatchers("/office/api/**").hasRole("OFFICE")
+
+                        // ---------- TEACHER APIs ----------
+                        .requestMatchers("/teacher/api/**").hasAnyRole("TEACHER", "ADMIN")
+
+                        // ✅ Admin Notice/Holiday management APIs
+                        .requestMatchers("/admin/api/notices/**", "/admin/api/holidays/**").hasRole("ADMIN")
+
+                        // ---------- ADMIN APIs ----------
+                        .requestMatchers("/admin/api/**").hasRole("ADMIN")
+
+                        // ✅ Branding
+                        .requestMatchers("/api/branding").authenticated()
+                        .requestMatchers("/api/admin/branding").hasRole("ADMIN")
+
+                        // ---------- TIMETABLE ----------
+                        .requestMatchers("/student/api/timetable/**").permitAll()
+                        .requestMatchers("/admin/api/timetable/**").hasRole("ADMIN")
+
+                        .anyRequest().authenticated()
+                )
+                .httpBasic(Customizer.withDefaults());
 
         return http.build();
     }

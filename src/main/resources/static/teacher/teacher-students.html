@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Teacher • Students</title>
+
+  <link rel="stylesheet" href="teacher-students.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+
+  <div class="panel">
+    <div class="panel-header">
+      <h2>My Students</h2>
+      <p>Pick a class-section you teach → students list will load. Click a student to view full profile.</p>
+    </div>
+
+    <div class="controls">
+      <div class="select">
+        <label>Class</label>
+        <select id="classSelect"></select>
+      </div>
+
+      <div class="searchWrap">
+        <label>Search</label>
+        <div class="searchRow">
+          <input id="q" type="text" placeholder="Search by studentId / name..." />
+          <button class="btn" id="btnClear" type="button" title="Clear search">
+            <i class="fa-solid fa-broom"></i>
+          </button>
+          <button class="btn dark" id="btnReload" type="button" title="Reload list">
+            <i class="fa-solid fa-rotate"></i>
+            Reload
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="studentsLoading" class="info" style="display:none;">Loading students...</div>
+    <div id="studentsError" class="error" style="display:none;"></div>
+
+    <div class="students" id="studentsList"></div>
+  </div>
+
+  <!-- Profile Modal -->
+  <div class="modal" id="profileModal" style="display:none">
+    <div class="modalCard">
+      <div class="mHead">
+        <div>
+          <div class="mTitle">Student Profile</div>
+          <div class="muted" id="pSub">—</div>
+        </div>
+        <button class="iconbtn" id="pClose" type="button" aria-label="Close">✕</button>
+      </div>
+
+      <div class="mBody" id="pBody"></div>
+
+      <div class="mActions">
+        <button class="btn dark" id="pOk" type="button">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="teacher-students.js"></script>
+</body>
+</html>

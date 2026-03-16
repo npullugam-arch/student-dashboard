@@ -1,0 +1,100 @@
+:root{
+  --bg:#f4f6ff; --card:#fff; --stroke:#e7e9ff; --text:#1f2430; --muted:#6d7488;
+  --shadow:0 16px 50px rgba(20,22,60,.10);
+}
+
+*{box-sizing:border-box}
+
+/* ✅ Prevent horizontal scroll for this page */
+html, body{
+  margin:0;
+  padding:0;
+  max-width:100%;
+  overflow-x:hidden;  /* ✅ removes right/left scroll button */
+}
+
+body{
+  font-family:system-ui,Segoe UI,Roboto,Arial;
+  background:var(--bg);
+  color:var(--text);
+}
+
+
+
+.wrap{max-width:1150px;margin:18px auto;padding:0 14px}
+
+.topbar{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  gap:12px;
+  margin-bottom:12px;
+}
+.topbar .h1{font-weight:900;font-size:18px;line-height:1.1}
+.topbar .left{display:flex;flex-direction:column;gap:2px}
+.muted{color:var(--muted)}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--stroke);
+  border-radius:22px;
+  box-shadow:var(--shadow);
+  padding:14px
+}
+
+.error{
+  margin-top:10px;background:#ffecec;border:1px solid #ffc7c7;color:#a11;
+  padding:10px;border-radius:12px
+}
+.hidden{display:none}
+
+/* ✅ No internal scrollbars */
+.table-wrap{
+  margin-top:10px;
+  border:1px solid var(--stroke);
+  border-radius:16px;
+  overflow:hidden; /* ✅ no bottom scrollbar */
+  background:#fff;
+}
+
+.tbl{
+  width:100%;
+  border-collapse:separate;
+  border-spacing:0;
+  table-layout:fixed; /* ✅ prevents overflow causing scroll */
+  background:#fff;
+}
+
+.tbl thead th{
+  background:linear-gradient(180deg,#ffffff,#f6f7ff);
+  text-align:left;
+  padding:12px 12px;
+  border-bottom:1px solid var(--stroke);
+  font-size:12px;
+}
+
+.tbl tbody td{
+  padding:12px 12px;
+  border-bottom:1px solid var(--stroke);
+  vertical-align:top;
+  font-size:14px;
+  word-break:break-word;
+  overflow-wrap:anywhere;
+}
+
+.tbl tbody tr:hover{background:#fafbff}
+
+.col-subject{width:180px}
+.col-homework{width:auto}
+
+.subject-cell{font-weight:900}
+
+/* ✅ Homework: title bold, desc below */
+.hw{display:flex;flex-direction:column;gap:6px}
+.hw-title{font-weight:900;line-height:1.3}
+.hw-desc{line-height:1.5;white-space:pre-wrap}
+
+.cell-dash{color:var(--muted);font-weight:800}
+
+@media (max-width: 760px){
+  .topbar .h1{font-size:16px;}
+  .col-subject{width:130px;}
+}

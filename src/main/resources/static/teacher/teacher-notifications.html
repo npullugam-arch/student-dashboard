@@ -1,0 +1,29 @@
+<div class="tn-wrap">
+  <div class="tn-top">
+    <div class="tn-title">
+      <div class="tn-icon">🔔</div>
+      <div>
+        <div class="tn-h1">Notifications</div>
+        <div class="tn-sub" id="tnCountLine">—</div>
+      </div>
+    </div>
+
+    <div class="tn-actions">
+      <button class="tn-btn ghost" id="tnMarkAllReadBtn" type="button">
+        <i class="fas fa-check-double"></i> Mark all read
+      </button>
+      <button class="tn-btn danger" id="tnClearAllBtn" type="button">
+        <i class="fas fa-trash"></i> Clear all
+      </button>
+      <button class="tn-btn" id="tnRefreshBtn" type="button">
+        <i class="fas fa-rotate-right"></i> Refresh
+      </button>
+    </div>
+  </div>
+
+  <div id="tnErr" class="tn-error" style="display:none;"></div>
+
+  <div id="tnList" class="tn-list">
+    <div class="tn-muted">Loading...</div>
+  </div>
+</div>

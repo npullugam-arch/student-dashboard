@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Teacher • Notices & Holidays</title>
+  <style>
+    :root{
+      --bg:#07121f;
+      --card:#0c1f33;
+      --text:#eaf0ff;
+      --muted:#a9b3d3;
+      --brand:#49c2ff;
+      --stroke:rgba(255,255,255,.10);
+      --shadow:0 18px 70px rgba(0,0,0,.35);
+      --r:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, Arial;
+      background: radial-gradient(1100px 600px at 10% 0%, rgba(73,194,255,.18), transparent 60%),
+                  radial-gradient(900px 500px at 90% 20%, rgba(108,123,255,.12), transparent 60%),
+                  var(--bg);
+      color:var(--text);
+      min-height:100vh;
+    }
+    .wrap{max-width:1100px;margin:0 auto;padding:22px}
+    .topbar{
+      display:flex;align-items:center;justify-content:space-between;gap:14px;
+      padding:16px 18px;border:1px solid var(--stroke);
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border-radius:22px; box-shadow:var(--shadow);
+    }
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{
+      width:46px;height:46px;border-radius:16px;
+      background:linear-gradient(135deg,var(--brand),#6c7bff);
+      display:grid;place-items:center;font-size:20px;
+    }
+    .title{font-weight:900;font-size:18px}
+    .sub{color:var(--muted);font-size:13px;margin-top:2px}
+    .pill{
+      display:inline-flex;gap:8px;align-items:center;
+      padding:8px 12px;border:1px solid var(--stroke); border-radius:999px;
+      background:rgba(255,255,255,.04); color:var(--muted); font-size:12px;
+    }
+    .btn{
+      border:0;cursor:pointer;
+      padding:10px 12px;border-radius:12px;
+      background:rgba(255,255,255,.08);color:var(--text);
+      border:1px solid var(--stroke);
+      font-weight:800;
+    }
+    .btn.primary{background:linear-gradient(135deg,var(--brand),#6c7bff); border:0}
+    .tabs{display:flex;gap:10px;margin:18px 0}
+    .tab{
+      padding:10px 14px;border-radius:999px;border:1px solid var(--stroke);
+      background:rgba(255,255,255,.04); color:var(--muted); cursor:pointer;
+      font-weight:900;
+    }
+    .tab.active{background:linear-gradient(135deg, rgba(73,194,255,.22), rgba(108,123,255,.14)); color:var(--text)}
+    .grid{display:grid;grid-template-columns: 1.15fr .85fr; gap:16px}
+    @media(max-width:980px){.grid{grid-template-columns:1fr}}
+    .card{
+      border:1px solid var(--stroke);
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border-radius:var(--r); box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .head{padding:14px 16px;border-bottom:1px solid var(--stroke)}
+    .head h2{margin:0;font-size:16px}
+    .muted{color:var(--muted);font-size:13px}
+    .body{padding:14px 16px}
+    .list{display:flex;flex-direction:column;gap:10px}
+    .notice{
+      padding:12px 12px;border-radius:16px;
+      border:1px solid var(--stroke); background:rgba(0,0,0,.18);
+    }
+    .notice .t{font-weight:900}
+    .notice .m{color:var(--muted);margin-top:6px;white-space:pre-wrap}
+    .meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:8px;color:var(--muted);font-size:12px}
+    .tag{display:inline-flex;align-items:center;gap:6px;
+      padding:6px 10px;border-radius:999px;border:1px solid var(--stroke);
+      background:rgba(255,255,255,.04); color:var(--muted); font-size:12px;
+    }
+    .err{display:none;margin:12px 0;padding:10px 12px;border-radius:14px;
+      background:rgba(255,77,109,.15);border:1px solid rgba(255,77,109,.35);color:#ffd0d9}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:10px 10px;border-bottom:1px solid var(--stroke);vertical-align:top}
+    th{color:var(--muted);text-align:left;font-size:12px}
+    td{font-size:13px}
+    .pager{display:flex;gap:10px;align-items:center;justify-content:flex-end;margin-top:10px}
+    .kbtn{padding:7px 10px;border-radius:10px;font-size:12px}
+    input{
+      width:100%; padding:10px 12px;border-radius:12px;
+      border:1px solid var(--stroke); background:rgba(0,0,0,.18); color:var(--text);
+      outline:none;
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo">👩‍🏫</div>
+      <div>
+        <div class="title">Teacher Dashboard</div>
+        <div class="sub">Notices + Holidays (from admin)</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <span class="pill" id="pillInfo">Loading…</span>
+      <button class="btn" id="btnReload" type="button">Reload</button>
+      <button class="btn" id="btnLogout" type="button">Logout</button>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="notices" type="button">Notices</button>
+    <button class="tab" data-tab="holidays" type="button">Holidays</button>
+  </div>
+
+  <div id="err" class="err"></div>
+
+  <!-- NOTICES -->
+  <div id="tab-notices" class="grid">
+    <div class="card">
+      <div class="head">
+        <h2>Latest Notices</h2>
+        <div class="muted">Filtered for you (role + optional class/section)</div>
+      </div>
+      <div class="body">
+        <div class="pager" style="justify-content:space-between">
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+            <span class="tag" id="tagTarget">Target: -</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center">
+            <button class="btn kbtn" id="prevN" type="button">Prev</button>
+            <span class="muted" id="pageInfo">Page 1</span>
+            <button class="btn kbtn" id="nextN" type="button">Next</button>
+          </div>
+        </div>
+        <div class="list" id="noticeList" style="margin-top:12px">
+          <div class="muted">Loading…</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="head">
+        <h2>Quick Filters</h2>
+        <div class="muted">Uses sessionStorage classId + section</div>
+      </div>
+      <div class="body">
+        <div class="muted small">If your teacher account is assigned class/section, store it:</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px">
+          <div>
+            <div class="muted">classId</div>
+            <input id="classId" placeholder="Ex: 10"/>
+          </div>
+          <div>
+            <div class="muted">section</div>
+            <input id="section" placeholder="Ex: A"/>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
+          <button class="btn primary" id="btnSaveTarget" type="button">Save</button>
+          <button class="btn" id="btnClearTarget" type="button">Clear</button>
+        </div>
+
+        <div class="muted" style="margin-top:16px">Upcoming Holidays (top 8)</div>
+        <table style="margin-top:10px">
+          <thead>
+            <tr><th>Date(s)</th><th>Name</th></tr>
+          </thead>
+          <tbody id="holidayMini">
+            <tr><td colspan="2" class="muted">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOLIDAYS -->
+  <div id="tab-holidays" class="grid" style="display:none">
+    <div class="card" style="grid-column:1/-1">
+      <div class="head">
+        <h2>Holidays</h2>
+        <div class="muted">Upcoming + yearly view</div>
+      </div>
+      <div class="body">
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <button class="btn primary" id="btnUpcoming" type="button">Load Upcoming</button>
+          <input id="year" type="number" placeholder="Year (ex: 2026)" style="max-width:180px"/>
+          <button class="btn" id="btnYear" type="button">Load Year</button>
+        </div>
+
+        <table style="margin-top:14px">
+          <thead>
+            <tr><th>Date(s)</th><th>Name</th><th>Description</th></tr>
+          </thead>
+          <tbody id="holidayList">
+            <tr><td colspan="3" class="muted">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const API_BASE="http://localhost:8080";
+  const el=id=>document.getElementById(id);
+  const token=()=>localStorage.getItem("token")||"";
+
+  function showErr(msg){ el("err").style.display="block"; el("err").textContent=msg; }
+  function clearErr(){ el("err").style.display="none"; el("err").textContent=""; }
+
+  async function api(path){
+    const headers={"Content-Type":"application/json"};
+    if(token()) headers["Authorization"]="Bearer "+token();
+    const res=await fetch(API_BASE+path,{headers});
+    const text=await res.text();
+    let data=null; try{data=text?JSON.parse(text):null}catch(e){data=text}
+    if(!res.ok) throw new Error((data&&data.message)||("HTTP "+res.status));
+    return data;
+  }
+
+  function getTarget(){
+    const classId = sessionStorage.getItem("classId");
+    const section = sessionStorage.getItem("section");
+    return { classId: classId ? Number(classId) : null, section: section ? section.toUpperCase() : null };
+  }
+
+  function setPill(){
+    const role = sessionStorage.getItem("role") || "TEACHER";
+    const t = getTarget();
+    el("pillInfo").textContent = `Role: ${role} • classId: ${t.classId ?? '-'} • section: ${t.section ?? '-'}`;
+    el("tagTarget").textContent = `Target: ${t.classId ?? '-'}-${t.section ?? '-'}`;
+    el("classId").value = t.classId ?? "";
+    el("section").value = t.section ?? "";
+  }
+
+  // Tabs
+  document.querySelectorAll(".tab").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+      b.classList.add("active");
+      const tab=b.dataset.tab;
+      el("tab-notices").style.display = tab==="notices" ? "grid":"none";
+      el("tab-holidays").style.display = tab==="holidays" ? "grid":"none";
+    });
+  });
+
+  // Logout
+  el("btnLogout").addEventListener("click", ()=>{
+    localStorage.removeItem("token");
+    sessionStorage.clear();
+    alert("Logged out.");
+    setPill();
+  });
+
+  el("btnReload").addEventListener("click", ()=>init());
+
+  // Save target
+  el("btnSaveTarget").addEventListener("click", ()=>{
+    const c = el("classId").value.trim();
+    const s = el("section").value.trim().toUpperCase();
+    if(c) sessionStorage.setItem("classId", c); else sessionStorage.removeItem("classId");
+    if(s) sessionStorage.setItem("section", s); else sessionStorage.removeItem("section");
+    setPill();
+    noticePage=0;
+    loadNotices();
+  });
+  el("btnClearTarget").addEventListener("click", ()=>{
+    sessionStorage.removeItem("classId");
+    sessionStorage.removeItem("section");
+    setPill();
+    noticePage=0;
+    loadNotices();
+  });
+
+  // Notices
+  let noticePage=0;
+  const size=6;
+
+  function fmtDT(s){ return s ? s.replace("T"," ").slice(0,16) : "-"; }
+
+  function renderNotice(n){
+    const target = (n.classId && n.section) ? `${n.classId}-${n.section}` : "-";
+    return `
+      <div class="notice">
+        <div class="t">${escapeHtml(n.title)}</div>
+        <div class="m">${escapeHtml(n.message)}</div>
+        <div class="meta">
+          <span class="tag">${n.audienceType}</span>
+          <span class="tag">Target: ${target}</span>
+          <span>Published: ${fmtDT(n.publishAt)}</span>
+          ${n.expireAt ? `<span>Expires: ${fmtDT(n.expireAt)}</span>` : `<span>Expires: -</span>`}
+        </div>
+      </div>
+    `;
+  }
+
+  function escapeHtml(s){
+    return (s||"").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  async function loadNotices(){
+    clearErr();
+    try{
+      const t=getTarget();
+      const params=new URLSearchParams();
+      if(t.classId) params.set("classId", String(t.classId));
+      if(t.section) params.set("section", t.section);
+      params.set("page", String(noticePage));
+      params.set("size", String(size));
+      const page = await api(`/notices/me?${params.toString()}`);
+      const list = (page.content||[]).map(renderNotice).join("");
+      el("noticeList").innerHTML = list || `<div class="muted">No notices yet.</div>`;
+      const cur = (page.number ?? noticePage)+1;
+      const total = page.totalPages ?? 1;
+      el("pageInfo").textContent = `Page ${cur} / ${Math.max(1,total)}`;
+      el("prevN").disabled = page.first===true || noticePage<=0;
+      el("nextN").disabled = page.last===true;
+    }catch(e){
+      showErr(e.message);
+      el("noticeList").innerHTML = `<div class="muted">Failed to load.</div>`;
+    }
+  }
+
+  el("prevN").addEventListener("click", ()=>{ noticePage=Math.max(0,noticePage-1); loadNotices(); });
+  el("nextN").addEventListener("click", ()=>{ noticePage=noticePage+1; loadNotices(); });
+
+  // Holidays mini + full
+  function renderHolidayRow(h){
+    const dates = h.endDate ? `${h.startDate} → ${h.endDate}` : h.startDate;
+    return `<tr><td>${dates}</td><td>${escapeHtml(h.name)}</td></tr>`;
+  }
+  function renderHolidayFull(h){
+    const dates = h.endDate ? `${h.startDate} → ${h.endDate}` : h.startDate;
+    return `<tr><td>${dates}</td><td><b>${escapeHtml(h.name)}</b></td><td class="muted">${escapeHtml(h.description||"")}</td></tr>`;
+  }
+
+  async function loadHolidayMini(){
+    try{
+      const list = await api(`/holidays/upcoming?limit=8`);
+      el("holidayMini").innerHTML = (list||[]).map(renderHolidayRow).join("")
+        || `<tr><td colspan="2" class="muted">No upcoming.</td></tr>`;
+    }catch(e){
+      el("holidayMini").innerHTML = `<tr><td colspan="2" class="muted">Failed.</td></tr>`;
+    }
+  }
+
+  async function loadUpcomingHolidays(){
+    clearErr();
+    try{
+      const list = await api(`/holidays/upcoming?limit=50`);
+      el("holidayList").innerHTML = (list||[]).map(renderHolidayFull).join("")
+        || `<tr><td colspan="3" class="muted">No upcoming.</td></tr>`;
+    }catch(e){
+      showErr(e.message);
+    }
+  }
+
+  async function loadYearHolidays(){
+    clearErr();
+    try{
+      const year = Number(el("year").value || new Date().getFullYear());
+      const list = await api(`/holidays/year/${year}`);
+      el("holidayList").innerHTML = (list||[]).map(renderHolidayFull).join("")
+        || `<tr><td colspan="3" class="muted">No holidays in ${year}.</td></tr>`;
+    }catch(e){
+      showErr(e.message);
+    }
+  }
+
+  el("btnUpcoming").addEventListener("click", loadUpcomingHolidays);
+  el("btnYear").addEventListener("click", loadYearHolidays);
+
+  function init(){
+    setPill();
+    loadNotices();
+    loadHolidayMini();
+    loadUpcomingHolidays();
+  }
+
+  init();
+</script>
+</body>
+</html>

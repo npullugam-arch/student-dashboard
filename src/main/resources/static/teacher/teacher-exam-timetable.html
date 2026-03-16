@@ -1,0 +1,57 @@
+<section class="page" id="examTimetableRoot">
+  <div class="page-head">
+    <div>
+      <h2 class="h2">Examination Timetable</h2>
+      <p class="muted">View-only. Select an exam and one of your assigned classes to see the timetable.</p>
+    </div>
+    <button class="btn ghost" id="ttReloadBtn" type="button">Reload</button>
+  </div>
+
+  <div class="card">
+    <div class="filters">
+
+      <label class="field">
+        <span>Exam</span>
+        <select class="inp" id="ttExamSelect">
+          <option value="">Loading...</option>
+        </select>
+      </label>
+
+      <label class="field">
+        <span>Assigned Class</span>
+        <select class="inp" id="ttClassSelect">
+          <option value="">Loading...</option>
+        </select>
+      </label>
+
+    </div>
+
+    <div class="result">
+      <div class="result-top">
+        <b id="ttTitle">Timetable</b>
+        <span class="muted" id="ttStatus">Loading...</span>
+      </div>
+
+      <div class="table-wrap">
+        <table class="table" id="ttTable">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Day</th>
+              <th>Subject</th>
+              <th>Start</th>
+              <th>End</th>
+            </tr>
+          </thead>
+          <tbody id="ttTbody"></tbody>
+        </table>
+
+        <div id="ttEmpty" class="muted empty" style="display:none;">
+          No timetable rows found.
+        </div>
+      </div>
+
+      <div id="ttError" class="error" style="display:none;"></div>
+    </div>
+  </div>
+</section>

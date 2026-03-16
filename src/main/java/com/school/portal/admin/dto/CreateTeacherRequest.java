@@ -16,7 +16,7 @@ public class CreateTeacherRequest {
     private String address;
     private String profileUrl;
 
-    private String subject; // "MATHS" etc
+    // private String subject; // "MATHS" etc
 
     private String dateOfBirth; // "YYYY-MM-DD"
     private Integer experience;

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Office Login • EduConnect</title>
+  <link rel="stylesheet" href="office.css"/>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Office Login</h1>
+      <p class="muted">Login using your Office credentials</p>
+
+      <form id="loginForm">
+        <label class="field">
+          <span>Username</span>
+          <input id="username" class="inp" autocomplete="username" required />
+        </label>
+
+        <label class="field">
+          <span>Password</span>
+          <input id="password" class="inp" type="password" autocomplete="current-password" required />
+        </label>
+
+        <div id="err" class="err" style="display:none;"></div>
+
+        <button class="btn" type="submit">Login</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="office.js"></script>
+</body>
+</html>

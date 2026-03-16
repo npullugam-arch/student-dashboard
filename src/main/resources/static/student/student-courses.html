@@ -1,23 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <title>My Courses</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Courses</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+
   <link rel="stylesheet" href="student-courses.css" />
 </head>
+
 <body>
 
-  <header class="topbar">
-    <h2>📚 My Courses</h2>
-    <a class="back" href="/student/student-dashboard.html">← Back</a>
-  </header>
+  <main class="main-content">
 
-  <main class="container">
-    <div id="coursesGrid" class="grid"></div>
+    <!-- <header class="topbar">
+      <div class="left">
+        <h2 class="top-title">📚 My Courses</h2>
+        <p class="top-sub">Connect with your assigned teachers</p>
+      </div>
+
+      <a class="back" href="/student/student-dashboard.html">← Back</a>
+    </header> -->
+
+    <section class="page-head">
+      <h1 class="page-title">My Courses</h1>
+      <p class="page-subtitle">Connect with your assigned teachers</p>
+    </section>
+
+    <div class="teacher-grid" id="coursesGrid"></div>
+
     <p id="emptyMsg" class="empty" style="display:none;">No courses found.</p>
+
   </main>
 
   <script src="student-courses.js"></script>
 </body>
+
 </html>

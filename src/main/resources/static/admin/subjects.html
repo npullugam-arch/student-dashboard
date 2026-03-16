@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Subjects</title>
+
+  <!-- Keep same dashboard CSS -->
+  <link rel="stylesheet" href="admin-dashboard.css"/>
+
+  <style>
+    /* ✅ iframe page should scroll as one full page */
+    html,
+    body{
+      height:100%;
+      overflow:auto !important;
+    }
+
+    body{
+      background:transparent;
+    }
+
+    .wrap{
+      max-width:1100px;
+      margin:0 auto;
+      padding:18px;
+      min-height:100%;
+    }
+
+    /* ✅ no separate scroll here */
+    #list{
+      margin-top:10px;
+      display:grid;
+      gap:10px;
+    }
+
+    /* ✅ safe input styling */
+    .inp{
+      border:1px solid rgba(0,0,0,.12);
+      border-radius:12px;
+      padding:10px 12px;
+      background:#fff;
+      outline:none;
+      min-height:42px;
+      font:inherit;
+    }
+
+    .inp:focus{
+      border-color:#5a43d1;
+      box-shadow:0 0 0 3px rgba(90,67,209,.10);
+    }
+
+    .error{
+      color:#b42318;
+      background:#fff0f0;
+      border:1px solid #f3b3b3;
+      border-radius:12px;
+      padding:10px 12px;
+    }
+
+    @media (max-width:768px){
+      .wrap{
+        padding:14px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ✅ SIMPLE PAGE WRAP (for iframe) -->
+  <main class="wrap">
+    <h1 style="margin:0 0 6px 0;">Subjects</h1>
+    <p class="muted" style="margin:0 0 14px 0;">
+      Create / delete subjects and manage class subjects.
+    </p>
+
+    <!-- dropdown (filled by JS) -->
+    <div style="margin:12px 0 10px 0;">
+      <select id="stdSelect" class="inp" style="width:220px;"></select>
+    </div>
+
+    <div class="note">
+      <b>Add Subject</b>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;">
+        <input id="subjectName" class="inp" placeholder="Subject name (e.g., EVS)">
+        <button class="btn dark" id="addBtn">➕ Add</button>
+      </div>
+      <div id="addMsg" class="muted" style="margin-top:8px;"></div>
+    </div>
+
+    <div id="err" class="error" style="display:none;margin-top:12px;"></div>
+
+    <div class="note" style="margin-top:14px;">
+      <b>Subjects List</b>
+      <div id="list"></div>
+    </div>
+  </main>
+
+  <!-- ✅ Keep admin-api.js (for apiGet/apiPost/apiDelete + requireAdmin) -->
+  <script src="admin-api.js"></script>
+  <script src="subjects.js"></script>
+</body>
+</html>
