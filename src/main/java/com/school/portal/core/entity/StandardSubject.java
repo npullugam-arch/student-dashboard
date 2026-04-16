@@ -31,3 +31,4 @@ public class StandardSubject {
     @Column(nullable = false)
     private Boolean active = true;
 }
+
