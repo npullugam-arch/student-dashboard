@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -94,7 +95,9 @@ public class SecurityConfig {
 
                         .anyRequest().authenticated()
                 )
-                .httpBasic(Customizer.withDefaults());
+                .httpBasic(basic -> basic.authenticationEntryPoint((request, response, exception) ->
+                        response.sendError(HttpStatus.UNAUTHORIZED.value(), "Unauthorized")
+                ));
 
         return http.build();
     }

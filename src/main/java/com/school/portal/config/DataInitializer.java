@@ -18,28 +18,40 @@ public class DataInitializer {
     @Bean
     CommandLineRunner initUsers(UserRepository userRepository) {
         return args -> {
-
-            if (!userRepository.existsByUsername("admin")) {
-                User admin = User.builder()
-                        .username("admin")
-                        .password(passwordEncoder.encode("admin123"))
-                        .role(Role.ADMIN)
-                        .active(true)
-                        .build();
-
-                userRepository.save(admin);
-            }
-
-            if (!userRepository.existsByUsername("office")) {
-                User office = User.builder()
-                        .username("office")
-                        .password(passwordEncoder.encode("office123"))
-                        .role(Role.OFFICE)
-                        .active(true)
-                        .build();
-
-                userRepository.save(office);
-            }
+            ensureBuiltInUser(userRepository, "admin", "admin123", Role.ADMIN);
+            ensureBuiltInUser(userRepository, "office", "office123", Role.OFFICE);
         };
+    }
+
+    private void ensureBuiltInUser(UserRepository userRepository,
+                                   String username,
+                                   String rawPassword,
+                                   Role role) {
+        User user = userRepository.findByUsername(username)
+                .orElseGet(() -> User.builder()
+                        .username(username)
+                        .password(passwordEncoder.encode(rawPassword))
+                        .role(role)
+                        .active(true)
+                        .passwordChanged(false)
+                        .build());
+
+        boolean changed = false;
+        if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
+            user.setPassword(passwordEncoder.encode(rawPassword));
+            changed = true;
+        }
+        if (user.getRole() != role) {
+            user.setRole(role);
+            changed = true;
+        }
+        if (!user.isActive()) {
+            user.setActive(true);
+            changed = true;
+        }
+
+        if (user.getId() == null || changed) {
+            userRepository.save(user);
+        }
     }
 }

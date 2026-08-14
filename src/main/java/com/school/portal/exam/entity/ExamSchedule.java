@@ -33,7 +33,7 @@ public class ExamSchedule {
     @Column(nullable = false)
     private LocalDate examDate;
 
-    @Column(nullable = false, length = 20)
+    @Column(name = "day_name", nullable = false, length = 20)
     private String day;
 
     @Column(nullable = false)
