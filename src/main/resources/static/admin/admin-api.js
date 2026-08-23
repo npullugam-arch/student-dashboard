@@ -38,7 +38,7 @@ function getSession() {
 
 function redirectToLogin() {
   // ✅ no alert popup (prevents “Session Required” annoy)
-  window.location.href = "/login/admin.html";
+  window.location.href = "/login/admin";
 }
 
 function requireAdmin() {

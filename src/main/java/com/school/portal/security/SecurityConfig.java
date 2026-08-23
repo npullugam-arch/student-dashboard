@@ -42,7 +42,7 @@ public class SecurityConfig {
                                 "/error",
 
                                 "/shared/**",
-                                "/login/**",
+                                "/login", "/login/**",
 
                                 "/student/**",      // student static pages
                                 "/office/**",       // ✅ allow office HTML/JS/CSS

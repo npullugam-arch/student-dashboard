@@ -208,16 +208,19 @@
 </div>
 
 <script>
-  const API_BASE="http://localhost:8080";
+  const API_BASE=window.location.origin;
   const el=id=>document.getElementById(id);
-  const token=()=>localStorage.getItem("token")||"";
+  const token=()=>{
+    try { return JSON.parse(localStorage.getItem("smp_session") || "{}").basicToken || ""; }
+    catch { return ""; }
+  };
 
   function showErr(msg){ el("err").style.display="block"; el("err").textContent=msg; }
   function clearErr(){ el("err").style.display="none"; el("err").textContent=""; }
 
   async function api(path){
     const headers={"Content-Type":"application/json"};
-    if(token()) headers["Authorization"]="Bearer "+token();
+    if(token()) headers["Authorization"]="Basic "+token();
     const res=await fetch(API_BASE+path,{headers});
     const text=await res.text();
     let data=null; try{data=text?JSON.parse(text):null}catch(e){data=text}
@@ -385,6 +388,10 @@
   }
 
   init();
+  window.addEventListener("focus", init);
+  setInterval(() => {
+    if (document.visibilityState === "visible") init();
+  }, 60000);
 </script>
 </body>
 </html>

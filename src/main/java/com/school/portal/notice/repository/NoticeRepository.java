@@ -17,7 +17,9 @@ public interface NoticeRepository extends JpaRepository<Notice, Long> {
         SELECT n FROM Notice n
         WHERE
           (:published IS NULL OR n.published = :published)
-          AND (:q IS NULL OR LOWER(n.title) LIKE LOWER(CONCAT('%',:q,'%')) OR LOWER(n.message) LIKE LOWER(CONCAT('%',:q,'%')))
+          AND (:q IS NULL
+               OR LOWER(n.title) LIKE CONCAT('%', LOWER(CAST(:q AS string)), '%')
+               OR LOWER(n.message) LIKE CONCAT('%', LOWER(CAST(:q AS string)), '%'))
         ORDER BY n.createdAt DESC
     """)
     Page<Notice> adminSearch(@Param("q") String q,

@@ -339,8 +339,12 @@
 </div>
 
 <script>
-  const API_BASE = "http://localhost:8080";
-  const token = () => localStorage.getItem("token") || "";
+  const API_BASE = window.location.origin;
+  const session = () => {
+    try { return JSON.parse(localStorage.getItem("smp_session") || "{}"); }
+    catch { return {}; }
+  };
+  const token = () => session().basicToken || "";
   const el = id => document.getElementById(id);
 
   function showErr(msg){
@@ -358,7 +362,7 @@
   async function api(path, opts={}){
     const headers = opts.headers || {};
     headers["Content-Type"] = "application/json";
-    if (token()) headers["Authorization"] = "Bearer " + token();
+    if (token()) headers["Authorization"] = "Basic " + token();
     const res = await fetch(API_BASE + path, {...opts, headers});
     const text = await res.text();
     let data = null;
@@ -400,8 +404,8 @@
 
   // Logout
   el("btnLogout").addEventListener("click", ()=>{
-    localStorage.removeItem("token");
-    showOk("Logged out (token removed).");
+    localStorage.removeItem("smp_session");
+    showOk("Logged out.");
     setAuthPill();
   });
 

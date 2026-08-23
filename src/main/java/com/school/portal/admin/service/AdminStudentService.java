@@ -22,6 +22,7 @@ public class AdminStudentService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Transactional
     public String addStudent(CreateStudentRequest request) {
 
         if (request.getStudentId() == null || request.getStudentId().isBlank()) {
